@@ -9,13 +9,13 @@ func main() {
         r := gin.Default()
 	
 	database.InitDB()
-
+	database.Add()
 	r.GET("/", func(c *gin.Context){
 		c.String(200, "Тут будет главная траница")
 	})
 	
 
-i	// Стена
+	// Стена
 	wall := r.Group("/wall") 
 	{
 
