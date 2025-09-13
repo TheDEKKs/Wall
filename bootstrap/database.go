@@ -14,8 +14,8 @@ import (
 type User struct {
 	// Данные акаунта 
 	Id_User int `gorm:"unique;primaryKey"`
-	Name_User string `gorm:"unique;"`
-	Id_Telegram string  `gorm:"unique;"`
+	Name_User string `gorm:"unique;not null"`
+	Id_Telegram int  `gorm:"unique;not null"`
 	Id_Wall int `gorm:"unique"`
 }
 
@@ -23,12 +23,12 @@ type User struct {
 type Wall struct {
 	// Настройка стены
 	Id_Wall int `gorm:"unique;primaryKey"`
-	Id_Creator string  `gorm:"unique;"`
-	Id_Comment []int `gorm:"column:Id_Comment;type:int[]"`
+	Id_Creator int  `gorm:"unique;not null"`
 
 	// Настройки для коментариев на стене
-	Mat bool 
-	Anonymously bool 
+	Mat bool `gorm:"default:'false'"` 
+	Anonymously bool `gorm:"default:'true'"` 
+
 	
 }
 
@@ -36,10 +36,10 @@ type Wall struct {
 type Comment struct {
 	// Данные 
 	Id_Comment int `gorm:"unique;primaryKey"`
-	Id_Wall int `gorm:"unique;"`
-	Id_Commentator int `gorm:"unique;"`
+	Id_Wall int `gorm:"unique;not null"`
+	Id_Commentator int `gorm:"unique; not null"`
 
-	Text_Comment string `gorm:"size:128"`
+	Text_Comment string `gorm:"size:128; not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -87,11 +87,49 @@ func CreateBase() {
 
 }
 
-func Add() {
-	user := User{1112, "tessdt", "tedwst", 2111}
+func CerateWall(ID_Creator int) int {
+	wall := Wall{Id_Creator: ID_Creator}
+
+	if err := db.Create(&wall).Error; err != nil {
+		fmt.Println("Error Create Wall - %v", err)
+	}
+
+	var wall_inf Wall
+	result := db.First(&wall_inf, "Id_Creator = ?", ID_Creator)
+	if result.Error != nil {
+		fmt.Println("Error Search Wall - %v", result.Error)
+	} else {
+		return wall_inf.Id_Wall
+	}
+	
+	return 0000
+
+}
+
+
+func Add(Telegram_ID int, Username string) {
+
+	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000}
 	if err := db.Create(&user).Error; err != nil {
 		fmt.Println("Error add user %v", err)
 	}
+	
+	var us User
+	result := db.First(&us, "Id_Telegram = ?", Telegram_ID)
+	if result.Error != nil {
+		fmt.Println("error: %v", result.Error)
+	} else {
+		wall := CerateWall(us.Id_User)
+
+		if wall != 0000 {
+			if err := db.Model(&User{}).Where("Id_Telegram = ?", Telegram_ID).Updates(User{Id_Wall: wall}).Error; err != nil {
+				fmt.Println("Error Updates Id_Wall - %v", err)
+			}
+		} else {
+			fmt.Println("Error")
+		}
+	}
+
 }
 /*
 func Search_User(user_search string) string {
