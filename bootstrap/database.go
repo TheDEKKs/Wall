@@ -26,8 +26,8 @@ type Wall struct {
 	Id_Creator int  `gorm:"unique;not null"`
 
 	// Настройки для коментариев на стене
-	Mat bool `gorm:"default:'false'"` 
-	Anonymously bool `gorm:"default:'true'"` 
+	Mat bool 
+	Anonymously bool 
 
 	
 }
@@ -87,48 +87,67 @@ func CreateBase() {
 
 }
 
-func CerateWall(ID_Creator int) int {
-	wall := Wall{Id_Creator: ID_Creator}
-
-	if err := db.Create(&wall).Error; err != nil {
-		fmt.Println("Error Create Wall - %v", err)
+func CreateNewComment(ID_Creator, ID_Wall int, Comment string) bool {
+	comments := Comment{Id_Wall: ID_Wall, Id_Commentator: ID_Creator, Text_Comment: Comment}
+	if err := db.Create(&comments).Error; err != nil {
+		fmt.Println("Error create comment - %v", err)
+		return false
 	}
 
-	var wall_inf Wall
-	result := db.First(&wall_inf, "Id_Creator = ?", ID_Creator)
+	return true
+}
+
+
+//Создание стены
+func CerateWall(ID_Creator int) int {
+	//Создание строки с ID создателя которое
+	wall := Wall{Id_Creator: ID_Creator}
+	
+	if err := db.Create(&wall).Error; err != nil {
+		fmt.Println("Error Create Wall - %v", err)
+		return 0
+	}	
+	//Получаем ID стены и возвращаем его
+	return wall.Id_Wall
+	/*var wall_inf Wall
+	result := db.First(&wall_inf, "Id_Creator = ?", ID_Creator)	//Выбираем строку с ID создателя
 	if result.Error != nil {
 		fmt.Println("Error Search Wall - %v", result.Error)
 	} else {
 		return wall_inf.Id_Wall
 	}
 	
-	return 0000
-
+	return 0000 */
 }
 
-
-func Add(Telegram_ID int, Username string) {
-
+//Функция для добавления в таблицу нового пользователя
+func AddUser(Telegram_ID int, Username string) {
+	
+	//Создание записи
 	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000}
 	if err := db.Create(&user).Error; err != nil {
 		fmt.Println("Error add user %v", err)
 	}
-	
+	/*
 	var us User
 	result := db.First(&us, "Id_Telegram = ?", Telegram_ID)
 	if result.Error != nil {
 		fmt.Println("error: %v", result.Error)
-	} else {
-		wall := CerateWall(us.Id_User)
-
-		if wall != 0000 {
+	} else {*/
+		//Создание стены
+		wall := CerateWall(user.Id_User)
+		
+		//Если успешно создалась стена 
+		if wall != 0 {
 			if err := db.Model(&User{}).Where("Id_Telegram = ?", Telegram_ID).Updates(User{Id_Wall: wall}).Error; err != nil {
 				fmt.Println("Error Updates Id_Wall - %v", err)
 			}
 		} else {
-			fmt.Println("Error")
+			fmt.Println("Error Create wall, delet user...")
+			db.Delete(&User{}, user.Id_User)
 		}
-	}
+	
+
 
 }
 /*

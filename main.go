@@ -9,7 +9,7 @@ func main() {
         r := gin.Default()
 	
 	database.InitDB()
-	database.Add(12345678, "Egor")
+	database.AddUser(123456789, "EgorTest")
 	r.GET("/", func(c *gin.Context){
 		c.String(200, "Тут будет главная траница")
 	})
