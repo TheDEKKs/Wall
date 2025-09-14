@@ -1,10 +1,18 @@
 package main
 
 import (
+	"net/http"
 	database "thedekk/webapp/bootstrap"
-//	"net/http"
+
+	//	"net/http"
 	"github.com/gin-gonic/gin"
+	//"golang.org/x/text/message"
 )
+
+type comment_user_post struct{
+	text_comment string `json:"name"`
+}
+
 func main() {
         r := gin.Default()
 	
@@ -19,14 +27,32 @@ func main() {
 	wall := r.Group("/wall") 
 	{
 
+	
+		//GET ЗАПРОСЫ
 		wall.GET("/:username", func(c *gin.Context) {
 			c.String(200, "Тут будет стена человека")
 		})
-
-		wall.POST("/newcomment", func(c *gin.Context) {
-			c.String(200, "Запрос на создание комента")
+		
+		wall.GET("win/newcomment", func(c *gin.Context) {
+			c.String(200, "Окно с созданием комента")
 		})
+		
 
+		//POST, PUT ЗАПРОСЫ ДЛЯ РАБОТЫ СО СТЕНОЙ И КОМЕНТАРИЯМИ 
+		wall.POST("/newcomment", func(c *gin.Context) {
+			var comment comment_user_post
+			c.String(200, "Запрос на создание комента")
+
+			if err := c.ShouldBindJSON(&comment); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})	
+			}
+
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Good",
+				"comment": comment.text_comment,
+			})
+		})
+		
 		wall.PUT("/edit", func(c *gin.Context) {
 			c.String(200, "Запрос на изменение коментария") 
 		})

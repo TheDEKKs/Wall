@@ -71,24 +71,8 @@ func InitDB() {
 
 }
 
-func CreateBase() {
-	if err := db.AutoMigrate(&User{}); err != nil {
-		fmt.Println("Error Migration %v", err)
-	}
-
-	if err := db.AutoMigrate(&Wall{}); err != nil {
-		fmt.Println("Error Migration Wall %v", err)
-	}
-
-
-	if err := db.AutoMigrate(&Comment{}); err != nil {
-		fmt.Println("Error Migration Wall %v", err)
-	}
-
-}
-
-func CreateNewComment(ID_Creator, ID_Wall int, Comment string) bool {
-	comments := Comment{Id_Wall: ID_Wall, Id_Commentator: ID_Creator, Text_Comment: Comment}
+func CreateNewComment(ID_Creator, ID_Wall int, Comment_User string) bool {
+	comments := Comment{Id_Wall: ID_Wall, Id_Commentator: ID_Creator, Text_Comment: Comment_User}
 	if err := db.Create(&comments).Error; err != nil {
 		fmt.Println("Error create comment - %v", err)
 		return false
