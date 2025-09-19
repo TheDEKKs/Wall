@@ -2,10 +2,10 @@ package main
 
 import (
 	"net/http"
-	database "thedekk/webapp/bootstrap"
-
+	database "thedekk/webapp/internal/database"
+	router "thedekk/webapp/internal/router"
 	//	"net/http"
-	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin" 
 	//"golang.org/x/text/message"
 )
 
@@ -16,6 +16,8 @@ type comment_user_post struct{
 func main() {
         r := gin.Default()
 	
+	router.InitRouter(r)
+
 	database.InitDB()
 	database.AddUser(123456789, "EgorTest")
 	r.GET("/", func(c *gin.Context){
