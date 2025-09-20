@@ -1,13 +1,15 @@
 package router
 
 import (
+	//"fmt"
 	"net/http"
 	database "thedekk/webapp/internal/database"
 	jsonstr "thedekk/webapp/internal/json"
-	"github.com/golang-jwt/jwt/v5"
+	//"time"
+
 	"github.com/gin-gonic/gin"
-	"os"
 )
+
 
 func Login(r *gin.Engine) {
 	r.POST("/login", login_post)
@@ -35,8 +37,3 @@ func login_post (c *gin.Context){
 
 
 }
-
-
-/*func jwtCreate() {
-	os.Getenv("secretKey")
-}*/
