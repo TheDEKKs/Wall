@@ -3,46 +3,13 @@ package database
 import (
 	"log"
 	"os"
-	"time"
+	//"time"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 
-//Структура базы данных юзера
-type User struct {
-	// Данные акаунта 
-	Id_User int `gorm:"unique;primaryKey"`
-	Name_User string `gorm:"unique;not null"`
-	Id_Telegram int  `gorm:"unique;not null"`
-	Id_Wall int `gorm:"unique"`
-}
-
-// Стурктура базы данных стены
-type Wall struct {
-	// Настройка стены
-	Id_Wall int `gorm:"unique;primaryKey"`
-	Id_Creator int  `gorm:"unique;not null"`
-
-	// Настройки для коментариев на стене
-	Mat bool 
-	Anonymously bool 
-
-	
-}
-
-// Структура базы данных коментариев
-type Comment struct {
-	// Данные 
-	Id_Comment int `gorm:"unique;primaryKey"`
-	Id_Wall int `gorm:"unique;not null"`
-	Id_Commentator int `gorm:"unique; not null"`
-
-	Text_Comment string `gorm:"size:128; not null"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
 
 
 var db *gorm.DB
@@ -105,13 +72,21 @@ func CerateWall(ID_Creator int) int {
 }
 
 //Функция для добавления в таблицу нового пользователя
-func AddUser(Telegram_ID int, Username string) {
+func AddUser(Telegram_ID int, Username, password_user string) string {
 	
 	//Создание записи
-	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000}
+	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000, password: password_user}
 	if err := db.Create(&user).Error; err != nil {
 		fmt.Println("Error add user %v", err)
+		var us User
+		if err := db.First(&us, "Name_User = ?", Username); err != nil {
+			return "Name User Not Unique"
+		}
+		if err := db.First(&us, "Id_Telegram = ?", Telegram_ID); err != nil {
+			return "ID Telegram Not Unique"
+		}
 	}
+
 	/*
 	var us User
 	result := db.First(&us, "Id_Telegram = ?", Telegram_ID)
@@ -125,13 +100,15 @@ func AddUser(Telegram_ID int, Username string) {
 		if wall != 0 {
 			if err := db.Model(&User{}).Where("Id_Telegram = ?", Telegram_ID).Updates(User{Id_Wall: wall}).Error; err != nil {
 				fmt.Println("Error Updates Id_Wall - %v", err)
+				return "Error Upadtes Id_Wall"
 			}
 		} else {
 			fmt.Println("Error Create wall, delet user...")
 			db.Delete(&User{}, user.Id_User)
+			return "Error Create Wall"
 		}
 	
-
+	return "Good"
 
 }
 /*

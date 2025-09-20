@@ -13,4 +13,6 @@ func InitRouter(rout_gin *gin.Engine) {
 		wall.NewComment(wall_grup)
 		wall.WallViewer(wall_grup)
 	}
+	Login(rout_gin)
+
 }
