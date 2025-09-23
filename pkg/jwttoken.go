@@ -16,7 +16,7 @@ type tokenJWT struct{
 
 var sec = []byte(os.Getenv("secretKey"))
 
-func jwtCreate(UserName, PasswordUs string) (string, error){
+func JwtCreate(UserName, PasswordUs string) (string, error){
 
 	userTOKENgen := tokenJWT {
 		Password: PasswordUs,
@@ -32,7 +32,7 @@ func jwtCreate(UserName, PasswordUs string) (string, error){
 
 }
 
-func validateToken(tokenStrUser string) (*tokenJWT, error){
+func ValidateToken(tokenStrUser string) (*tokenJWT, error){
 	tokenSTR := &tokenJWT{}
 
 	token, err := jwt.ParseWithClaims(tokenStrUser, tokenSTR, func(t *jwt.Token) (interface{}, error) {
