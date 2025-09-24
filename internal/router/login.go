@@ -27,8 +27,7 @@ func login_post (c *gin.Context){
 	var json_login jsonstr.POST_Login
 
 	if err := c.ShouldBindJSON(&json_login); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		c.String(500, "Error JSON Request")
+		c.JSON(http.StatusBadRequest, gin.H{"status": "Error JSON request", "error": err.Error()})
 		return
 	}
 
@@ -39,21 +38,19 @@ func login_post (c *gin.Context){
 		token, err := pkg.JwtCreate(json_login.Name, json_login.Password)
 
 		if err != nil {
-			c.String(500, "Error Create Token %s %s", err)
+			c.JSON(500, gin.H{"status": "Error create token", "Error": err,})
 			return
 		}
 
-		maxAge := 300 //14 * 86400
+		maxAge := 14 * 86400
 		
 		fmt.Println(token)
 		c.SetCookie("TOKEN_JWT", string(token), maxAge, "/", "", false, false)
-		c.JSON(http.StatusOK, gin.H{"message": "Cokie create"})
-
-		c.String(200, "Good create user")
+		c.JSON(http.StatusOK, gin.H{"status": "Create User and Cookie"})
 		
 	
 	} else {
-		c.String(500, "Error Add User %s", err)
+		c.JSON(500, gin.H{"status": "Error create user", "Error": err,})
 		return
 	}
 
