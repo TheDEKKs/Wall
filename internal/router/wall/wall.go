@@ -18,11 +18,11 @@ func dataWall(c *gin.Context) {
 		return
 	}
 
-	user, err := pkg.ValidateToken(cookiesJS)
+	user, pass, err := pkg.ValidateToken(cookiesJS)
 	fmt.Println(cookiesJS)
 	if err != nil {
 		c.String(500, err.Error())
 	}
-	c.String(200, user.Name, user.Password)
+	c.JSON(200, gin.H{"user":user, "pass":pass,})
 	
-}
+} 

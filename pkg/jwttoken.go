@@ -32,7 +32,7 @@ func JwtCreate(UserName, PasswordUs string) (string, error){
 
 }
 
-func ValidateToken(tokenStrUser string) (*tokenJWT, error){
+func ValidateToken(tokenStrUser string) (string, string, error){
 	tokenSTR := &tokenJWT{}
 
 	token, err := jwt.ParseWithClaims(tokenStrUser, tokenSTR, func(t *jwt.Token) (interface{}, error) {
@@ -40,13 +40,13 @@ func ValidateToken(tokenStrUser string) (*tokenJWT, error){
 	})
 
 	if err != nil {
-		return nil, err
+		return "", "", err
 	}
 
 	if !token.Valid {
-		return nil, fmt.Errorf("Token invalid")
+		return "","", fmt.Errorf("Token invalid") 
 	}
 
-	return tokenSTR, nil
+	return tokenSTR.Password, tokenSTR.Name, nil
 
 }
