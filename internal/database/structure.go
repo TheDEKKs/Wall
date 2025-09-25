@@ -28,11 +28,18 @@ type Wall struct {
 // Структура базы данных коментариев
 type Comment struct {
 	// Данные 
-	Id_Comment int `gorm:"unique;primaryKey"`
-	Id_Wall int `gorm:"unique;not null"`
-	Id_Commentator int `gorm:"unique; not null"`
+	Id_Comment int `gorm:"unique;primaryKey" json"id"`
+	Id_Wall int `gorm:"not null" json:"id_wall"`
+	Id_Commentator int `gorm:"unique; not null" json"id_commentor"`
 
-	Text_Comment string `gorm:"size:128; not null"`
+	Text_Comment string `gorm:"size:128; not null" json"text"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+
+
+type CommentRequest struct {
+	Id_Commentor int `json:"id"`
+	Comment string `json:"comment`
 }

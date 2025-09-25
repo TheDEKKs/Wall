@@ -132,4 +132,29 @@ func Search_User(user_search string) string {
 }
 */
 
+func SearchComment(id_wall_search string) ([]CommentRequest, error) {
+	comment := []Comment{}
+
+	if err := db.Find(&comment, "Id_Wall = ?", id_wall_search).Error; err != nil {
+		return  []CommentRequest{}, err
+	}
+
+    commentRequstUS := []CommentRequest{}
+	fmt.Println(comment)
+	for _, com := range comment {
+		fmt.Println(com)
+		fmt.Println(com.Text_Comment)
+		commentRequstUS = append(commentRequstUS, CommentRequest{
+			Id_Commentor: com.Id_Commentator,
+			Comment: com.Text_Comment,
+		})
+
+	}
+
+	fmt.Println(commentRequstUS)
+	return commentRequstUS, nil
+
+}
+
+
 
