@@ -5,3 +5,16 @@ type POST_Login struct{
 	Name string `json:"User"`
 	ID_Telegram int `json:"ID_Telegram"`
 }
+
+
+type NewCommentRequest struct{
+	Token string `json:"token"`
+	Text_coment string `json:"comment"` 
+	ID_Wall int `json:"id_wall"`
+}
+
+
+type CommentRequest struct {
+	Id_Commentor int `json:"id"`
+	Comment string `json:"comment`
+}

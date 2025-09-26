@@ -33,7 +33,7 @@ func login_post (c *gin.Context){
 
 
 
-	if err := database.AddUser(json_login.ID_Telegram, json_login.Name, json_login.Password); err == "Good" {
+	if err := database.AddUser(json_login.ID_Telegram, json_login.Name, json_login.Password); err == nil {
 
 		token, err := pkg.JwtCreate(json_login.Name, json_login.Password)
 

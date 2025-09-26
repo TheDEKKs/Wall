@@ -39,7 +39,4 @@ type Comment struct {
 
 
 
-type CommentRequest struct {
-	Id_Commentor int `json:"id"`
-	Comment string `json:"comment`
-}
+

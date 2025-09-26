@@ -22,6 +22,7 @@ func dataWall(c *gin.Context) {
 	}
 
 	c.JSON(200, json_comment)
+	
 	 /*
 	cookiesJS, err := c.Cookie("TOKEN_JWT")
 	 if err != nil {
