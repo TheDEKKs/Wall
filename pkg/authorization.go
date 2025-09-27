@@ -3,6 +3,7 @@ package pkg
 import (
 	database "thedekk/webapp/internal/database"
 	jsonstr "thedekk/webapp/internal/json"
+
 )
 
 func NewCommentCreate(data jsonstr.NewCommentRequest) (int, error){
@@ -27,4 +28,19 @@ func NewCommentCreate(data jsonstr.NewCommentRequest) (int, error){
 		
 		//Возращаем ID коментария
 		return id, nil
+}
+
+
+func UpdateComment(data jsonstr.EditComment) (bool, error) {
+	dataToken, err := ValidateToken(data.Token)
+
+	if err != nil {
+		return false, err
+	}
+
+	if err := database.UpdateComentDB(data.Id_Comment, data.New_Comment, dataToken.Name); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

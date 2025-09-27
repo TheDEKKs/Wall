@@ -158,3 +158,27 @@ func ID_User(user_name string) (int, error) {
 
 	return userSearchId.Id_User, nil
 }
+
+/*
+func ID_Creator(id_comment int) (int, error) {
+	//Выбираем в таблице User пользователя с именем user_name и возращаем его ID
+	commentSearchId := Comment{}
+
+	if err := db.Find(&commentSearchId, "Id_Comment = ?", id_comment).Error; err != nil {
+		return 0, err
+	}
+
+	return commentSearchId.Id_Commentator, nil
+}
+
+*/
+
+func UpdateComentDB(id_comment int, new_comment, name_user string) error{
+
+	if err := db.Model(&Comment{}).Where("Id_Comment = ? AND Id_Commentator = ?", id_comment, name_user).Updates(Comment{Text_Comment: new_comment}).Error; err != nil {
+		return err
+	}
+
+	return  nil
+
+}
