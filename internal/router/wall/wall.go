@@ -14,6 +14,7 @@ func WallViewer(r *gin.RouterGroup) {
 }
 
 func dataWall(c *gin.Context) {
+	//Ищем все коментарии которые привязаны к стене 
 	json_comment, err := database.SearchComment(c.Param("id"))
 
 	if err != nil {
@@ -21,6 +22,7 @@ func dataWall(c *gin.Context) {
 		return
 	}
 
+	//Возращаем коментарии в JSON 
 	c.JSON(200, json_comment)
 	
 	 /*

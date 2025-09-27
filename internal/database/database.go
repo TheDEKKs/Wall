@@ -22,11 +22,12 @@ func InitDB() {
 	dsn := os.Getenv("DATABASE_URL")
 	var err error
 
+	// Открытие базы 
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Printf("Fatal Open DB %v", err)
 	}
-
+	//Миграция
 	if err := db.AutoMigrate(&User{}, &Wall{}, &Comment{}); err != nil {
 		log.Printf("Fatal Migration %v", err)
 	}
@@ -36,17 +37,19 @@ func InitDB() {
 }
 
 func CreateNewComment(ID_Creator, ID_Wall int, Comment_User string) (int, error) {
+	//Создаем структуру
 	comments := Comment{Id_Wall: ID_Wall, Id_Commentator: ID_Creator, Text_Comment: Comment_User}
+	//Создаем поле
 	if err := db.Create(&comments).Error; err != nil {
 		return 0, err
 	}
-
+	//Возращаем ID коментария 
 	return comments.Id_Comment, nil
 }
 
 // Создание стены
 func CerateWall(ID_Creator int) (int, error) {
-	//Создание строки с ID создателя которое
+	//Создание строки с ID создателя который создал стену
 	wall := Wall{Id_Creator: ID_Creator}
 
 	if err := db.Create(&wall).Error; err != nil {
@@ -70,14 +73,9 @@ func AddUser(Telegram_ID int, Username, password_user string) error {
 
 	//Создание записи
 	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000, password: password_user}
+	//Создаем заппись
 	if err := db.Create(&user).Error; err != nil {
-		var us User
-		if err := db.First(&us, "Name_User = ?", Username); err != nil {
-			return err.Error
-		}
-		if err := db.First(&us, "Id_Telegram = ?", Telegram_ID); err != nil {
-			return err.Error
-		}
+		return err
 	}
 
 	/*
@@ -91,11 +89,12 @@ func AddUser(Telegram_ID int, Username, password_user string) error {
 
 	//Если успешно создалась стена
 	if err == nil {
+		//В юзера добавляем ID стены
 		if err := db.Model(&User{}).Where("Id_Telegram = ?", Telegram_ID).Updates(User{Id_Wall: wall}).Error; err != nil {
 			return err
 		}
 	} else {
-		fmt.Println("Error Create wall, delet user...")
+		//Если есть ошибка то удаляем юзера из базы
 		db.Delete(&User{}, user.Id_User)
 		return err
 	}
@@ -126,13 +125,15 @@ func Search_User(user_search string) string {
 
 func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 	comment := []Comment{}
-
+	//Выбиравем коментарии где Id_Wall == id_wall_search 
 	if err := db.Find(&comment, "Id_Wall = ?", id_wall_search).Error; err != nil {
 		return []jsonstr.CommentRequest{}, err
 	}
 
+	//Структура для возращение коментариев
 	commentRequstUS := []jsonstr.CommentRequest{}
 
+	//Перебираем коментарии и добавляем в comentRequstUS
 	for _, com := range comment {
 		fmt.Println(com)
 		fmt.Println(com.Text_Comment)
@@ -142,12 +143,13 @@ func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 		})
 
 	}
-
+	//Возращаем все коментарии в JSON
 	return commentRequstUS, nil
 
 }
 
 func ID_User(user_name string) (int, error) {
+	//Выбираем в таблице User пользователя с именем user_name и возращаем его ID
 	userSearchId := User{}
 
 	if err := db.Find(&userSearchId, "Name_User = ?", user_name).Error; err != nil {

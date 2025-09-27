@@ -4,6 +4,7 @@ package wall
 import (
 	"github.com/gin-gonic/gin"
 	jsonstr "thedekk/webapp/internal/json"
+	pkg "thedekk/webapp/pkg"
 
 )
 
@@ -12,12 +13,21 @@ func NewComment(r *gin.RouterGroup) {
 }
 
 func createNewComment(c *gin.Context) {
+	//Получаем JSON данные для создание комента
 	jsonComment := jsonstr.NewCommentRequest{}
 	if err := c.ShouldBindJSON(&jsonComment); err != nil {
 		c.JSON(500, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.JSON(200, jsonComment)
 
+	//Создание коментариия от аунтафицированого пользователя
+	id, err := pkg.NewCommentCreate(jsonComment)
+	if err != nil {
+		c.JSON(500, gin.H{"Error": err})
+		return
+	}
+
+	//Возращаем ID коментария если все прошло хорошо
+	c.JSON(200, gin.H{"comment_id": id})
 }
