@@ -23,6 +23,5 @@ type CommentRequest struct {
 type EditComment struct {
 	Token string `json:"token"`
 	Id_Comment int `json:"id_comment"`
-	Name_Commentor string `json"name_commentor"`
-	New_Comment string `json"comment`
+	New_Comment string `json:"new_comment"`
 }

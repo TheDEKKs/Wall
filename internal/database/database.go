@@ -173,11 +173,12 @@ func ID_Creator(id_comment int) (int, error) {
 
 */
 
-func UpdateComentDB(id_comment int, new_comment, name_user string) error{
-
-	if err := db.Model(&Comment{}).Where("Id_Comment = ? AND Id_Commentator = ?", id_comment, name_user).Updates(Comment{Text_Comment: new_comment}).Error; err != nil {
+func UpdateComentDB(id_comment, id_user  int, new_comment string) error{
+	fmt.Println("Start UPDATEDB")
+	if err := db.Model(&Comment{}).Where("Id_Comment = ? AND Id_Commentator = ?", id_comment, id_user).Updates(Comment{Text_Comment: new_comment}).Error; err != nil {
 		return err
 	}
+	fmt.Println("Stop UPDATEDB")
 
 	return  nil
 
