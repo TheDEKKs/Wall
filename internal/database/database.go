@@ -183,3 +183,26 @@ func UpdateComentDB(id_comment, id_user  int, new_comment string) error{
 	return  nil
 
 }
+
+
+func SearchAllComment(id int) ([]jsonstr.ReturnAllComment, error){
+	commentSearch := []Comment{}
+	//Поиск всех по ID косентариев
+	if err := db.Find(&commentSearch, "Id_Commentator = ?", id).Error; err != nil {
+		return []jsonstr.ReturnAllComment{}, err
+	}
+
+	commentAnswer := []jsonstr.ReturnAllComment{}
+
+	//Перебор всех коментариев пользовтаелей
+	for _, com := range commentSearch {
+		commentAnswer = append(commentAnswer, jsonstr.ReturnAllComment{
+			Id_Wall: com.Id_Wall,
+			Id_Comment: com.Id_Comment,
+			Text_Comment: com.Text_Comment,	
+		})
+	}
+
+	return commentAnswer, nil
+
+}

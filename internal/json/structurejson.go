@@ -25,3 +25,10 @@ type EditComment struct {
 	Id_Comment int `json:"id_comment"`
 	New_Comment string `json:"new_comment"`
 }
+
+
+type ReturnAllComment struct {
+	Id_Wall int `json:"Id_Wall"`
+	Id_Comment int `json:"Id_Comment"`
+	Text_Comment string `json:"text"`
+}

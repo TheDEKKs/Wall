@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	database "thedekk/webapp/internal/database"
 	jsonstr "thedekk/webapp/internal/json"
 )
@@ -45,7 +44,6 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 		return false,err
 	}
 
-	fmt.Println(data.Id_Comment, id, data.New_Comment)
 	if err := database.UpdateComentDB(data.Id_Comment, id, data.New_Comment); err != nil {
 		return false, err
 	}

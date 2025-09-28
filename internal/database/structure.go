@@ -30,7 +30,7 @@ type Comment struct {
 	// Данные 
 	Id_Comment int `gorm:"unique;primaryKey" json"id"`
 	Id_Wall int `gorm:"not null" json:"id_wall"`
-	Id_Commentator int `gorm:"unique; not null" json"id_commentor"`
+	Id_Commentator int `gorm:"not null" json"id_commentor"`
 
 	Text_Comment string `gorm:"size:128; not null" json"text"`
 	CreatedAt time.Time
