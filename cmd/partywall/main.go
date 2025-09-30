@@ -4,6 +4,7 @@ import (
 	//"net/http"
 	database "thedekk/webapp/internal/database"
 	router "thedekk/webapp/internal/router"
+	redis "thedekk/webapp/internal/redis"
 
 	//	"net/http"
 	"github.com/gin-gonic/gin"
@@ -16,7 +17,8 @@ type comment_user_post struct {
 
 func main() {
 	r := gin.Default()
-
+	
+	
 	router.InitRouter(r)
 
 	database.InitDB()
@@ -100,7 +102,10 @@ func main() {
 
 	*/
 
+	redis.InitReddis()
 
 	r.Run()
+
+	
 
 }
