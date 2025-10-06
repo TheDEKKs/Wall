@@ -7,11 +7,11 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-
+var ctx = context.Background()
+var rdb *redis.Client
 
 func InitReddis() {
-	var ctx = context.Background()
-	rdb := redis.NewClient(&redis.Options{
+	rdb = redis.NewClient(&redis.Options{
 		Addr: "redis-cache:6379",
 		Password: "2242",
 		DB: 0,

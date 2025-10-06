@@ -1,8 +1,9 @@
 package database
 
-import(
+import (
+	"fmt"
 	jsonstr "thedekk/webapp/internal/json"
-
+	redis "thedekk/webapp/internal/redis"
 )
 
 func CreateNewComment(ID_Creator, ID_Wall int, Comment_User string) (int, error) {
@@ -43,24 +44,37 @@ func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 
 
 func SearchAllComment(id int) ([]jsonstr.ReturnAllComment, error){
-	commentSearch := []Comment{}
-	//Поиск всех по ID косентариев
-	if err := db.Find(&commentSearch, "Id_Commentator = ?", id).Error; err != nil {
-		return []jsonstr.ReturnAllComment{}, err
-	}
+		data, err := redis.Serach(id)
 
-	commentAnswer := []jsonstr.ReturnAllComment{}
+		if err == nil && len(data) > 0 {
+			fmt.Println("Hach Data")
+			return data, nil
+		} else {
+			fmt.Println(err)
+			fmt.Println("Not Hach Data")
+			var commentAnswer []jsonstr.ReturnAllComment
 
-	//Перебор всех коментариев пользовтаелей
-	for _, com := range commentSearch {
-		commentAnswer = append(commentAnswer, jsonstr.ReturnAllComment{
-			Id_Wall: com.Id_Wall,
-			Id_Comment: com.Id_Comment,
-			Text_Comment: com.Text_Comment,	
-		})
-	}
+			commentSearch := []Comment{}
+			//Поиск всех коментарий по ID коментора
+			if err := db.Find(&commentSearch, "Id_Commentator = ?", id).Error; err != nil {
+				return []jsonstr.ReturnAllComment{}, err
+			}
 
-	return commentAnswer, nil
+
+			//Перебор всех коментариев пользовтаелей
+			for _, com := range commentSearch {
+				commentAnswer = append(commentAnswer, jsonstr.ReturnAllComment{
+					Id_Wall: com.Id_Wall,
+					Id_Comment: com.Id_Comment,
+					Text_Comment: com.Text_Comment,	
+				})
+			}
+
+			if err := redis.NewRecording(string(id), commentAnswer); err != nil {
+				fmt.Println(err)
+			}
+			return commentAnswer, nil
+		}
 
 }
 
