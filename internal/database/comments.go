@@ -43,10 +43,10 @@ func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 
 
 
-func SearchAllComment(id int) ([]jsonstr.ReturnAllComment, error){
+func SearchAllComment(id, hach int) ([]jsonstr.ReturnAllComment, error){
 		data, err := redis.Serach(id)
 
-		if err == nil && len(data) > 0 {
+		if err == nil && len(data) > 0 && hach != 1 {
 			fmt.Println("Hach Data")
 			return data, nil
 		} else {
