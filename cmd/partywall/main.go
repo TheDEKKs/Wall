@@ -3,19 +3,19 @@ package main
 import (
 	//"net/http"
 	database "thedekk/webapp/internal/database"
-	router "thedekk/webapp/internal/router"
 	redis "thedekk/webapp/internal/redis"
+	router "thedekk/webapp/internal/router"
+	loger "thedekk/webapp/pkg/loger"
 
 	//	"net/http"
 	"github.com/gin-gonic/gin"
 	//"golang.org/x/text/message"
 )
 
-type comment_user_post struct {
-	text_comment string `json:"name"`
-}
 
 func main() {
+	loger.InitLoger("app.log")	
+	
 	r := gin.Default()
 	
 	

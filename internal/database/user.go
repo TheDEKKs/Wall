@@ -1,5 +1,9 @@
 package database
 
+import (
+	loger"thedekk/webapp/pkg/loger"
+)
+
 //Ищем ID пользователя по его нику
 func ID_User(user_name string) (int, error) {
 	//Выбираем в таблице User пользователя с именем user_name и возращаем его ID
@@ -19,6 +23,7 @@ func AddUser(Telegram_ID int, Username, password_user string) error {
 	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000, password: password_user}
 	//Создаем заппись
 	if err := db.Create(&user).Error; err != nil {
+		loger.Log.Println("USER_DB: Error create new user: ", err)
 		return err
 	}
 
@@ -35,11 +40,13 @@ func AddUser(Telegram_ID int, Username, password_user string) error {
 	if err == nil {
 		//В юзера добавляем ID стены
 		if err := db.Model(&User{}).Where("Id_Telegram = ?", Telegram_ID).Updates(User{Id_Wall: wall}).Error; err != nil {
+			loger.Log.Println("USER_DB: Error update Id_Wall in User Table: ", err)
 			return err
 		}
 	} else {
 		//Если есть ошибка то удаляем юзера из базы
 		db.Delete(&User{}, user.Id_User)
+		loger.Log.Println("USER_DB: Error create wall user: ", err)
 		return err
 	}
 		return nil

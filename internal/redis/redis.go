@@ -2,7 +2,7 @@ package redis
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -17,14 +17,12 @@ func InitReddis() {
 		DB: 0,
 	})
 
-	pong, err := rdb.Ping(ctx).Result()
+	_, err := rdb.Ping(ctx).Result()
 
 
 	if err != nil {
-		fmt.Println("Error conect redis", err)
+		log.Println("Error conect redis", err)
 		return 
 	}
-
-	fmt.Println("Ping ", pong)
 
 }
