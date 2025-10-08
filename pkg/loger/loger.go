@@ -9,6 +9,8 @@ import (
 
 var Zap *zap.Logger
 
+
+
 func InitLoger(file_log string) error{
 	var err error
 	file, err := os.OpenFile(file_log, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -32,7 +34,6 @@ func InitLoger(file_log string) error{
 
 	defer Zap.Sync()
 
-	Zap.Info("StartApp")
 	return nil
 
 	/*path, _ := os.Executable()var err error
