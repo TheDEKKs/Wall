@@ -45,6 +45,8 @@ services:
     networks:
       - net_my
       
+    volumes:
+      - ./log/:/app/log
 
     environment:
       DATABASE_URL: "postgres://postgres:2242@postgres/mydb"
