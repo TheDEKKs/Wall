@@ -1,15 +1,17 @@
-package redis
+package comment
 
 import (
 	"encoding/json"
 	jsonstr "thedekk/webapp/internal/json"
+	r "thedekk/webapp/internal/redis"
+
 )
 
 //Функция для поиска по ID
-func Serach(id_filed int) ([]jsonstr.ReturnAllComment, error) {
+func SerachAllCommentUser(id_filed int) ([]jsonstr.ReturnAllComment, error) {
 	//Даные по ключу ID
 
-	data, err := rdb.HGetAll(ctx, string(id_filed)).Result()
+	data, err := r.Rdb.HGetAll(r.Ctx, string(id_filed)).Result()
 
 	if err != nil {
 		return nil, err

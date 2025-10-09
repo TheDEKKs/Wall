@@ -2,8 +2,11 @@ package database
 
 import (
 	"fmt"
+	"strconv"
+	loger "thedekk/webapp/pkg/loger"
+
 	jsonstr "thedekk/webapp/internal/json"
-	redis "thedekk/webapp/internal/redis"
+	redisCom "thedekk/webapp/internal/redis/comment"
 )
 
 func CreateNewComment(ID_Creator, ID_Wall int, Comment_User string) (int, error) {
@@ -20,31 +23,43 @@ func CreateNewComment(ID_Creator, ID_Wall int, Comment_User string) (int, error)
 
 func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 	comment := []Comment{}
-	//Выбиравем коментарии где Id_Wall == id_wall_search 
-	if err := db.Find(&comment, "Id_Wall = ?", id_wall_search).Error; err != nil {
-		return []jsonstr.CommentRequest{}, err
+	id, _ := strconv.Atoi(id_wall_search)
+	data, err := redisCom.SearchAllCommentWall(id)
+
+	if err == nil && len(data) > 0{
+		loger.Zap.Info("Hach Data")
+		return data, nil
+
+	} else {
+		loger.Zap.Info("Test " + err.Error())
+
+		//Выбиравем коментарии где Id_Wall == id_wall_search 
+		if err := db.Find(&comment, "Id_Wall = ?", id_wall_search).Error; err != nil {
+			return []jsonstr.CommentRequest{}, err
+		}
+
+		//Структура для возращение коментариев
+		commentRequstUS := []jsonstr.CommentRequest{}
+
+		//Перебираем коментарии и добавляем в comentRequstUS
+		for _, com := range comment {
+				commentRequstUS = append(commentRequstUS, jsonstr.CommentRequest{
+				Id_Commentor: com.Id_Commentator,
+				Comment:      com.Text_Comment,
+			})
+
+		}
+
+		redisCom.NewRecordingWallComent(string(id), data)
+		//Возращаем все коментарии в JSON
+		return commentRequstUS, nil
 	}
-
-	//Структура для возращение коментариев
-	commentRequstUS := []jsonstr.CommentRequest{}
-
-	//Перебираем коментарии и добавляем в comentRequstUS
-	for _, com := range comment {
-			commentRequstUS = append(commentRequstUS, jsonstr.CommentRequest{
-			Id_Commentor: com.Id_Commentator,
-			Comment:      com.Text_Comment,
-		})
-
-	}
-	//Возращаем все коментарии в JSON
-	return commentRequstUS, nil
-
 }
 
 
 
 func SearchAllComment(id, hach int) ([]jsonstr.ReturnAllComment, error){
-		data, err := redis.Serach(id)
+		data, err := redisCom.SerachAllCommentUser(id)
 
 		if err == nil && len(data) > 0 && hach != 1 {
 			fmt.Println("Hach Data")
@@ -70,7 +85,7 @@ func SearchAllComment(id, hach int) ([]jsonstr.ReturnAllComment, error){
 				})
 			}
 
-			if err := redis.NewRecording(string(id), commentAnswer); err != nil {
+			if err := redisCom.NewRecordingAllComent(string(id), commentAnswer); err != nil {
 				fmt.Println(err)
 			}
 			return commentAnswer, nil

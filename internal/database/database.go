@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"os"
+	loger "thedekk/webapp/pkg/loger"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -21,11 +22,12 @@ func InitDB() {
 	// Открытие базы 
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Printf("Fatal Open DB %v", err)
+		loger.Zap.Warn(err.Error())
+
 	}
 	//Миграция
 	if err := db.AutoMigrate(&User{}, &Wall{}, &Comment{}); err != nil {
-		log.Printf("Fatal Migration %v", err)
+		loger.Zap.Warn(err.Error())
 	}
 
 	//CreateBase()

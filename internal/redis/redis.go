@@ -7,17 +7,17 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var ctx = context.Background()
-var rdb *redis.Client
+var Ctx = context.Background()
+var Rdb *redis.Client
 
 func InitReddis() {
-	rdb = redis.NewClient(&redis.Options{
+	Rdb = redis.NewClient(&redis.Options{
 		Addr: "redis-cache:6379",
 		Password: "2242",
 		DB: 0,
 	})
 
-	_, err := rdb.Ping(ctx).Result()
+	_, err := Rdb.Ping(Ctx).Result()
 
 
 	if err != nil {
