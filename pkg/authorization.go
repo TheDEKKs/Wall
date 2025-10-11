@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	database "thedekk/webapp/internal/database"
 	jsonstr "thedekk/webapp/internal/json"
 )
@@ -52,22 +53,26 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 }
 
 
-func ExaminationAfftion(token string, id_wall int, mat, anon bool) error {
+func ExaminationAfftion(token string, id_wall int, mat bool) error {
 	data, err := ValidateToken(token)
 
 	if err != nil {
+		if err.Error() == "Token invalid" {
+			return fmt.Errorf("Token invalid")
+		}
 		return err
+		
 	}
 
 	id_User, err := database.ID_User(data.Name) 
 
 	id_Wall, err := database.SearchWallUser(id_User)
 
-	if err := database.UpdateSetingsWall(anon, mat, id_Wall); err != nil {
+	if err := database.UpdateSetingsWall(mat, id_Wall); err != nil {
 		return err
 	}
 
-	
+
 
 	return nil
 }

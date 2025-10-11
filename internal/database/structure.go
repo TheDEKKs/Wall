@@ -20,7 +20,7 @@ type Wall struct {
 
 	// Настройки для коментариев на стене
 	Mat bool 
-	Anonymously bool 
+	//Anonymously bool 
 
 	
 }

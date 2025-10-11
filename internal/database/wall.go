@@ -24,8 +24,8 @@ func CerateWall(ID_Creator int) (int, error) {
 
 
 
-func UpdateSetingsWall(anon, mat bool, id_wall int) error {
-	if err := db.Model(&Wall{}).Where("Id_Wall = ?", id_wall).Updates(Wall{Anonymously: anon, Mat: mat}).Error; err != nil {
+func UpdateSetingsWall(mat bool, id_wall int) error {
+	if err := db.Model(&Wall{}).Where("Id_Wall = ?", id_wall).Updates(Wall{ Mat: mat}).Error; err != nil {
 		return err
 	}
 	return nil
