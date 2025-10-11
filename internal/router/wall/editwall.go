@@ -1,7 +1,7 @@
 package wall
 
 import (
-	"strconv"
+	"net/http"
 	pkg "thedekk/webapp/pkg"
 
 	"github.com/gin-gonic/gin"
@@ -13,23 +13,24 @@ func EditWall(r *gin.RouterGroup) {
 
 func newDataWall(c *gin.Context) {
 	mat := c.Query("mat")
-	id := c.Query("Wall")
-
 	token, err := c.Cookie("TOKEN_JWT")
 	if err != nil {
+		if err == http.ErrNoCookie{
+			c.JSON(500, gin.H{"Error": "Not Cookie, Not Login"})
+			return
+		}
 		c.JSON(500, gin.H{"Error": err.Error})
+		return 
 	}
 	
-	id_wall, _ := strconv.Atoi(id)
-
 	switch mat {
 	case "true":
-		if err := pkg.ExaminationAfftion(token, id_wall, true); err != nil {
+		if err := pkg.ExaminationAfftion(token, true); err != nil {
 			c.JSON(500, gin.H{"Error": err.Error})
 			return
 		}
 	case "false":
-		if err := pkg.ExaminationAfftion(token, id_wall, true); err != nil {
+		if err := pkg.ExaminationAfftion(token, false); err != nil {
 			c.JSON(500, gin.H{"Error": err.Error})
 
 			return

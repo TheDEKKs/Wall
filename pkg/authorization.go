@@ -53,7 +53,7 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 }
 
 
-func ExaminationAfftion(token string, id_wall int, mat bool) error {
+func ExaminationAfftion(token string, mat bool) error {
 	data, err := ValidateToken(token)
 
 	if err != nil {
