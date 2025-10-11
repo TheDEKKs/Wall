@@ -50,4 +50,20 @@ sudo dcoker-compos up --build
     "token": "None" (string),
     "id_comment": Id comment (int, not null),
     "id_commentor": Id creator (int, not null),
-    "new_comment": "New text" (string, not null) 
+    "new_comment": "New text" (string, not null)
+
+- /searchallcomment
+  ```
+  query parameters - id (int), hach (int)
+  gets the id whose comments we are looking for
+  if hach != 1, search data in hach
+
+- /wall/:id
+  ```
+  gets wall data
+
+- /wall/editwall
+  ```
+  query parameters - mat (bool)
+  update user wall, string "Mat"
+
