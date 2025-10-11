@@ -1,8 +1,16 @@
 # Wall
-> [!NOTE] 
-> Hello World! This project is Pet-Project, I am would be grateful if you leave on "GitHub Issues" with advice. I hope what with understanding to my small project 
+The project for to create a wall, where your friends could sign/comment. 
 
-This is project backend part. Sory I can't write Fronternd:)
+You can create account and wall, write comments, edit comment and wall, see all comments user and comments wall. 
+
+
+## Tools
+Programming language: Golang
+Backend: Gin
+DB: PostgresSQL, Gorm
+Hach: Redis
+Else: Docker, Godotenv  
+
 ## Install
 
 ```
@@ -68,10 +76,6 @@ sudo dcoker-compos up --build
   update user wall, string "Mat"
 
 
-### I'm using here
-Go package:
-> Gin/Gorm/Godotenv
-
-Additional tool:
-> PostgresSQL/Redis/Docker
+>[!NOTE]
+>I would be grateful if you leave your recommendation in "GitHub Issues"
 
