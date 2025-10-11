@@ -8,10 +8,10 @@ import (
 )
 
 //Функция для поиска по ID
-func SerachAllCommentUser(id_filed int) ([]jsonstr.ReturnAllComment, error) {
+func SerachAllCommentUser(id_filed string) ([]jsonstr.ReturnAllComment, error) {
 	//Даные по ключу ID
 
-	data, err := r.Rdb.HGetAll(r.Ctx, string(id_filed)).Result()
+	data, err := r.Rdb.HGetAll(r.Ctx, id_filed +":all").Result()
 
 	if err != nil {
 		return nil, err

@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"strconv"
 	loger "thedekk/webapp/pkg/loger"
 
 	jsonstr "thedekk/webapp/internal/json"
@@ -23,16 +22,13 @@ func CreateNewComment(ID_Creator, ID_Wall int, Comment_User string) (int, error)
 
 func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 	comment := []Comment{}
-	id, _ := strconv.Atoi(id_wall_search)
-	data, err := redisCom.SearchAllCommentWall(id)
+	data, err := redisCom.SearchAllCommentWall(id_wall_search)
 
 	if err == nil && len(data) > 0{
 		loger.Zap.Info("Hach Data")
 		return data, nil
 
 	} else {
-		loger.Zap.Info("Test " + err.Error())
-
 		//Выбиравем коментарии где Id_Wall == id_wall_search 
 		if err := db.Find(&comment, "Id_Wall = ?", id_wall_search).Error; err != nil {
 			return []jsonstr.CommentRequest{}, err
@@ -50,7 +46,7 @@ func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 
 		}
 
-		redisCom.NewRecordingWallComent(string(id), data)
+		redisCom.NewRecordingWallComent(id_wall_search, commentRequstUS)
 		//Возращаем все коментарии в JSON
 		return commentRequstUS, nil
 	}
@@ -59,7 +55,7 @@ func SearchComment(id_wall_search string) ([]jsonstr.CommentRequest, error) {
 
 
 func SearchAllComment(id, hach int) ([]jsonstr.ReturnAllComment, error){
-		data, err := redisCom.SerachAllCommentUser(id)
+		data, err := redisCom.SerachAllCommentUser(string(id))
 
 		if err == nil && len(data) > 0 && hach != 1 {
 			fmt.Println("Hach Data")

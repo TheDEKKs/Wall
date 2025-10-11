@@ -5,12 +5,10 @@ import (
 	"encoding/json"
 	jsonstr "thedekk/webapp/internal/json"
 	r "thedekk/webapp/internal/redis"
-
 )
 
-func SearchAllCommentWall(id_wall int) ([]jsonstr.CommentRequest, error) {
-	data, err := r.Rdb.HGetAll(r.Ctx, string(id_wall)).Result()
-
+func SearchAllCommentWall(id_wall string) ([]jsonstr.CommentRequest, error) {
+	data, err := r.Rdb.HGetAll(r.Ctx, id_wall).Result()
 	if err != nil {
 		return nil, err
 	}

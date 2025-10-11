@@ -16,7 +16,7 @@ func NewRecordingAllComent(key string, data []jsonstr.ReturnAllComment) (error) 
 		return err
 	}
 
-	if err := r.Rdb.HSet(r.Ctx, key, "all_commnet",jsonData).Err(); err != nil {
+	if err := r.Rdb.HSet(r.Ctx, key + ":all", "all_commnet",jsonData).Err(); err != nil {
 		return err
 	}
 
