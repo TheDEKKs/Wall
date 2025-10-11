@@ -1,6 +1,6 @@
 # Wall
 > [!NOTE] 
-> Hello World! This project is Pet-Project, I am would be grateful if you leave on "GitHub Issues" with advice.
+> Hello World! This project is Pet-Project, I am would be grateful if you leave on "GitHub Issues" with advice. \nI hope what with understanding to my small project 
 
 ## Install
 
