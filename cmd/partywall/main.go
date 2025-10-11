@@ -6,7 +6,7 @@ import (
 	redis "thedekk/webapp/internal/redis"
 	router "thedekk/webapp/internal/router"
 	loger "thedekk/webapp/pkg/loger"
-
+	"github.com/joho/godotenv"
 	//	"net/http"
 	"github.com/gin-gonic/gin"
 	//"golang.org/x/text/message"
@@ -18,6 +18,10 @@ func main() {
 	
 	r := gin.Default()
 	
+	err := godotenv.Load()
+    if err != nil {
+        loger.Zap.Error(err.Error())
+    }
 	
 	router.InitRouter(r)
 

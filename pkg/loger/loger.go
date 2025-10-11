@@ -7,6 +7,8 @@ import (
 	"go.uber.org/zap"
 )
 
+
+//Нужно для вызова логирования
 var Zap *zap.Logger
 
 

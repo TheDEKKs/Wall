@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	database "thedekk/webapp/internal/database"
 	jsonstr "thedekk/webapp/internal/json"
 )
@@ -32,19 +31,24 @@ func NewCommentCreate(data jsonstr.NewCommentRequest) (int, error){
 
 
 func UpdateComment(data jsonstr.EditComment) (bool, error) {
+	//Снова проверяем на фалидность
 	dataToken, err := ValidateToken(data.Token)
 
-	if err != nil {
-		return false, err
-	}
+		if err != nil {
+			return false, err
+		}
 
 
+	//Получаем ID 
+	// ***Про это я как раз иговорил потом в данные токены нужно добавить ID
 	id, err := database.ID_User(dataToken.Name)
 
 	if err != nil {
 		return false,err
 	}
 
+
+	//Обновляем коментарий
 	if err := database.UpdateComentDB(data.Id_Comment, id, data.New_Comment); err != nil {
 		return false, err
 	}
@@ -52,14 +56,12 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 	return true, nil
 }
 
-
+//Функция которая обновляет натсройки стены
 func ExaminationAfftion(token string, mat bool) error {
+	//Снова проверяем на фалидность
 	data, err := ValidateToken(token)
 
 	if err != nil {
-		if err.Error() == "Token invalid" {
-			return fmt.Errorf("Token invalid")
-		}
 		return err
 		
 	}
