@@ -1,4 +1,4 @@
-# Wall
+# Wall Info
 The project for to create a wall, where your friends could sign/comment. 
 
 You can create account and wall, write comments, edit comment and wall, see all comments user and comments wall. 
