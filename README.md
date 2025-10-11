@@ -30,3 +30,24 @@ sudo dcoker-compos up --build
 | PUT | /wall/editwall | Update wall |
 | POST | /wall/newcomment | New comment |
 | POST | /login | Login in app |
+
+
+- /wall/newcomment
+  ```
+    "token": "null" (string),
+    "comment": "Text Comment" (string, not null),
+    "id_wall": Id Wall (int, not null)
+  
+
+- /login
+  ``` 
+    "password": "Password" (string),
+    "User": "User Name" (string, unique;not null),
+    "ID_Telegram": Id Telegram (int, unique;not null) 
+
+- /wall/editcomment
+  ```
+    "token": "None" (string),
+    "id_comment": Id comment (int, not null),
+    "id_commentor": Id creator (int, not null),
+    "new_comment": "New text" (string, not null) 
