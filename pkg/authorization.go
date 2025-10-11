@@ -50,3 +50,24 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 
 	return true, nil
 }
+
+
+func ExaminationAfftion(token string, id_wall int, mat, anon bool) error {
+	data, err := ValidateToken(token)
+
+	if err != nil {
+		return err
+	}
+
+	id_User, err := database.ID_User(data.Name) 
+
+	id_Wall, err := database.SearchWallUser(id_User)
+
+	if err := database.UpdateSetingsWall(anon, mat, id_Wall); err != nil {
+		return err
+	}
+
+	
+
+	return nil
+}

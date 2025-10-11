@@ -20,3 +20,24 @@ func CerateWall(ID_Creator int) (int, error) {
 
 	return 0000 */
 }
+
+
+
+
+func UpdateSetingsWall(anon, mat bool, id_wall int) error {
+	if err := db.Model(&Wall{}).Where("Id_Wall = ?", id_wall).Updates(Wall{Anonymously: anon, Mat: mat}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+
+func SearchWallUser(id int) (int, error) {
+	wall := Wall{}
+	
+	if err := db.Find(&wall, "Id_Creator = ?", id).Error; err != nil {
+		return 0, err
+	}
+
+	return wall.Id_Wall, nil
+}

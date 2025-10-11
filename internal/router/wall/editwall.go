@@ -8,4 +8,7 @@ func EditWall(r *gin.RouterGroup) {
 	r.PUT("/editwall", newDataWall)
 }
 
-func newDataWall(c *gin.Context) {}
+func newDataWall(c *gin.Context) {
+
+	
+}
