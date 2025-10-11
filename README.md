@@ -67,3 +67,11 @@ sudo dcoker-compos up --build
   query parameters - mat (bool)
   update user wall, string "Mat"
 
+
+### I'm using here
+Go package:
+> Gin/Gorm/Godotenv
+
+Additional tool:
+> PostgresSQL/Redis/Docker
+
