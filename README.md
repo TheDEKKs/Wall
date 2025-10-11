@@ -1,7 +1,8 @@
 # Wall
 > [!NOTE] 
-> Hello World! This project is Pet-Project, I am would be grateful if you leave on "GitHub Issues" with advice. \nI hope what with understanding to my small project 
+> Hello World! This project is Pet-Project, I am would be grateful if you leave on "GitHub Issues" with advice. I hope what with understanding to my small project 
 
+This is project backend part. Sory I can't write Fronternd:)
 ## Install
 
 ```
