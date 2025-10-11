@@ -25,6 +25,7 @@ func CerateWall(ID_Creator int) (int, error) {
 
 
 func UpdateSetingsWall(mat bool, id_wall int) error {
+	//Обновляем настройки стены по ее ID 
 	if err := db.Model(&Wall{}).Where("Id_Wall = ?", id_wall).Updates(Wall{ Mat: mat}).Error; err != nil {
 		return err
 	}
@@ -35,6 +36,7 @@ func UpdateSetingsWall(mat bool, id_wall int) error {
 func SearchWallUser(id int) (int, error) {
 	wall := Wall{}
 	
+	//Ищем id стены по id создателя
 	if err := db.Find(&wall, "Id_Creator = ?", id).Error; err != nil {
 		return 0, err
 	}

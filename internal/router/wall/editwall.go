@@ -12,8 +12,10 @@ func EditWall(r *gin.RouterGroup) {
 }
 
 func newDataWall(c *gin.Context) {
+	//Получаем нужные нам данные из запроса
 	mat := c.Query("mat")
 	token, err := c.Cookie("TOKEN_JWT")
+
 	if err != nil {
 		if err == http.ErrNoCookie{
 			c.JSON(500, gin.H{"Error": "Not Cookie, Not Login"})
@@ -24,6 +26,8 @@ func newDataWall(c *gin.Context) {
 	}
 	
 	switch mat {
+	//Тут мы отправляем запрос на обновление стены нашего пользователя
+	//Да я сюда впихнул switch конструкция ничего лучше я не придумал
 	case "true":
 		if err := pkg.ExaminationAfftion(token, true); err != nil {
 			c.JSON(500, gin.H{"Error": err.Error})

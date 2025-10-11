@@ -12,6 +12,7 @@ func EditComment(r *gin.RouterGroup) {
 }
 
 func newDataComment(c *gin.Context) {
+	//Получаем JSON 
 	UpdateComment := jsonstr.EditComment{}
 
 	if err := c.ShouldBindJSON(&UpdateComment); err != nil {
@@ -19,6 +20,8 @@ func newDataComment(c *gin.Context) {
 		return
 	}
 
+
+	//И про токен тоже не забываем
 	Tokens, err := c.Cookie("TOKEN_JWT")
 
 	if err != nil { 
@@ -27,8 +30,12 @@ func newDataComment(c *gin.Context) {
 
 	}
 
+
+	//Тут опять добавляем 
 	UpdateComment.Token = Tokens
 
+
+	//И обновляем
 	good, err := pkg.UpdateComment(UpdateComment)
 
 	if err != nil {

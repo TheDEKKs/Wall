@@ -19,11 +19,14 @@ func createNewComment(c *gin.Context) {
 		return
 	}
 
+	//Еееу тут опять токен забираем)))
 	token, err := c.Cookie("TOKEN_JWT")
 	if err != nil {
 		c.JSON(500, gin.H{"Error": err.Error})
+		return
 	}
 
+	//Тут в поле где должен быть токен добавяем его
 	jsonComment.Token = token
 	//Создание коментариия от аунтафицированого пользователя
 	id, err := pkg.NewCommentCreate(jsonComment)

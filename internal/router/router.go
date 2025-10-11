@@ -6,6 +6,7 @@ import (
 )
 
 func InitRouter(rout_gin *gin.Engine) {
+	//Тут я надеюсь ненадо ничего обьяснять 
 	wall_grup := rout_gin.Group("/wall")
 	{
 		wall.EditComment(wall_grup)

@@ -8,7 +8,8 @@ import (
 
 )
 
-
+//Тоже самое что в ./newrecCommentWall 
+//Если интересно загляни туда
 func NewRecordingAllComent(key string, data []jsonstr.ReturnAllComment) (error) {
 	jsonData, err := json.Marshal(data)
 

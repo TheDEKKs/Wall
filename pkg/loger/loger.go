@@ -15,6 +15,7 @@ var Zap *zap.Logger
 
 func InitLoger(file_log string) error{
 	var err error
+	//Оу я тут открываю фаял
 	file, err := os.OpenFile(file_log, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil{
 		log.Println("Error create file ", err)
@@ -24,9 +25,11 @@ func InitLoger(file_log string) error{
 	defer file.Close()
 	
 
+	//Здесь я настраиваю логирование 
 	loger := zap.NewProductionConfig()
 	loger.OutputPaths = []string{"stdout", "./log/.log"}
 
+	//Дальше я уже фиг знаю что делал (я был слишком уставшим)
 	Zap, err = loger.Build()
 
 	if err != nil {

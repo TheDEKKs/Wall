@@ -10,6 +10,7 @@ import (
 
 
 func NewRecordingWallComent(key string, data []jsonstr.CommentRequest) (error) {
+	//Иницелизируем в JSON
 	jsonData, err := json.Marshal(data)
 	if len(jsonData) < 0 {
 		loger.Zap.Info("Data < 0")
@@ -18,6 +19,7 @@ func NewRecordingWallComent(key string, data []jsonstr.CommentRequest) (error) {
 		return err
 	}
 
+	//Устанавливаем новый хеш
 	if err := r.Rdb.HSet(r.Ctx, key, "wall_comment", jsonData).Err(); err != nil {
 		return err
 	}

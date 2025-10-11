@@ -10,6 +10,8 @@ import (
 var Ctx = context.Background()
 var Rdb *redis.Client
 
+
+//Смысла коментировать я не вижу
 func InitReddis() {
 	Rdb = redis.NewClient(&redis.Options{
 		Addr: "redis-cache:6379",

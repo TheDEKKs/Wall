@@ -8,12 +8,13 @@ import (
 )
 
 func SearchAllCommentWall(id_wall string) ([]jsonstr.CommentRequest, error) {
+	//Получаем результат поиска по ID стены
 	data, err := r.Rdb.HGetAll(r.Ctx, id_wall).Result()
 	if err != nil {
 		return nil, err
 	}
-
-	//Записываем в нужный тип 
+	
+	//Перебираем и Записываем в нужный тип для дольнейшего удобства
 	var comment []jsonstr.CommentRequest
 	for _, com := range data {
 		var c []jsonstr.CommentRequest

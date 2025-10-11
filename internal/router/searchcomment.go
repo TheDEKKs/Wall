@@ -16,17 +16,16 @@ func EditComment(r *gin.Engine) {
 func SearchAllComment(c *gin.Context){
 	//Если есть такие поля записываем
 	id := c.Query("id")
+	//Если хеш не 1 то мы ищем в хеше
+	//Еслти 1 то пропускаем хеш
 	hach := c.Query("hach")
 
-	idInt, err := strconv.Atoi(id)
+	idInt, _ := strconv.Atoi(id)
 
-	if err != nil {
-		c.JSON(500, gin.H{"error id in int": err})
-		return
-	}
+	hachs, _ := strconv.Atoi(hach)
 
-	hachs, err := strconv.Atoi(hach)
 
+	//Вызываем функцию поиска всех моентариев
 	answer, err := database.SearchAllComment(idInt, hachs)
 
 	if err != nil {
@@ -34,5 +33,6 @@ func SearchAllComment(c *gin.Context){
 		return
 	}
 
+	//Возращаем коментарии
 	c.JSON(200, answer)
 }

@@ -14,17 +14,20 @@ import (
 
 
 func main() {
+	//Иницелизируем логирование
 	loger.InitLoger("app.log")	
 	
 	r := gin.Default()
-	
+	//Открываем .env
 	err := godotenv.Load()
     if err != nil {
         loger.Zap.Error(err.Error())
     }
 	
+	//Иницелизируем роутеры
 	router.InitRouter(r)
 
+	//Иницелизируем базу
 	database.InitDB()
 
 	/*	database.AddUser(123456789, "EgorTest")
@@ -105,6 +108,7 @@ func main() {
 		}
 
 	*/
+	//Иницелизируем хеш
 
 	redis.InitReddis()
 
