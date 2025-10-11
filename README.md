@@ -5,11 +5,11 @@ You can create account and wall, write comments, edit comment and wall, see all 
 
 
 ## Tools
-Programming language: Golang
-Backend: Gin
-DB: PostgresSQL, Gorm
-Hach: Redis
-Else: Docker, Godotenv  
+**Programming language:** *Golang* \n
+**Backend:** *Gin* \n
+**DB:** *PostgresSQL, Gorm* \n
+**Hach:** *Redis* \n
+**Else:** *Docker, Godotenv* \n
 
 ## Install
 
