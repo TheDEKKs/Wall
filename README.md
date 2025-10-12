@@ -30,7 +30,7 @@ DATABASE_URL = "postgres://postgres:2242@postgres/mydb"
 
 After which, start project command 
 ```
-sudo dcoker-compos up --build
+sudo dcoker-compose up --build
 ```
 
 ## Requests
@@ -45,40 +45,60 @@ sudo dcoker-compos up --build
 
 
 - /wall/newcomment
-  ```
+  
+  JSON Request:
+ ```
     "token": "null" (string),
     "comment": "Text Comment" (string, not null),
     "id_wall": Id Wall (int, not null)
-  
+  ```
 
 - /login
-  ``` 
+
+ JSON Request:
+  ```
     "password": "Password" (string),
     "User": "User Name" (string, unique;not null),
     "ID_Telegram": Id Telegram (int, unique;not null) 
+```
 
 - /wall/editcomment
+
+ JSON Request:
   ```
     "token": "None" (string),
     "id_comment": Id comment (int, not null),
     "id_commentor": Id creator (int, not null),
     "new_comment": "New text" (string, not null)
+```
 
 - /searchallcomment
   ```
   query parameters - id (int), hach (int)
-  gets the id whose comments we are looking for
-  if hach != 1, search data in hach
+  ```
 
+>[!IMPORTANT]
+> Gets user comments, if hach != 1 search data in hach
+   
+
+  **Example**
+  > *GET* localhost:8080/searchallcomment?id=1&hach=0
+  
 - /wall/:id
   ```
   gets wall data
+  ```
+  **Example**
+  > *GET* localhost:8080/wall/1
+  
 
 - /wall/editwall
-  ```
-  query parameters - mat (bool)
+  ```query parameters - mat (bool)
   update user wall, string "Mat"
+  ```
 
+  **Example**
+  > *PUT* localhost:8080/wall/editwall?mat=true
 
 >[!NOTE]
 >I would be grateful if you leave your recommendation in "GitHub Issues"
