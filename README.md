@@ -78,10 +78,11 @@ sudo dcoker-compose up --build
   ```
   
   **Example**
+  
   *GET*
   
   ```URL
-  localhost:8080/searchallcomment?id=1&hach=0 ```
+  localhost:8080/searchallcomment?id=1&hach=0 
 
 
 >[!IMPORTANT]
