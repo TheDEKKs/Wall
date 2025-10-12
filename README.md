@@ -17,19 +17,19 @@ You can create account and wall, write comments, edit comment and wall, see all 
 
 ## Install
 
-```
+```bash
 git clone https://github.com/TheDEKKs/Wall.git
 cd Wall
 ```
 
 Now create new file ".env", and paste:
-```
+```env
 secretKey = "you secter key"
 DATABASE_URL = "postgres://postgres:2242@postgres/mydb"
 ```
 
 After which, start project command 
-```
+```bash
 sudo dcoker-compose up --build
 ```
 
@@ -47,29 +47,29 @@ sudo dcoker-compose up --build
 - /wall/newcomment
   
   JSON Request:
- ```
-    "token": "null" (string),
-    "comment": "Text Comment" (string, not null),
-    "id_wall": Id Wall (int, not null)
+ ```JSON
+    "token": "null",
+    "comment": "Text Comment",
+    "id_wall": 0
   ```
 
 - /login
 
  JSON Request:
-  ```
-    "password": "Password" (string),
-    "User": "User Name" (string, unique;not null),
-    "ID_Telegram": Id Telegram (int, unique;not null) 
+  ```JSON
+    "password": "Password",
+    "User": "User Name",
+    "ID_Telegram": 0 
 ```
 
 - /wall/editcomment
 
  JSON Request:
-  ```
-    "token": "None" (string),
-    "id_comment": Id comment (int, not null),
-    "id_commentor": Id creator (int, not null),
-    "new_comment": "New text" (string, not null)
+  ```JSON
+    "token": "None",
+    "id_comment": 0,
+    "id_commentor": 0,
+    "new_comment": "New text"
 ```
 
 - /searchallcomment
