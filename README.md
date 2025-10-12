@@ -76,21 +76,29 @@ sudo dcoker-compose up --build
   ```
   query parameters - id (int), hach (int)
   ```
+  
+  **Example**
+  *GET*
+  
+  ```URL
+  localhost:8080/searchallcomment?id=1&hach=0 ```
+
 
 >[!IMPORTANT]
 > Gets user comments, if hach != 1 search data in hach
    
-
-  **Example**
-  > *GET* localhost:8080/searchallcomment?id=1&hach=0
   
 - /wall/:id
   ```
   gets wall data
   ```
+
   **Example**
-  > *GET* localhost:8080/wall/1
   
+   *GET*
+  ```URL
+  localhost:8080/wall/1
+  ```
 
 - /wall/editwall
   ```query parameters - mat (bool)
@@ -98,7 +106,11 @@ sudo dcoker-compose up --build
   ```
 
   **Example**
-  > *PUT* localhost:8080/wall/editwall?mat=true
+
+   *PUT*
+  ```URL
+    localhost:8080/wall/editwall?mat=true
+  ```
 
 >[!NOTE]
 >I would be grateful if you leave your recommendation in "GitHub Issues"
