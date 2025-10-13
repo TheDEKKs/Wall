@@ -1,14 +1,16 @@
-package pkg
+package repositories
 
 import (
 	database "thedekk/webapp/internal/database"
 	jsonstr "thedekk/webapp/internal/json"
+	pkg "thedekk/webapp/pkg"
+
 )
 
 func NewCommentCreate(data jsonstr.NewCommentRequest) (int, error){
 		
 		//Получаем данные которые были в токене
-		vallid, err := ValidateToken(data.Token)
+		vallid, err := pkg.ValidateToken(data.Token)
 		if err != nil {
 			return 0, err
 		}
@@ -27,7 +29,7 @@ func NewCommentCreate(data jsonstr.NewCommentRequest) (int, error){
 
 func UpdateComment(data jsonstr.EditComment) (bool, error) {
 	//Снова проверяем на фалидность
-	dataToken, err := ValidateToken(data.Token)
+	dataToken, err := pkg.ValidateToken(data.Token)
 
 	if err != nil {
 		return false, err
@@ -51,7 +53,7 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 //Функция которая обновляет натсройки стены
 func ExaminationAfftion(token string, mat bool) error {
 	//Снова проверяем на фалидность
-	data, err := ValidateToken(token)
+	data, err := pkg.ValidateToken(token)
 
 	if err != nil {
 		return err

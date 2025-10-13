@@ -3,7 +3,8 @@ package wall
 import (
 		"github.com/gin-gonic/gin"
 		jsonstr "thedekk/webapp/internal/json"
-		pkg "thedekk/webapp/pkg"
+		jwtReuest "thedekk/webapp/internal/domain/repositories"
+
 
 )
 
@@ -36,7 +37,7 @@ func newDataComment(c *gin.Context) {
 
 
 	//И обновляем
-	good, err := pkg.UpdateComment(UpdateComment)
+	good, err := jwtReuest.UpdateComment(UpdateComment)
 
 	if err != nil {
 		c.JSON(500, gin.H{"Error Update": err})

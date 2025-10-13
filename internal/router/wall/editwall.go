@@ -2,7 +2,8 @@ package wall
 
 import (
 	"net/http"
-	pkg "thedekk/webapp/pkg"
+	jwtReuest "thedekk/webapp/internal/domain/repositories"
+
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,12 +30,12 @@ func newDataWall(c *gin.Context) {
 	//Тут мы отправляем запрос на обновление стены нашего пользователя
 	//Да я сюда впихнул switch конструкция ничего лучше я не придумал
 	case "true":
-		if err := pkg.ExaminationAfftion(token, true); err != nil {
+		if err := jwtReuest.ExaminationAfftion(token, true); err != nil {
 			c.JSON(500, gin.H{"Error": err.Error})
 			return
 		}
 	case "false":
-		if err := pkg.ExaminationAfftion(token, false); err != nil {
+		if err := jwtReuest.ExaminationAfftion(token, false); err != nil {
 			c.JSON(500, gin.H{"Error": err.Error})
 
 			return

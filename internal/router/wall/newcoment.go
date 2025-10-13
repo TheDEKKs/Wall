@@ -2,7 +2,7 @@ package wall
 
 import (
 	jsonstr "thedekk/webapp/internal/json"
-	pkg "thedekk/webapp/pkg"
+	jwtReuest "thedekk/webapp/internal/domain/repositories"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +29,7 @@ func createNewComment(c *gin.Context) {
 	//Тут в поле где должен быть токен добавяем его
 	jsonComment.Token = token
 	//Создание коментариия от аунтафицированого пользователя
-	id, err := pkg.NewCommentCreate(jsonComment)
+	id, err := jwtReuest.NewCommentCreate(jsonComment)
 	if err != nil {
 		c.JSON(500, gin.H{"Error": err})
 		return
