@@ -12,17 +12,19 @@ import (
 //Просто если сразу буду записывать ID то я смогу избавиться от вызова функций по поиску его 
 type tokenJWT struct{
 	Password string 
+	Id int
 	Name string 
 	jwt.StandardClaims
 }
 //Получаем секретный ключ
 var sec = []byte(os.Getenv("secretKey"))
 
-func JwtCreate(UserName, PasswordUs string) (string, error){
+func JwtCreate(UserName, PasswordUs string, id int) (string, error){
 	//Создаем стурктуру 
 	userTOKENgen := tokenJWT {
 		Password: PasswordUs,
 		Name: UserName,
+		Id: id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(336 * time.Hour).Unix(),
 		},

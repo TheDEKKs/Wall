@@ -13,14 +13,9 @@ func NewCommentCreate(data jsonstr.NewCommentRequest) (int, error){
 			return 0, err
 		}
 
-		//Получаем ID пользователя из его имени 
-		id_User, err := database.ID_User(vallid.Name) 
-		if err != nil {
-			return 0, err
-		}
 
 		//Создаем новый коментарий 
-		id, err := database.CreateNewComment(id_User, data.ID_Wall, data.Text_coment)
+		id, err := database.CreateNewComment(vallid.Id, data.ID_Wall, data.Text_coment)
 		if err != nil{
 			return 0, err
 		}
@@ -34,22 +29,19 @@ func UpdateComment(data jsonstr.EditComment) (bool, error) {
 	//Снова проверяем на фалидность
 	dataToken, err := ValidateToken(data.Token)
 
-		if err != nil {
-			return false, err
-		}
-
+	if err != nil {
+		return false, err
+	}
 
 	//Получаем ID 
 	// ***Про это я как раз иговорил потом в данные токены нужно добавить ID
-	id, err := database.ID_User(dataToken.Name)
-
 	if err != nil {
 		return false,err
 	}
 
 
 	//Обновляем коментарий
-	if err := database.UpdateComentDB(data.Id_Comment, id, data.New_Comment); err != nil {
+	if err := database.UpdateComentDB(data.Id_Comment, dataToken.Id, data.New_Comment); err != nil {
 		return false, err
 	}
 
@@ -66,14 +58,11 @@ func ExaminationAfftion(token string, mat bool) error {
 		
 	}
 
-	id_User, err := database.ID_User(data.Name) 
-
-	id_Wall, err := database.SearchWallUser(id_User)
+	id_Wall, err := database.SearchWallUser(data.Id)
 
 	if err := database.UpdateSetingsWall(mat, id_Wall); err != nil {
 		return err
 	}
-
 
 
 	return nil

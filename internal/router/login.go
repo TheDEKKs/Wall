@@ -33,8 +33,9 @@ func login_post (c *gin.Context){
 	//Добавляем пользователя в базу
 	if err := database.AddUser(json_login.ID_Telegram, json_login.Name, json_login.Password); err == nil {
 
+		id, _ :=  database.ID_User(json_login.Name)
 		//Создаем токен
-		token, err := pkg.JwtCreate(json_login.Name, json_login.Password)
+		token, err := pkg.JwtCreate(json_login.Name, json_login.Password, id)
 
 		if err != nil {
 			c.JSON(500, gin.H{"status": "Error create token", "Error": err,})
