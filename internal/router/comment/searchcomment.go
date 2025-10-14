@@ -8,12 +8,12 @@ import (
 )
 
 
-func EditComment(r *gin.RouterGroup) {
-	r.GET("/searchallcomment", SearchAllComment)
+func SearchUserComment(r *gin.RouterGroup) {
+	r.GET("/search", searchAllComment)
 
 }
 
-func SearchAllComment(c *gin.Context){
+func searchAllComment(c *gin.Context){
 	//Если есть такие поля записываем
 	id := c.Query("id")
 	//Если хеш не 1 то мы ищем в хеше

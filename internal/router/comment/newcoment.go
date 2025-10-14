@@ -1,4 +1,4 @@
-package wall
+package comment
 
 import (
 	jsonstr "thedekk/webapp/internal/json"
