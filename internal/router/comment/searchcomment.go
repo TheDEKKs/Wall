@@ -1,4 +1,4 @@
-package router
+package comment
 
 import (
 	"strconv"
@@ -8,7 +8,7 @@ import (
 )
 
 
-func EditComment(r *gin.Engine) {
+func EditComment(r *gin.RouterGroup) {
 	r.GET("/searchallcomment", SearchAllComment)
 
 }

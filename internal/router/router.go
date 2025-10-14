@@ -2,7 +2,10 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	 wall "thedekk/webapp/internal/router/wall"
+	wall "thedekk/webapp/internal/router/wall"
+	login "thedekk/webapp/internal/router/login"
+	comment "thedekk/webapp/internal/router/comment"
+
 )
 
 func InitRouter(rout_gin *gin.Engine) {
@@ -14,7 +17,14 @@ func InitRouter(rout_gin *gin.Engine) {
 		wall.WallViewer(wall_grup)
 		wall.EditWall(wall_grup)
 	}
-	Login(rout_gin)
-	EditComment(rout_gin)
+
+
+	login.Login(rout_gin)
+
+
+	comment_grup := rout_gin.Group("/comment")
+	{
+		comment.EditComment(comment_grup)
+	}
 
 }
