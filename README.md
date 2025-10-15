@@ -3,6 +3,10 @@ The project for to create a wall, where your friends could sign/comment.
 
 You can create account and wall, write comments, edit comment and wall, see all comments user and comments wall. 
 
+# UPDATES
+- Create new column "Id" in JWT Token 
+- Migration created with the help Goose
+- New URL
 
 ## Tools
 **Programming language:** *Golang* 
@@ -38,13 +42,13 @@ sudo dcoker-compose up --build
 | --- | --- | --- |
 | GET |  /wall/:id | Open wall |
 | GET | /searchallcomment | Search all comment |
-| PUT | /wall/editcomment | Update comment |
+| PUT | /comment/editcomment | Update comment |
 | PUT | /wall/editwall | Update wall |
-| POST | /wall/newcomment | New comment |
-| POST | /login | Login in app |
+| POST | /comment/newcomment  | New comment |
+| POST | /au/registration | Registration in app |
 
 
-- /wall/newcomment
+- /comment/newcomment 
   
   JSON Request:
  ```JSON
@@ -53,7 +57,7 @@ sudo dcoker-compose up --build
     "id_wall": 0
   ```
 
-- /login
+- /au/registration
 
  JSON Request:
   ```JSON
@@ -62,7 +66,7 @@ sudo dcoker-compose up --build
     "ID_Telegram": 0 
 ```
 
-- /wall/editcomment
+- /comment/editcomment 
 
  JSON Request:
   ```JSON
