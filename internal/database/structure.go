@@ -1,7 +1,5 @@
 package database
 
-import ("time")
-
 //Структура базы данных юзера
 type User struct {
 	// Данные акаунта 
@@ -9,7 +7,7 @@ type User struct {
 	Name_User string `gorm:"unique;not null"`
 	Id_Telegram int  `gorm:"unique;not null"`
 	Id_Wall int `gorm:"unique"`
-	password string 
+	Password string 
 }
 
 // Стурктура базы данных стены
@@ -33,8 +31,7 @@ type Comment struct {
 	Id_Commentator int `gorm:"not null" json"id_commentor"`
 
 	Text_Comment string `gorm:"size:128; not null" json"text"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	
 }
 
 

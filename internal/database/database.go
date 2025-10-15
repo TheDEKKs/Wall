@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	loger "thedekk/webapp/pkg/loger"
-
+	"github.com/pressly/goose/v3"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,11 +25,19 @@ func InitDB() {
 		loger.Zap.Warn(err.Error())
 
 	}
+
+	sqlDB, _ := db.DB()
+
+	if err := goose.Up(sqlDB, "./migration"); err != nil {
+		loger.Zap.Error("Error create migrate - "+err.Error())
+	}
+
+	/*
 	//Миграция
 	if err := db.AutoMigrate(&User{}, &Wall{}, &Comment{}); err != nil {
 		loger.Zap.Warn(err.Error())
 	}
-
+	*/
 	//CreateBase()
 
 }

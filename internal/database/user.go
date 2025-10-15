@@ -21,7 +21,7 @@ func ID_User(user_name string) (int, error) {
 func AddUser(Telegram_ID int, Username, password_user string) error {
 
 	//Создание записи
-	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000, password: password_user}
+	user := User{Name_User: Username, Id_Telegram: Telegram_ID, Id_Wall: 0000, Password: password_user}
 	//Создаем заппись
 	if err := db.Create(&user).Error; err != nil {
 		loger.Zap.Warn(err.Error())
