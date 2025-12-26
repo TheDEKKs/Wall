@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:17.6
+    restart: always
+    environment:
+      POSTGRES_USER: wall
+      POSTGRES_PASSWORD: wall
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data: {}
