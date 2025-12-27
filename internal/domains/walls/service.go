@@ -42,3 +42,7 @@ func (s *WallService) NewWall(ctx context.Context, userID uuid.UUID) (error) {
 
 	return nil
 } 
+
+func (s *WallService) GetWallByID(ctx context.Context, userID uuid.UUID) (uuid.UUID, error) {
+	return s.repo.GetWallIDByUserID(ctx, userID)
+}

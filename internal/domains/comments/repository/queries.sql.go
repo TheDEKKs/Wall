@@ -7,13 +7,24 @@ package repository
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
-const test = `-- name: Test :exec
-SELECT id, user_name, password_hash, registration_at FROM users
+const newComment = `-- name: NewComment :exec
+INSERT INTO comments 
+    (user_id, wall_id, text)
+VALUES 
+    ($1, $2, $3)
 `
 
-func (q *Queries) Test(ctx context.Context) error {
-	_, err := q.db.Exec(ctx, test)
+type NewCommentParams struct {
+	UserID uuid.UUID `json:"user_id"`
+	WallID uuid.UUID `json:"wall_id"`
+	Text   string    `json:"text"`
+}
+
+func (q *Queries) NewComment(ctx context.Context, arg NewCommentParams) error {
+	_, err := q.db.Exec(ctx, newComment, arg.UserID, arg.WallID, arg.Text)
 	return err
 }

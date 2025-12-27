@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/google/uuid"
@@ -15,22 +14,19 @@ type CookieCtx struct {
 func MyMiddleware(ctx huma.Context, next func(huma.Context)) {
 	var cookie CookieCtx
 
-	token, err := huma.ReadCookie(ctx, "token")
-	if err != nil {
-		fmt.Println(err)
-	}
-	userID, err := huma.ReadCookie(ctx, "user_id")
-	if err != nil {
-		fmt.Println(err)
-	}
+	token, err0 := huma.ReadCookie(ctx, "token")
 
-	cookie.Token = token.Value
-	cookie.UserID, err = uuid.Parse(userID.Value)
-	if err != nil {
-		fmt.Println(err)
-	}
+	userID, err1 := huma.ReadCookie(ctx, "user_id")
+	
+	if err0 == nil && err1 == nil {
+		cookie.Token = token.Value
+		cookie.UserID, _ = uuid.Parse(userID.Value)
 
-	ctx = huma.WithValue(ctx, "cookie", cookie)
+		ctx = huma.WithValue(ctx, "cookie", cookie)
+
+		next(ctx)
+
+	}
 
 	next(ctx)
 }

@@ -22,6 +22,17 @@ func (q *Queries) GetWallByUserID(ctx context.Context, userID uuid.UUID) (Wall, 
 	return i, err
 }
 
+const getWallIDByUserID = `-- name: GetWallIDByUserID :one
+SELECT id FROM walls WHERE user_id = $1
+`
+
+func (q *Queries) GetWallIDByUserID(ctx context.Context, userID uuid.UUID) (uuid.UUID, error) {
+	row := q.db.QueryRow(ctx, getWallIDByUserID, userID)
+	var id uuid.UUID
+	err := row.Scan(&id)
+	return id, err
+}
+
 const setWall = `-- name: SetWall :exec
 INSERT INTO walls 
     (user_id)

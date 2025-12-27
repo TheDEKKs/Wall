@@ -33,7 +33,7 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	userHandler := handlers.NewUserHandler(userService)
 
 	//COMMENT
-	commentService := comments.NewCommentService(conn)
+	commentService := comments.NewCommentService(conn, userService)
 	commentHandler := handlers.NewCommentHandler(commentService)
 
 	
@@ -54,8 +54,8 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	huma.Register(api, huma.Operation{
 		OperationID: "new-comment",
 		Method:      http.MethodPost,
-		Path:        "/comment",
-		Summary:     "login",
+		Path:        "/comment/{wall}",
+		Summary:     "comment",
 	}, commentHandler.NewComment)
 
 	// Start the server!

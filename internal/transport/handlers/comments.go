@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"thedekk/WWT/internal/domains/comments"
-	"thedekk/WWT/internal/transport/middlewares"
 )
 
 type CommentHandler struct {
@@ -17,11 +16,23 @@ func NewCommentHandler(commentService *comments.CommentsService) *CommentHandler
 	}
 }
 
+type NewCommentInput struct {
+	Wall    string `path:"wall"`
+	Body struct {
+		Comment  string `json:"comment"`
+	}
+}
 
-func (c *CommentHandler) NewComment(ctx context.Context, input *struct{}) (*struct{}, error) {
-	token := ctx.Value("cookie").(middlewares.CookieCtx)
+func (h *CommentHandler) NewComment(ctx context.Context, input *NewCommentInput) (*struct{}, error) {
+	if len(input.Body.Comment) > 500 {
+		return nil, fmt.Errorf("Error comment very big")
+	} else if len(input.Body.Comment) <= 0 {
+		return nil, fmt.Errorf("Comment is null")
+	}
 
-	fmt.Println(token.Token, token.UserID)
+	if err := h.commentService.NewComment(ctx, input.Wall, input.Body.Comment); err != nil {
+		return nil, err
+	}
 
 	return nil, nil
 }
