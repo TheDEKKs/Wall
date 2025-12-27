@@ -8,11 +8,26 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type Comment struct {
+	ID        uuid.UUID  `json:"id"`
+	UserID    uuid.UUID  `json:"user_id"`
+	WallID    uuid.UUID  `json:"wall_id"`
+	Text      string     `json:"text"`
+	CreatedAt *time.Time `json:"created_at"`
+}
 
 type User struct {
 	ID             uuid.UUID  `json:"id"`
 	UserName       string     `json:"user_name"`
 	PasswordHash   string     `json:"password_hash"`
 	RegistrationAt *time.Time `json:"registration_at"`
+}
+
+type Wall struct {
+	ID        uuid.UUID   `json:"id"`
+	UserID    pgtype.UUID `json:"user_id"`
+	CreatedAt *time.Time  `json:"created_at"`
 }

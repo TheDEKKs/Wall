@@ -45,7 +45,7 @@ var (
 	DoesNotExist = errors.New("Account does not exist")
 )
 
-func (s *UserService) RegistrationUser(ctx context.Context, userName, password string) (*string, error) {
+func (s *UserService) RegistrationUser(ctx context.Context, userName, password string) (*map[string]string, error) {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
 		return nil, err
@@ -80,12 +80,15 @@ func (s *UserService) RegistrationUser(ctx context.Context, userName, password s
 		return nil, err
 	}
 
-	return &token, nil
+	userCookie := map[string]string{
+		"Token": token,
+		"UserID": user.ID.String(),
+	}
+
+	return &userCookie, nil
 }
 
-func (s *UserService) LoginUser(ctx context.Context, userName, password string) (*string, error) {
-	
-
+func (s *UserService) LoginUser(ctx context.Context, userName, password string) (*map[string]string, error) {
 	user, err := s.repo.LoginUser(ctx, userName)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, DoesNotExist
@@ -105,5 +108,10 @@ func (s *UserService) LoginUser(ctx context.Context, userName, password string) 
 		return nil, err
 	}
 
-	return &token, nil
+	userCookie := map[string]string{
+		"Token": token,
+		"UserID": user.ID.String(),
+	}
+
+	return &userCookie, nil
 }

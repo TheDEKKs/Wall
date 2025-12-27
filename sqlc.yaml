@@ -38,3 +38,10 @@ sql:
       go:
         <<: *go_defaults
         out: internal/domains/comments/repository/
+
+  - <<: *default
+    queries: internal/domains/walls/repository/queries.sql
+    gen:
+      go:
+        <<: *go_defaults
+        out: internal/domains/walls/repository/

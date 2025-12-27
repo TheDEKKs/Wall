@@ -5,6 +5,7 @@ import (
 	"thedekk/WWT/internal/domains/comments"
 	"thedekk/WWT/internal/domains/users"
 	"thedekk/WWT/internal/transport/handlers"
+	"thedekk/WWT/internal/transport/middlewares"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
@@ -20,7 +21,7 @@ func NewService(conn *pgxpool.Pool) (error)  {
 
 	configAPI := huma.DefaultConfig("My API", "1.0.0")
 	api := humachi.New(router, configAPI)
-
+	api.UseMiddleware(middlewares.MyMiddleware)
 
 	
 	//USER
