@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Comment struct {
@@ -27,7 +26,7 @@ type User struct {
 }
 
 type Wall struct {
-	ID        uuid.UUID   `json:"id"`
-	UserID    pgtype.UUID `json:"user_id"`
-	CreatedAt *time.Time  `json:"created_at"`
+	ID        uuid.UUID  `json:"id"`
+	UserID    uuid.UUID  `json:"user_id"`
+	CreatedAt *time.Time `json:"created_at"`
 }

@@ -8,14 +8,14 @@ package repository
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const getWallByUserID = `-- name: GetWallByUserID :one
 SELECT id, user_id, created_at FROM walls WHERE user_id = $1
 `
 
-func (q *Queries) GetWallByUserID(ctx context.Context, userID pgtype.UUID) (Wall, error) {
+func (q *Queries) GetWallByUserID(ctx context.Context, userID uuid.UUID) (Wall, error) {
 	row := q.db.QueryRow(ctx, getWallByUserID, userID)
 	var i Wall
 	err := row.Scan(&i.ID, &i.UserID, &i.CreatedAt)
@@ -29,7 +29,7 @@ VALUES
     ($1)
 `
 
-func (q *Queries) SetWall(ctx context.Context, userID pgtype.UUID) error {
+func (q *Queries) SetWall(ctx context.Context, userID uuid.UUID) error {
 	_, err := q.db.Exec(ctx, setWall, userID)
 	return err
 }

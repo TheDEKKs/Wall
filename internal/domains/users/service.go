@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"thedekk/WWT/internal/domains/users/repository"
+	"thedekk/WWT/internal/domains/walls"
 	"thedekk/WWT/internal/security"
 
 	"github.com/jackc/pgx/v5"
@@ -19,16 +20,18 @@ type DBTX interface {
 }
 
 type UserService struct {
-	db   DBTX
-	repo *repository.Queries
+	db          DBTX
+	repo        *repository.Queries
+	wallService *walls.WallService
 }
 
-func NewUserService(db DBTX) *UserService {
+func NewUserService(db DBTX, wallService *walls.WallService) *UserService {
 	repo := repository.New(db)
 
 	return &UserService{
-		db:   db,
-		repo: repo,
+		db:          db,
+		repo:        repo,
+		wallService: wallService,
 	}
 }
 
@@ -76,12 +79,18 @@ func (s *UserService) RegistrationUser(ctx context.Context, userName, password s
 		return nil, err
 	}
 
+	wallTx := s.wallService.WithTx(tx)
+
+	if err := wallTx.NewWall(ctx, user.ID); err != nil {
+		return nil, err
+	}
+
 	if err := tx.Commit(ctx); err != nil {
 		return nil, err
 	}
 
 	userCookie := map[string]string{
-		"Token": token,
+		"Token":  token,
 		"UserID": user.ID.String(),
 	}
 
@@ -102,14 +111,13 @@ func (s *UserService) LoginUser(ctx context.Context, userName, password string) 
 		return nil, err
 	}
 
-
 	token, err := security.JwtCreate(user.PasswordHash, user.ID)
 	if err != nil {
 		return nil, err
 	}
 
 	userCookie := map[string]string{
-		"Token": token,
+		"Token":  token,
 		"UserID": user.ID.String(),
 	}
 

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"thedekk/WWT/internal/domains/comments"
 	"thedekk/WWT/internal/domains/users"
+	"thedekk/WWT/internal/domains/walls"
 	"thedekk/WWT/internal/transport/handlers"
 	"thedekk/WWT/internal/transport/middlewares"
 
@@ -23,9 +24,12 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	api := humachi.New(router, configAPI)
 	api.UseMiddleware(middlewares.MyMiddleware)
 
+	//WALL
+	wallService := walls.NewWallService(conn)
+
 	
 	//USER
-	userService := users.NewUserService(conn)
+	userService := users.NewUserService(conn, wallService)
 	userHandler := handlers.NewUserHandler(userService)
 
 	//COMMENT

@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE walls (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID UNIQUE REFERENCES users(id),
+    user_id UUID UNIQUE NOT NULL REFERENCES users(id),
     created_at TIMESTAMPTZ DEFAULT now()
 
 );
