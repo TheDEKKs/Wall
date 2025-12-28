@@ -15,25 +15,22 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-
-func NewService(conn *pgxpool.Pool) (error)  {
+func NewService(conn *pgxpool.Pool) error {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
 	configAPI := huma.DefaultConfig("My API", "1.0.0")
 	api := humachi.New(router, configAPI)
 	api.UseMiddleware(middlewares.MyMiddleware)
-	
+
 	wallService := walls.NewWallService(conn)
 	userService := users.NewUserService(conn, wallService)
 	commentService := comments.NewCommentService(conn, userService)
-
 
 	userHandler := handlers.NewUserHandler(userService)
 	commentHandler := handlers.NewCommentHandler(commentService)
 	wallHandler := handlers.NewWallHandler(wallService, commentService)
 
-	
 	huma.Register(api, huma.Operation{
 		OperationID: "registration",
 		Method:      http.MethodPost,

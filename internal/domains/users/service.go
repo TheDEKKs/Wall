@@ -125,9 +125,8 @@ func (s *UserService) LoginUser(ctx context.Context, userName, password string) 
 	return &userCookie, nil
 }
 
-
 func (s *UserService) GetWallIDByUserName(ctx context.Context, userName string) (*uuid.UUID, error) {
-	userID, err :=  s.repo.GetUserIDByUserName(ctx, userName) 
+	userID, err := s.repo.GetUserIDByUserName(ctx, userName)
 	if err != nil {
 		return nil, err
 	}

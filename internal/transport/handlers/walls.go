@@ -7,14 +7,14 @@ import (
 )
 
 type WallHandler struct {
-	wallService *walls.WallService
+	wallService    *walls.WallService
 	commentService *comments.CommentsService
 }
 
 func NewWallHandler(wallService *walls.WallService, commentService *comments.CommentsService) *WallHandler {
 	return &WallHandler{
 		commentService: commentService,
-		wallService: wallService,
+		wallService:    wallService,
 	}
 }
 
@@ -22,7 +22,9 @@ type CommentsWallOut struct {
 	Body []comments.Comments
 }
 
-func (h *WallHandler) GetCommentsWall(ctx context.Context, input *struct{Wall string `path:"wall"`}) (*CommentsWallOut, error) {
+func (h *WallHandler) GetCommentsWall(ctx context.Context, input *struct {
+	Wall string `path:"wall"`
+}) (*CommentsWallOut, error) {
 	comment, err := h.commentService.GetCommentsWall(ctx, input.Wall)
 	if err != nil {
 		return nil, err

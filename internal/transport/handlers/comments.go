@@ -17,9 +17,9 @@ func NewCommentHandler(commentService *comments.CommentsService) *CommentHandler
 }
 
 type NewCommentInput struct {
-	Wall    string `path:"wall"`
+	Wall string `path:"wall"`
 	Body struct {
-		Comment  string `json:"comment"`
+		Comment string `json:"comment"`
 	}
 }
 
