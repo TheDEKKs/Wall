@@ -48,7 +48,7 @@ func (h *UserHandler) RegistrationUser(ctx context.Context, input *RegistrationU
 	}, http.Cookie{
 		Name:  "user_id",
 		Value: (*userCookie)["UserID"],
-		MaxAge:   10, 
+		MaxAge:   14 * 24 * 60 * 60,
 	}, )
 
 	return &userCookieOut, nil

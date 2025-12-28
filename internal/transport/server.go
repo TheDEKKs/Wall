@@ -23,18 +23,15 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	configAPI := huma.DefaultConfig("My API", "1.0.0")
 	api := humachi.New(router, configAPI)
 	api.UseMiddleware(middlewares.MyMiddleware)
-
-	//WALL
-	wallService := walls.NewWallService(conn)
-
 	
-	//USER
+	wallService := walls.NewWallService(conn)
 	userService := users.NewUserService(conn, wallService)
-	userHandler := handlers.NewUserHandler(userService)
-
-	//COMMENT
 	commentService := comments.NewCommentService(conn, userService)
+
+
+	userHandler := handlers.NewUserHandler(userService)
 	commentHandler := handlers.NewCommentHandler(commentService)
+	wallHandler := handlers.NewWallHandler(wallService, commentService)
 
 	
 	huma.Register(api, huma.Operation{
@@ -54,9 +51,16 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	huma.Register(api, huma.Operation{
 		OperationID: "new-comment",
 		Method:      http.MethodPost,
-		Path:        "/comment/{wall}",
+		Path:        "/comment/new/{wall}",
 		Summary:     "comment",
 	}, commentHandler.NewComment)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "wall-comments",
+		Method:      http.MethodPost,
+		Path:        "/{wall}/comments",
+		Summary:     "wall-Comments",
+	}, wallHandler.GetCommentsWall)
 
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)
