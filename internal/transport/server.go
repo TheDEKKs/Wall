@@ -15,8 +15,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-
-func NewService(conn *pgxpool.Pool) (error)  {
+func NewService(conn *pgxpool.Pool) error {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
@@ -24,19 +23,14 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	api := humachi.New(router, configAPI)
 	api.UseMiddleware(middlewares.MyMiddleware)
 
-	//WALL
 	wallService := walls.NewWallService(conn)
-
-	
-	//USER
 	userService := users.NewUserService(conn, wallService)
-	userHandler := handlers.NewUserHandler(userService)
-
-	//COMMENT
 	commentService := comments.NewCommentService(conn, userService)
-	commentHandler := handlers.NewCommentHandler(commentService)
 
-	
+	userHandler := handlers.NewUserHandler(userService)
+	commentHandler := handlers.NewCommentHandler(commentService)
+	wallHandler := handlers.NewWallHandler(wallService, commentService)
+
 	huma.Register(api, huma.Operation{
 		OperationID: "registration",
 		Method:      http.MethodPost,
@@ -54,9 +48,16 @@ func NewService(conn *pgxpool.Pool) (error)  {
 	huma.Register(api, huma.Operation{
 		OperationID: "new-comment",
 		Method:      http.MethodPost,
-		Path:        "/comment/{wall}",
+		Path:        "/comment/new/{wall}",
 		Summary:     "comment",
 	}, commentHandler.NewComment)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "wall-comments",
+		Method:      http.MethodPost,
+		Path:        "/{wall}/comments",
+		Summary:     "wall-Comments",
+	}, wallHandler.GetCommentsWall)
 
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)
