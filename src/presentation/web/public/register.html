@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall - Регистрация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --eva-purple: #9933ff;
+            --eva-orange: #ff6600;
+            --eva-green: #00ff00;
+            --eva-red: #ff0000;
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #666666;
+            --border-color: #333333;
+            --warning-yellow: #ffff00;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 2rem 0;
+        }
+
+        .eva-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(153, 51, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(153, 51, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .register-container {
+            background: var(--bg-dark);
+            border: 2px solid var(--eva-purple);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 50px rgba(153, 51, 255, 0.3);
+            animation: slideIn 0.5s ease;
+            margin: 2rem auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .corner-marks {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--eva-orange);
+        }
+
+        .corner.top-left {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner.top-right {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner.bottom-left {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner.bottom-right {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .register-header {
+            padding: 3rem 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .register-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--eva-purple);
+        }
+
+        .register-subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.3rem;
+            color: var(--text-muted);
+        }
+
+        .register-content {
+            padding: 3rem 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            letter-spacing: 0.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-label.optional {
+            color: var(--text-muted);
+        }
+
+        .form-label.optional::after {
+            content: ' (ОПЦИОНАЛЬНО)';
+            font-size: 0.7rem;
+            color: var(--eva-green);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--eva-purple);
+            box-shadow: 0 0 10px rgba(153, 51, 255, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.1rem;
+            display: none;
+        }
+
+        .password-strength.active {
+            display: block;
+        }
+
+        .password-strength.weak {
+            color: var(--eva-red);
+        }
+
+        .password-strength.medium {
+            color: var(--eva-orange);
+        }
+
+        .password-strength.strong {
+            color: var(--eva-green);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: var(--eva-purple);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+        }
+
+        .submit-button:hover {
+            box-shadow: 0 0 20px rgba(153, 51, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .register-footer {
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-link {
+            color: var(--eva-orange);
+            text-decoration: none;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--eva-purple);
+            text-shadow: 0 0 10px rgba(153, 51, 255, 0.5);
+        }
+
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link:hover {
+            color: var(--eva-purple);
+            transform: translateX(-5px);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--eva-red);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--eva-red);
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .info-box {
+            background: rgba(255, 165, 0, 0.05);
+            border: 1px solid var(--eva-orange);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.05rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .info-box strong {
+            color: var(--eva-orange);
+        }
+
+        @media (max-width: 768px) {
+            .register-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.3rem;
+            }
+
+            .register-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="eva-grid"></div>
+    
+    <a href="index.html" class="back-link">
+        <span>←</span>
+        <span>НАЗАД</span>
+    </a>
+
+    <div class="register-container">
+        <div class="corner-marks">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+        </div>
+
+        <div class="register-header">
+            <h1 class="register-title">РЕГИСТРАЦИЯ</h1>
+            <p class="register-subtitle">СОЗДАНИЕ АККАУНТА</p>
+        </div>
+
+        <div class="register-content">
+            <div class="error-message" id="errorMessage">
+                ⚠ ОШИБКА: ПРОВЕРЬТЕ ВВЕДЁННЫЕ ДАННЫЕ
+            </div>
+
+            <div class="info-box">
+                <strong>⚠ ВНИМАНИЕ:</strong> Имя пользователя должно быть уникальным. Пароль должен содержать минимум 8 символов. Telegram можно добавить позже в настройках.
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Имя пользователя</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Введите username"
+                        required
+                        minlength="3"
+                        maxlength="20"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Пароль</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Минимум 8 символов"
+                        required
+                        minlength="8"
+                    >
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Повторите пароль</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="form-input" 
+                        placeholder="Повторите пароль"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label optional" for="telegram">Telegram</label>
+                    <input 
+                        type="text" 
+                        id="telegram" 
+                        name="telegram" 
+                        class="form-input" 
+                        placeholder="@username или оставьте пустым"
+                    >
+                </div>
+
+                <button type="submit" class="submit-button" id="submitBtn">
+                    СОЗДАТЬ АККАУНТ →
+                </button>
+            </form>
+        </div>
+
+        <div class="register-footer">
+            <p>УЖЕ ЕСТЬ АККАУНТ? <a href="login.html" class="footer-link">ВОЙТИ</a></p>
+        </div>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Password strength checker
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            
+            if (password.length === 0) {
+                passwordStrength.classList.remove('active');
+                return;
+            }
+
+            passwordStrength.classList.add('active');
+
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+            passwordStrength.className = 'password-strength active';
+            
+            if (strength <= 2) {
+                passwordStrength.classList.add('weak');
+                passwordStrength.textContent = '⚠ СЛАБЫЙ ПАРОЛЬ';
+            } else if (strength <= 4) {
+                passwordStrength.classList.add('medium');
+                passwordStrength.textContent = '⚡ СРЕДНИЙ ПАРОЛЬ';
+            } else {
+                passwordStrength.classList.add('strong');
+                passwordStrength.textContent = '✓ СИЛЬНЫЙ ПАРОЛЬ';
+            }
+        });
+
+        // Form validation and submission
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const telegram = document.getElementById('telegram').value;
+
+            // Validation
+            if (username.length < 3) {
+                showError('Имя пользователя слишком короткое');
+                return;
+            }
+
+            if (password.length < 8) {
+                showError('Пароль должен содержать минимум 8 символов');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Пароли не совпадают');
+                return;
+            }
+
+            // Success
+            console.log('Registration data:', {
+                username,
+                password,
+                telegram: telegram || null
+            });
+
+            // Здесь будет отправка на сервер
+            // После успешной регистрации - редирект на логин
+            // window.location.href = 'login.html';
+            
+            alert('Регистрация успешна! (это демо-версия)');
+        });
+
+        function showError(message) {
+            errorMessage.textContent = `⚠ ОШИБКА: ${message.toUpperCase()}`;
+            errorMessage.classList.add('active');
+            
+            setTimeout(() => {
+                errorMessage.classList.remove('active');
+            }, 4000);
+        }
+
+        // Real-time password match validation
+        confirmPasswordInput.addEventListener('input', () => {
+            if (confirmPasswordInput.value && passwordInput.value !== confirmPasswordInput.value) {
+                confirmPasswordInput.style.borderColor = 'var(--eva-red)';
+            } else {
+                confirmPasswordInput.style.borderColor = 'var(--border-color)';
+            }
+        });
+
+        // Console easter egg
+        console.log('%c WALL REGISTRATION SYSTEM ', 'background: #9933ff; color: #fff; font-size: 16px; padding: 5px;');
+        console.log('%c NEW USER PROTOCOL ACTIVE ', 'background: #ff6600; color: #000; font-size: 12px; padding: 5px;');
+    </script>
+</body>
+</html>

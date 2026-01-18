@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall - Вход</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --eva-purple: #9933ff;
+            --eva-orange: #ff6600;
+            --eva-green: #00ff00;
+            --eva-red: #ff0000;
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #666666;
+            --border-color: #333333;
+            --warning-yellow: #ffff00;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .eva-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(153, 51, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(153, 51, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .login-container {
+            background: var(--bg-dark);
+            border: 2px solid var(--eva-purple);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 50px rgba(153, 51, 255, 0.3);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .corner-marks {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--eva-orange);
+        }
+
+        .corner.top-left {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner.top-right {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner.bottom-left {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner.bottom-right {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .login-header {
+            padding: 3rem 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--eva-purple);
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.3rem;
+            color: var(--text-muted);
+        }
+
+        .login-content {
+            padding: 3rem 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            letter-spacing: 0.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--eva-purple);
+            box-shadow: 0 0 10px rgba(153, 51, 255, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider-text {
+            background: var(--bg-dark);
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+            color: var(--text-muted);
+            letter-spacing: 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: var(--eva-purple);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+        }
+
+        .submit-button:hover {
+            box-shadow: 0 0 20px rgba(153, 51, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .tg-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: rgba(0, 136, 204, 0.1);
+            border: 2px solid #0088cc;
+            color: #0088cc;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .tg-button:hover {
+            background: rgba(0, 136, 204, 0.2);
+            border-color: #0099e6;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .login-footer {
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .footer-link {
+            color: var(--eva-orange);
+            text-decoration: none;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--eva-purple);
+            text-shadow: 0 0 10px rgba(153, 51, 255, 0.5);
+        }
+
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link:hover {
+            color: var(--eva-purple);
+            transform: translateX(-5px);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--eva-red);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--eva-red);
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .login-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.3rem;
+            }
+
+            .login-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="eva-grid"></div>
+    
+    <a href="index.html" class="back-link">
+        <span>←</span>
+        <span>НАЗАД</span>
+    </a>
+
+    <div class="login-container">
+        <div class="corner-marks">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+        </div>
+
+        <div class="login-header">
+            <h1 class="login-title">ВХОД</h1>
+            <p class="login-subtitle">ДОСТУП К СИСТЕМЕ</p>
+        </div>
+
+        <div class="login-content">
+            <div class="error-message" id="errorMessage">
+                ⚠ ОШИБКА: НЕВЕРНЫЕ ДАННЫЕ
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Имя пользователя</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Введите username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Пароль</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Введите пароль"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="submit-button">
+                    ВОЙТИ →
+                </button>
+            </form>
+
+            <div class="divider">
+                <span class="divider-text">ИЛИ</span>
+            </div>
+
+            <button class="tg-button" id="tgLoginBtn">
+                <span>📱</span>
+                <span>ВОЙТИ ЧЕРЕЗ TELEGRAM</span>
+            </button>
+        </div>
+
+        <div class="login-footer">
+            <p>НЕТ АККАУНТА? <a href="register.html" class="footer-link">РЕГИСТРАЦИЯ</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Здесь будет отправка на сервер
+            console.log('Login attempt:', { username, password });
+
+            // Пример обработки ошибки
+            if (!username || !password) {
+                errorMessage.classList.add('active');
+                setTimeout(() => {
+                    errorMessage.classList.remove('active');
+                }, 3000);
+            } else {
+                // Успешный вход - редирект на главную страницу профиля
+                console.log('Login successful!');
+                // window.location.href = '/dashboard';
+            }
+        });
+
+        // Telegram login
+        const tgLoginBtn = document.getElementById('tgLoginBtn');
+        tgLoginBtn.addEventListener('click', () => {
+            console.log('Telegram login initiated');
+            // Здесь будет логика входа через Telegram
+            // Например, открытие окна авторизации Telegram
+        });
+
+        // Console easter egg
+        console.log('%c WALL LOGIN SYSTEM ', 'background: #9933ff; color: #fff; font-size: 16px; padding: 5px;');
+        console.log('%c ACCESS LEVEL: GUEST ', 'background: #ff6600; color: #000; font-size: 12px; padding: 5px;');
+    </script>
+</body>
+</html>

@@ -498,6 +498,253 @@
             margin: 0.5rem 0;
         }
 
+        /* Auth Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: var(--bg-dark);
+            border: 2px solid var(--eva-purple);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            animation: modalSlide 0.4s ease;
+            box-shadow: 0 0 50px rgba(153, 51, 255, 0.3);
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--eva-red);
+            color: var(--eva-red);
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            background: var(--eva-red);
+            color: var(--bg-dark);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            padding: 3rem 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--eva-orange);
+        }
+
+        .modal-corner.top-left {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .modal-corner.top-right {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .modal-corner.bottom-left {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .modal-corner.bottom-right {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px var(--eva-purple);
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.3rem;
+            color: var(--text-muted);
+        }
+
+        .modal-content {
+            padding: 3rem 2rem;
+        }
+
+        .auth-options {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .auth-button {
+            background: rgba(153, 51, 255, 0.05);
+            border: 2px solid var(--border-color);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(153, 51, 255, 0.1);
+            transition: left 0.3s ease;
+        }
+
+        .auth-button:hover {
+            border-color: var(--eva-purple);
+            transform: translateX(10px);
+        }
+
+        .auth-button:hover::before {
+            left: 0;
+        }
+
+        .register-btn:hover {
+            border-color: var(--eva-orange);
+        }
+
+        .login-btn:hover {
+            border-color: var(--eva-green);
+        }
+
+        .auth-icon {
+            font-size: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            color: var(--text-primary);
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-arrow {
+            font-size: 1.5rem;
+            color: var(--eva-purple);
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-button:hover .auth-arrow {
+            transform: translateX(10px);
+        }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider-text {
+            background: var(--bg-dark);
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+            color: var(--text-muted);
+            letter-spacing: 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        .modal-footer {
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-info {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.1rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .section-number {
@@ -530,6 +777,20 @@
             .warning-box {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .modal-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.3rem;
+            }
+
+            .auth-text {
+                font-size: 1.2rem;
+                letter-spacing: 0.2rem;
+            }
+
+            .auth-button {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -632,7 +893,7 @@
                 </a>
                 <a href="#" class="social-card">
                     <div class="social-icon">💬</div>
-                    <div class="social-name">ПОДДЕРЖКА В TELEGRAM</div>
+                    <div class="social-name">ПОДДЕРЖКА TG</div>
                     <div class="social-status">ACTIVE</div>
                 </a>
             </div>
@@ -646,7 +907,7 @@
                 <div class="warning-stripes"></div>
                 <p class="cta-text">ГОТОВ СОЗДАТЬ СВОЮ СТЕНУ?</p>
             </div>
-            <button class="cta-button">
+            <button class="cta-button" id="startButton">
                 <span class="button-text">НАЧАТЬ</span>
                 <span class="button-arrow">→</span>
             </button>
@@ -656,6 +917,46 @@
             </div>
         </div>
     </section>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-container">
+            <button class="modal-close" id="closeModal">×</button>
+            
+            <div class="modal-header">
+                <div class="modal-corner top-left"></div>
+                <div class="modal-corner top-right"></div>
+                <h2 class="modal-title">WALL SYSTEM</h2>
+                <p class="modal-subtitle">ДОСТУП К СИСТЕМЕ</p>
+            </div>
+
+            <div class="modal-content">
+                <div class="auth-options">
+                    <button class="auth-button register-btn">
+                        <span class="auth-icon">📝</span>
+                        <span class="auth-text">РЕГИСТРАЦИЯ</span>
+                        <span class="auth-arrow">→</span>
+                    </button>
+                    
+                    <div class="divider">
+                        <span class="divider-text">ИЛИ</span>
+                    </div>
+                    
+                    <button class="auth-button login-btn">
+                        <span class="auth-icon">🔓</span>
+                        <span class="auth-text">ВОЙТИ</span>
+                        <span class="auth-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="modal-corner bottom-left"></div>
+                <div class="modal-corner bottom-right"></div>
+                <p class="modal-info">ВЫБЕРИТЕ ДЕЙСТВИЕ ДЛЯ ПРОДОЛЖЕНИЯ</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Typing animation for hero section
@@ -762,6 +1063,51 @@
         // CTA Button
         document.querySelector('.cta-button')?.addEventListener('click', () => {
             console.log('Starting Wall creation...');
+        });
+
+        // Auth Modal functionality
+        const authModal = document.getElementById('authModal');
+        const startButton = document.getElementById('startButton');
+        const closeModal = document.getElementById('closeModal');
+        const registerBtn = document.querySelector('.register-btn');
+        const loginBtn = document.querySelector('.login-btn');
+
+        // Open modal
+        startButton?.addEventListener('click', () => {
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close modal
+        closeModal?.addEventListener('click', () => {
+            authModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close on overlay click
+        authModal?.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && authModal.classList.contains('active')) {
+                authModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Register button
+        registerBtn?.addEventListener('click', () => {
+            window.location.href = 'register.html';
+        });
+
+        // Login button
+        loginBtn?.addEventListener('click', () => {
+            window.location.href = 'login.html';
         });
 
         // Random glitch effect
