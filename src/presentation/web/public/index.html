@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall - Пиши на стены</title>
+    <style>
+        /* Evangelion-inspired minimal design */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* EVA Color Palette */
+            --eva-purple: #9933ff;
+            --eva-orange: #ff6600;
+            --eva-green: #00ff00;
+            --eva-red: #ff0000;
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #666666;
+            --border-color: #333333;
+            --warning-yellow: #ffff00;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 4rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--bg-darker);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .eva-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(153, 51, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(153, 51, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: 1rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px var(--eva-purple);
+            animation: glitch 3s infinite;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            letter-spacing: 0.5rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            border-left: 3px solid var(--eva-orange);
+            padding-left: 1rem;
+            display: inline-block;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                transform: translate(0);
+            }
+            92% {
+                transform: translate(-2px, 2px);
+            }
+            94% {
+                transform: translate(2px, -2px);
+            }
+            96% {
+                transform: translate(-2px, -2px);
+            }
+        }
+
+        /* Corner Marks */
+        .corner-marks {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--eva-purple);
+        }
+
+        .corner.top-left {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner.top-right {
+            top: 20px;
+            right: 20px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .scroll-text {
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            color: var(--text-muted);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: var(--eva-purple);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.5); }
+        }
+
+        /* Section Number */
+        .section-number {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-size: 6rem;
+            font-weight: 900;
+            color: rgba(153, 51, 255, 0.1);
+            line-height: 1;
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: 0.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-primary);
+        }
+
+        .title-line {
+            width: 60px;
+            height: 3px;
+            background: var(--eva-orange);
+        }
+
+        /* About Section */
+        .about-section {
+            background: var(--bg-dark);
+        }
+
+        .about-content {
+            margin-bottom: 3rem;
+        }
+
+        .about-text {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            line-height: 2;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            border-left: 2px solid var(--eva-purple);
+            padding-left: 2rem;
+        }
+
+        .warning-box {
+            background: rgba(255, 255, 0, 0.05);
+            border: 2px solid var(--warning-yellow);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .warning-icon {
+            font-size: 3rem;
+            color: var(--warning-yellow);
+        }
+
+        .warning-box p {
+            font-size: 1.1rem;
+            letter-spacing: 0.1rem;
+            color: var(--warning-yellow);
+            font-weight: bold;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: var(--bg-darker);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(153, 51, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--eva-purple);
+            transition: width 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--eva-purple);
+            transform: translateY(-5px);
+        }
+
+        .feature-card:hover::before {
+            width: 100%;
+        }
+
+        .feature-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(153, 51, 255, 0.3);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-text {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        /* Social Section */
+        .social-section {
+            background: var(--bg-dark);
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .social-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .social-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: rgba(153, 51, 255, 0.1);
+            transition: height 0.3s ease;
+        }
+
+        .social-card:hover {
+            border-color: var(--eva-purple);
+            transform: translateY(-5px);
+        }
+
+        .social-card:hover::after {
+            height: 100%;
+        }
+
+        .social-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-status {
+            font-size: 0.8rem;
+            color: var(--eva-green);
+            letter-spacing: 0.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--bg-darker);
+            position: relative;
+        }
+
+        .cta-content {
+            text-align: center;
+        }
+
+        .cta-warning {
+            background: var(--bg-dark);
+            border: 3px solid var(--warning-yellow);
+            padding: 2rem 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .warning-stripes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 0, 0.05) 10px,
+                rgba(255, 255, 0, 0.05) 20px
+            );
+            pointer-events: none;
+        }
+
+        .cta-text {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 900;
+            letter-spacing: 0.3rem;
+            color: var(--warning-yellow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button {
+            background: var(--eva-purple);
+            color: var(--text-primary);
+            border: none;
+            padding: 1.5rem 4rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(153, 51, 255, 0.5);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .button-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover .button-arrow {
+            transform: translateX(10px);
+        }
+
+        .cta-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .cta-footer p {
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-number {
+                font-size: 3rem;
+                top: 20px;
+                left: 20px;
+            }
+            
+            .hero-title {
+                letter-spacing: 0.5rem;
+            }
+            
+            .hero-subtitle {
+                letter-spacing: 0.2rem;
+            }
+            
+            .section-title {
+                letter-spacing: 0.2rem;
+            }
+            
+            .features-grid,
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-text {
+                padding-left: 1rem;
+            }
+            
+            .warning-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="section hero-section">
+        <div class="eva-grid"></div>
+        <div class="hero-content">
+            <h1 class="hero-title" id="hero-title"></h1>
+            <p class="hero-subtitle" id="hero-subtitle"></p>
+        </div>
+        <div class="scroll-indicator">
+            <span class="scroll-text">SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+        <div class="corner-marks">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about-section">
+        <div class="section-number">01</div>
+        <div class="content-wrapper">
+            <h2 class="section-title">
+                <span class="title-line"></span>
+                О ЧЁМ WALL?
+            </h2>
+            <div class="about-content">
+                <p class="about-text">
+                    Твоя личная стена в цифровом пространстве. 
+                    Место, где твои друзья могут оставить свой след — 
+                    написать всё, что думают о тебе, поделиться воспоминаниями, 
+                    признаться в чём-то важном.
+                </p>
+                <p class="about-text">
+                    Без масок. Без фильтров. Только искренность.
+                </p>
+            </div>
+            <div class="warning-box">
+                <div class="warning-icon">⚠</div>
+                <p>КАЖДОЕ СООБЩЕНИЕ — ЭТО СВЯЗЬ МЕЖДУ ЛЮДЬМИ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section features-section">
+        <div class="section-number">02</div>
+        <div class="content-wrapper">
+            <h2 class="section-title">
+                <span class="title-line"></span>
+                ВОЗМОЖНОСТИ
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3 class="feature-title">ОТКРЫТОСТЬ</h3>
+                    <p class="feature-text">Друзья пишут от своего имени — честно и искренне</p>
+                    <div class="feature-icon">✍️</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3 class="feature-title">ЛИЧНАЯ СТЕНА</h3>
+                    <p class="feature-text">Твоё уникальное пространство для воспоминаний</p>
+                    <div class="feature-icon">🧱</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3 class="feature-title">СВЯЗЬ</h3>
+                    <p class="feature-text">Укрепляй отношения через искренние послания</p>
+                    <div class="feature-icon">💭</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Section -->
+    <section class="section social-section">
+        <div class="section-number">03</div>
+        <div class="content-wrapper">
+            <h2 class="section-title">
+                <span class="title-line"></span>
+                СВЯЗЬ
+            </h2>
+            <div class="social-grid">
+                <a href="#" class="social-card">
+                    <div class="social-icon">📱</div>
+                    <div class="social-name">TELEGRAM</div>
+                    <div class="social-status">ACTIVE</div>
+                </a>
+                <a href="#" class="social-card">
+                    <div class="social-icon">✉️</div>
+                    <div class="social-name">EMAIL</div>
+                    <div class="social-status">ACTIVE</div>
+                </a>
+                <a href="#" class="social-card">
+                    <div class="social-icon">💬</div>
+                    <div class="social-name">ПОДДЕРЖКА В TELEGRAM</div>
+                    <div class="social-status">ACTIVE</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+        <div class="cta-content">
+            <div class="cta-warning">
+                <div class="warning-stripes"></div>
+                <p class="cta-text">ГОТОВ СОЗДАТЬ СВОЮ СТЕНУ?</p>
+            </div>
+            <button class="cta-button">
+                <span class="button-text">НАЧАТЬ</span>
+                <span class="button-arrow">→</span>
+            </button>
+            <div class="cta-footer">
+                <p>WALL SYSTEM v1.0.0</p>
+                <p>© 2026 ALL RIGHTS RESERVED</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Typing animation for hero section
+        const heroTitle = document.getElementById('hero-title');
+        const heroSubtitle = document.getElementById('hero-subtitle');
+
+        const titleText = 'WALL';
+        const subtitleText = 'ПИШИ НА СТЕНЫ';
+
+        let titleIndex = 0;
+        let subtitleIndex = 0;
+
+        // Type title
+        function typeTitle() {
+            if (titleIndex < titleText.length) {
+                heroTitle.textContent += titleText.charAt(titleIndex);
+                titleIndex++;
+                setTimeout(typeTitle, 200);
+            } else {
+                setTimeout(typeSubtitle, 500);
+            }
+        }
+
+        // Type subtitle
+        function typeSubtitle() {
+            if (subtitleIndex < subtitleText.length) {
+                heroSubtitle.textContent += subtitleText.charAt(subtitleIndex);
+                subtitleIndex++;
+                setTimeout(typeSubtitle, 100);
+            } else {
+                heroSubtitle.style.borderRight = '2px solid #fff';
+                setInterval(() => {
+                    heroSubtitle.style.borderRight = 
+                        heroSubtitle.style.borderRight === '2px solid #fff' 
+                        ? '2px solid transparent' 
+                        : '2px solid #fff';
+                }, 500);
+            }
+        }
+
+        // Start typing animation
+        window.addEventListener('load', () => {
+            setTimeout(typeTitle, 500);
+        });
+
+        // Smooth scroll
+        document.querySelector('.scroll-indicator')?.addEventListener('click', () => {
+            const aboutSection = document.querySelector('.about-section');
+            aboutSection?.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const sectionNumbers = document.querySelectorAll('.section-number');
+            
+            sectionNumbers.forEach((number) => {
+                const speed = 0.5;
+                const yPos = -(scrolled * speed);
+                number.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+
+        // Fade-in animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll(
+                '.feature-card, .social-card, .about-text, .warning-box'
+            );
+            
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Glitch effect
+        heroTitle?.addEventListener('mouseenter', () => {
+            let glitchInterval = setInterval(() => {
+                heroTitle.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+            }, 50);
+            
+            setTimeout(() => {
+                clearInterval(glitchInterval);
+                heroTitle.style.transform = 'translate(0, 0)';
+            }, 300);
+        });
+
+        // CTA Button
+        document.querySelector('.cta-button')?.addEventListener('click', () => {
+            console.log('Starting Wall creation...');
+        });
+
+        // Random glitch effect
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                document.body.style.filter = 'hue-rotate(180deg)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 50);
+            }
+        }, 3000);
+
+        // Console easter egg
+        console.log('%c WALL SYSTEM INITIALIZED ', 'background: #9933ff; color: #fff; font-size: 20px; padding: 10px;');
+        console.log('%c VERSION 1.0.0 ', 'background: #000; color: #00ff00; font-size: 14px; padding: 5px;');
+        console.log('%c NERV APPROVED ', 'background: #ff6600; color: #000; font-size: 12px; padding: 5px;');
+    </script>
+</body>
+</html>
