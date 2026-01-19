@@ -366,7 +366,7 @@
             </div>
 
             <div class="info-box">
-                <strong>⚠ ВНИМАНИЕ:</strong> Имя пользователя должно быть уникальным. Пароль должен содержать минимум 8 символов. Telegram можно добавить позже в настройках.
+                <strong>⚠ ВНИМАНИЕ:</strong> Имя пользователя должно быть уникальным. Пароль должен содержать минимум 8 символов.
             </div>
 
             <form id="registerForm">
@@ -410,17 +410,6 @@
                     >
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label optional" for="telegram">Telegram</label>
-                    <input 
-                        type="text" 
-                        id="telegram" 
-                        name="telegram" 
-                        class="form-input" 
-                        placeholder="@username или оставьте пустым"
-                    >
-                </div>
-
                 <button type="submit" class="submit-button" id="submitBtn">
                     СОЗДАТЬ АККАУНТ →
                 </button>
@@ -439,6 +428,7 @@
         const confirmPasswordInput = document.getElementById('confirmPassword');
         const passwordStrength = document.getElementById('passwordStrength');
         const submitBtn = document.getElementById('submitBtn');
+        const API_BASE_URL = 'http://127.0.0.1:8888';
 
         // Password strength checker
         passwordInput.addEventListener('input', () => {
@@ -473,13 +463,12 @@
         });
 
         // Form validation and submission
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
-            const telegram = document.getElementById('telegram').value;
 
             // Validation
             if (username.length < 3) {
@@ -497,18 +486,42 @@
                 return;
             }
 
-            // Success
-            console.log('Registration data:', {
-                username,
-                password,
-                telegram: telegram || null
-            });
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'РЕГИСТРАЦИЯ...';
 
-            // Здесь будет отправка на сервер
-            // После успешной регистрации - редирект на логин
-            // window.location.href = 'login.html';
-            
-            alert('Регистрация успешна! (это демо-версия)');
+            try {
+                const response = await fetch(`${API_BASE_URL}/registration`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_name: username,
+                        password: password,
+                        repeat_password: confirmPassword
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    showError(errorData.message || 'Ошибка регистрации');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'СОЗДАТЬ АККАУНТ →';
+                    return;
+                }
+
+                // Успешная регистрация
+                console.log('Registration successful!');
+                alert('Регистрация успешна! Перенаправление...');
+                window.location.href = `wall.html?user=${username}`;
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('Проблема соединения с сервером');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'СОЗДАТЬ АККАУНТ →';
+            }
         });
 
         function showError(message) {

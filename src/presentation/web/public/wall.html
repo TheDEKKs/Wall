@@ -428,15 +428,7 @@
         }
 
         .author-avatar {
-            width: 40px;
-            height: 40px;
-            background: rgba(153, 51, 255, 0.2);
-            border: 1px solid var(--eva-purple);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+            display: none; /* Скрыто в MVP */
         }
 
         .author-name {
@@ -776,7 +768,7 @@
 
     <script>
         // Конфигурация API
-        const API_BASE_URL = '/api'; // Измените на ваш URL API
+        const API_BASE_URL = 'http://127.0.0.1:8888'; // Ваш бэкенд
         
         // Получаем username из URL (например: wall.html?user=alex_raven)
         const urlParams = new URLSearchParams(window.location.search);
@@ -806,8 +798,13 @@
         // Загрузка данных стены
         async function loadWallData() {
             try {
-                // Запрос данных пользователя и комментариев
-                const response = await fetch(`${API_BASE_URL}/wall/${targetUsername}`);
+                // Запрос данных стены - POST метод согласно вашему API
+                const response = await fetch(`${API_BASE_URL}/${targetUsername}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
                 
                 if (!response.ok) {
                     throw new Error(`Пользователь не найден (${response.status})`);
@@ -817,11 +814,9 @@
                 
                 // Ожидаемая структура JSON:
                 // {
-                //   "user": {
-                //     "user_name": "alex_raven",
-                //     "telegram": "@alex_raven" или null
-                //   },
-                //   "comments": [
+                //   "user_name": "alex_raven",
+                //   "number_of_records": 5,
+                //   "Comments": [
                 //     {
                 //       "user_name": "friend_user",
                 //       "comment": "Текст комментария",
@@ -830,8 +825,11 @@
                 //   ]
                 // }
 
-                userData = data.user;
-                comments = data.comments || [];
+                userData = {
+                    user_name: data.user_name,
+                    number_of_records: data.number_of_records
+                };
+                comments = data.Comments || [];
 
                 renderUserData();
                 renderComments();
@@ -849,19 +847,12 @@
             document.getElementById('userName').textContent = userData.user_name.toUpperCase();
             document.getElementById('userAvatar').textContent = getAvatarEmoji(userData.user_name);
             
+            // В MVP нет Telegram
             const telegramElement = document.getElementById('userTelegram');
-            if (userData.telegram) {
-                telegramElement.innerHTML = `
-                    <span class="telegram-icon">📱</span>
-                    <span>${userData.telegram}</span>
-                `;
-                telegramElement.classList.remove('not-linked');
-            } else {
-                telegramElement.innerHTML = `
-                    <span>⚠ TELEGRAM НЕ ПРИВЯЗАН</span>
-                `;
-                telegramElement.classList.add('not-linked');
-            }
+            telegramElement.innerHTML = `
+                <span>⚠ MVP - TELEGRAM СКОРО</span>
+            `;
+            telegramElement.classList.add('not-linked');
 
             // Обновляем title страницы
             document.title = `Wall - ${userData.user_name}`;
@@ -902,7 +893,6 @@
                 <div class="comment-card">
                     <div class="comment-header">
                         <div class="comment-author">
-                            <div class="author-avatar">${getAvatarEmoji(comment.user_name)}</div>
                             <div class="author-name">${escapeHtml(comment.user_name).toUpperCase()}</div>
                         </div>
                         <div class="comment-date">${formatDate(comment.time)}</div>
@@ -1037,19 +1027,20 @@
 
         // Отправка комментария на сервер
         async function postComment(commentText) {
-            const response = await fetch(`${API_BASE_URL}/wall/${targetUsername}/comment`, {
+            const response = await fetch(`${API_BASE_URL}/comment/new/${targetUsername}`, {
                 method: 'POST',
+                credentials: 'include', // Отправка cookies
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     comment: commentText
-                    // user_name будет определен на сервере из сессии/токена
                 })
             });
 
             if (!response.ok) {
-                throw new Error(`Ошибка отправки (${response.status})`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Ошибка отправки (${response.status})`);
             }
 
             return await response.json();
