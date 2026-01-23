@@ -28,11 +28,11 @@ type Telegram struct {
 }
 
 type User struct {
-	ID             uuid.UUID  `json:"id"`
-	UserName       string     `json:"user_name"`
-	PasswordHash   string     `json:"password_hash"`
-	TelegramID     uuid.UUID  `json:"telegram_id"`
-	RegistrationAt *time.Time `json:"registration_at"`
+	ID               uuid.UUID  `json:"id"`
+	UserName         string     `json:"user_name"`
+	PasswordHash     string     `json:"password_hash"`
+	TelegramRecordID uuid.UUID  `json:"telegram_record_id"`
+	RegistrationAt   *time.Time `json:"registration_at"`
 }
 
 type Wall struct {

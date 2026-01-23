@@ -14,7 +14,7 @@ CREATE TABLE users(
 	id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 	user_name VARCHAR UNIQUE NOT NULL,
     password_hash VARCHAR NOT NULL,
-    telegram_id UUID UNIQUE NOT NULL REFERENCES telegram(id),
+    telegram_record_id UUID UNIQUE NOT NULL REFERENCES telegram(id),
 
     registration_at TIMESTAMPTZ DEFAULT now()
 

@@ -1,6 +1,6 @@
 -- name: RegistrationUser :one
 INSERT INTO users
-    (user_name, password_hash, telegram_id)
+    (user_name, password_hash, telegram_record_id)
 VALUES  
     ($1, $2, $3)
 RETURNING *;

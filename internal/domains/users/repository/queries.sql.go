@@ -23,7 +23,7 @@ func (q *Queries) GetUserIDByUserName(ctx context.Context, userName string) (uui
 }
 
 const loginUser = `-- name: LoginUser :one
-SELECT id, user_name, password_hash, telegram_id, registration_at FROM users WHERE user_name = $1
+SELECT id, user_name, password_hash, telegram_record_id, registration_at FROM users WHERE user_name = $1
 `
 
 func (q *Queries) LoginUser(ctx context.Context, userName string) (User, error) {
@@ -33,7 +33,7 @@ func (q *Queries) LoginUser(ctx context.Context, userName string) (User, error) 
 		&i.ID,
 		&i.UserName,
 		&i.PasswordHash,
-		&i.TelegramID,
+		&i.TelegramRecordID,
 		&i.RegistrationAt,
 	)
 	return i, err
@@ -41,26 +41,26 @@ func (q *Queries) LoginUser(ctx context.Context, userName string) (User, error) 
 
 const registrationUser = `-- name: RegistrationUser :one
 INSERT INTO users
-    (user_name, password_hash, telegram_id)
+    (user_name, password_hash, telegram_record_id)
 VALUES  
     ($1, $2, $3)
-RETURNING id, user_name, password_hash, telegram_id, registration_at
+RETURNING id, user_name, password_hash, telegram_record_id, registration_at
 `
 
 type RegistrationUserParams struct {
-	UserName     string    `json:"user_name"`
-	PasswordHash string    `json:"password_hash"`
-	TelegramID   uuid.UUID `json:"telegram_id"`
+	UserName         string    `json:"user_name"`
+	PasswordHash     string    `json:"password_hash"`
+	TelegramRecordID uuid.UUID `json:"telegram_record_id"`
 }
 
 func (q *Queries) RegistrationUser(ctx context.Context, arg RegistrationUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, registrationUser, arg.UserName, arg.PasswordHash, arg.TelegramID)
+	row := q.db.QueryRow(ctx, registrationUser, arg.UserName, arg.PasswordHash, arg.TelegramRecordID)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.UserName,
 		&i.PasswordHash,
-		&i.TelegramID,
+		&i.TelegramRecordID,
 		&i.RegistrationAt,
 	)
 	return i, err
