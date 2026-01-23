@@ -5,8 +5,8 @@ import (
 	"thedekk/WWT/internal/domains/comments"
 	"thedekk/WWT/internal/domains/users"
 	"thedekk/WWT/internal/domains/walls"
-	"thedekk/WWT/internal/transport/handlers"
-	"thedekk/WWT/internal/transport/middlewares"
+	"thedekk/WWT/internal/transport/web/handlers"
+	"thedekk/WWT/internal/transport/web/middlewares"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"

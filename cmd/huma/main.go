@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"thedekk/WWT/internal/env"
-	"thedekk/WWT/internal/transport"
+	"thedekk/WWT/internal/transport/web"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/net/context"
