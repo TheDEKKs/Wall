@@ -18,10 +18,20 @@ type Comment struct {
 	CreatedAt *time.Time `json:"created_at"`
 }
 
+type Telegram struct {
+	ID             uuid.UUID  `json:"id"`
+	TelegramID     int64      `json:"telegram_id"`
+	FirstName      string     `json:"first_name"`
+	LastName       string     `json:"last_name"`
+	Username       string     `json:"username"`
+	RegistrationAt *time.Time `json:"registration_at"`
+}
+
 type User struct {
 	ID             uuid.UUID  `json:"id"`
 	UserName       string     `json:"user_name"`
 	PasswordHash   string     `json:"password_hash"`
+	TelegramID     uuid.UUID  `json:"telegram_id"`
 	RegistrationAt *time.Time `json:"registration_at"`
 }
 

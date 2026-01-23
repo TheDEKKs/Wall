@@ -1,8 +1,8 @@
 -- name: RegistrationUser :one
 INSERT INTO users
-    (user_name, password_hash)
+    (user_name, password_hash, telegram_id)
 VALUES  
-    ($1, $2)
+    ($1, $2, $3)
 RETURNING *;
 
 -- name: LoginUser :one 
