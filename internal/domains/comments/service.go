@@ -5,7 +5,7 @@ import (
 
 	"thedekk/WWT/internal/domains/users"
 	"thedekk/WWT/internal/domains/comments/repository"
-	"thedekk/WWT/internal/transport/middlewares"
+	"thedekk/WWT/internal/transport/web/middlewares"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"

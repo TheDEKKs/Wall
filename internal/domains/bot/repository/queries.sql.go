@@ -7,16 +7,32 @@ package repository
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
+
+const getUserByTelegramID = `-- name: GetUserByTelegramID :one
+SELECT id, telegram_id, first_name, last_name, username, registration_at FROM telegram WHERE telegram_id = $1
+`
+
+func (q *Queries) GetUserByTelegramID(ctx context.Context, telegramID int64) (Telegram, error) {
+	row := q.db.QueryRow(ctx, getUserByTelegramID, telegramID)
+	var i Telegram
+	err := row.Scan(
+		&i.ID,
+		&i.TelegramID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.RegistrationAt,
+	)
+	return i, err
+}
 
 const newTelegramRecord = `-- name: NewTelegramRecord :one
 INSERT INTO telegram
     (telegram_id, first_name, last_name, username) 
 VALUES 
     ($1, $2, $3, $4)
-RETURNING id
+RETURNING id, telegram_id, first_name, last_name, username, registration_at
 `
 
 type NewTelegramRecordParams struct {
@@ -26,14 +42,21 @@ type NewTelegramRecordParams struct {
 	Username   string `json:"username"`
 }
 
-func (q *Queries) NewTelegramRecord(ctx context.Context, arg NewTelegramRecordParams) (uuid.UUID, error) {
+func (q *Queries) NewTelegramRecord(ctx context.Context, arg NewTelegramRecordParams) (Telegram, error) {
 	row := q.db.QueryRow(ctx, newTelegramRecord,
 		arg.TelegramID,
 		arg.FirstName,
 		arg.LastName,
 		arg.Username,
 	)
-	var id uuid.UUID
-	err := row.Scan(&id)
-	return id, err
+	var i Telegram
+	err := row.Scan(
+		&i.ID,
+		&i.TelegramID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.RegistrationAt,
+	)
+	return i, err
 }

@@ -3,4 +3,7 @@ INSERT INTO telegram
     (telegram_id, first_name, last_name, username) 
 VALUES 
     ($1, $2, $3, $4)
-RETURNING id;
+RETURNING *;
+
+-- name: GetUserByTelegramID :one 
+SELECT * FROM telegram WHERE telegram_id = $1;

@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"context"
 	"fmt"
 	"thedekk/WWT/internal/domains/bot"
 	"thedekk/WWT/internal/transport/bot/handlers"
@@ -10,10 +11,11 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pgxpool.Pool) {
+func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pgxpool.Pool) error {
 	botService := bot.NewBotService(conn)
 	botHandler := handlers.NewBotHandler(botService)
-	fmt.Printf("botHandler: %v\n", botHandler)
+
+	ctx := context.Background()
 
 	for up := range updates {
 		if up.Message != nil && up.Message.IsCommand() {
@@ -21,8 +23,15 @@ func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pg
 			msg.ParseMode = "Markdown"
 			
 			switch up.Message.Command(){
-			case "post":
-				msg.Text = "Your registration cod -"
+			case "start": 	
+				id, err := botHandler.GetOrCreateUserCode(ctx, up)
+				if err != nil {
+					fmt.Println(err)
+					msg.Text = "Error create new user, please try again later."
+				} else {
+					msg.Text = fmt.Sprintf("Your registration cod - `%s`", id.String())
+				}
+				
 
 
 			default:
@@ -38,4 +47,6 @@ func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pg
 		}
 	
 	}
+
+	return nil
 }
