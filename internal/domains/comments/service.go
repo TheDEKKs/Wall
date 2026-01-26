@@ -60,28 +60,31 @@ type Comments struct {
 	Time     time.Time `json:"time"`
 }
 
-func (s *CommentsService) GetCommentsWall(ctx context.Context, wallName string) (*[]Comments, error) {
+func (s *CommentsService) GetCommentsWall(ctx context.Context, wallName string) (*[]Comments, int, error) {
 	wallID, err := s.userService.GetWallIDByUserName(ctx, wallName)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	comments, err := s.repo.GetCommentsByWallID(ctx, *wallID)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	commentsOut := []Comments{}
 
-	for _, c := range comments {
+	var in int
+
+	for i, c := range comments {
 		user, err := s.userService.GetUserByUserID(ctx, c.UserID)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 
 		commentsOut = append(commentsOut, Comments{UserName: user.UserName, Comment: c.Text, Time: *c.CreatedAt})
 
+		in = i
 	}
 
-	return &commentsOut, nil
+	return &commentsOut, in, nil
 }

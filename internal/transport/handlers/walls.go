@@ -18,17 +18,25 @@ func NewWallHandler(wallService *walls.WallService, commentService *comments.Com
 	}
 }
 
-type CommentsWallOut struct {
-	Body []comments.Comments
+type Wall struct {
+	Comments        []comments.Comments
+	UserName        string `json:"user_name"`
+	NumberOfRecords int    `json:"number_of_records"`
 }
 
-func (h *WallHandler) GetCommentsWall(ctx context.Context, input *struct {
+type CommentsWallOut struct {
+	Body Wall
+}
+
+func (h *WallHandler) GetWall(ctx context.Context, input *struct {
 	Wall string `path:"wall"`
 }) (*CommentsWallOut, error) {
-	comment, err := h.commentService.GetCommentsWall(ctx, input.Wall)
+	comment, index, err := h.commentService.GetCommentsWall(ctx, input.Wall)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CommentsWallOut{Body: *comment}, nil
+	wall := Wall{Comments: *comment, UserName: input.Wall, NumberOfRecords: index}
+
+	return &CommentsWallOut{Body: wall}, nil
 }

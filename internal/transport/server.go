@@ -53,11 +53,11 @@ func NewService(conn *pgxpool.Pool) error {
 	}, commentHandler.NewComment)
 
 	huma.Register(api, huma.Operation{
-		OperationID: "wall-comments",
+		OperationID: "wall",
 		Method:      http.MethodPost,
-		Path:        "/{wall}/comments",
-		Summary:     "wall-Comments",
-	}, wallHandler.GetCommentsWall)
+		Path:        "/{wall}",
+		Summary:     "wall",
+	}, wallHandler.GetWall)
 
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)
