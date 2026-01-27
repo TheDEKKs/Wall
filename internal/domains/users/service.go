@@ -139,3 +139,7 @@ func (s *UserService) GetWallIDByUserName(ctx context.Context, userName string) 
 
 	return &wallID, nil
 }
+
+func (s *UserService) GetUserByUserID(ctx context.Context, userID uuid.UUID) (repository.User, error) {
+	return s.repo.GetUserByUserID(ctx, userID)
+}

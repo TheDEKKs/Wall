@@ -11,6 +11,36 @@ import (
 	"github.com/google/uuid"
 )
 
+const getCommentsByWallID = `-- name: GetCommentsByWallID :many
+SELECT id, user_id, wall_id, text, created_at FROM comments WHERE wall_id = $1
+`
+
+func (q *Queries) GetCommentsByWallID(ctx context.Context, wallID uuid.UUID) ([]Comment, error) {
+	rows, err := q.db.Query(ctx, getCommentsByWallID, wallID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Comment
+	for rows.Next() {
+		var i Comment
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.WallID,
+			&i.Text,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const newComment = `-- name: NewComment :exec
 INSERT INTO comments 
     (user_id, wall_id, text)

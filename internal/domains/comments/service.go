@@ -2,10 +2,12 @@ package comments
 
 import (
 	"context"
+	"time"
 
-	"thedekk/WWT/internal/domains/users"
 	"thedekk/WWT/internal/domains/comments/repository"
 	"thedekk/WWT/internal/transport/web/middlewares"
+	"thedekk/WWT/internal/domains/users"
+	
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -19,18 +21,17 @@ type DBTX interface {
 }
 
 type CommentsService struct {
-	db   DBTX
-	repo *repository.Queries
+	db          DBTX
+	repo        *repository.Queries
 	userService *users.UserService
-
 }
 
 func NewCommentService(db DBTX, userService *users.UserService) *CommentsService {
 	repo := repository.New(db)
 
 	return &CommentsService{
-		db:   db,
-		repo: repo,
+		db:          db,
+		repo:        repo,
 		userService: userService,
 	}
 }
@@ -46,11 +47,45 @@ func (s *CommentsService) NewComment(ctx context.Context, wallName, text string)
 	if err := s.repo.NewComment(ctx, repository.NewCommentParams{
 		UserID: cookie.UserID,
 		WallID: *wallID,
-		Text: text,
+		Text:   text,
 	}); err != nil {
 		return err
 	}
 
-
 	return nil
+}
+
+type Comments struct {
+	UserName string    `json:"user_name"`
+	Comment  string    `json:"comment"`
+	Time     time.Time `json:"time"`
+}
+
+func (s *CommentsService) GetCommentsWall(ctx context.Context, wallName string) (*[]Comments, int, error) {
+	wallID, err := s.userService.GetWallIDByUserName(ctx, wallName)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	comments, err := s.repo.GetCommentsByWallID(ctx, *wallID)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	commentsOut := []Comments{}
+
+	var in int
+
+	for i, c := range comments {
+		user, err := s.userService.GetUserByUserID(ctx, c.UserID)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		commentsOut = append(commentsOut, Comments{UserName: user.UserName, Comment: c.Text, Time: *c.CreatedAt})
+
+		in = i
+	}
+
+	return &commentsOut, in, nil
 }
