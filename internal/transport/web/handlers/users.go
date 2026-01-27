@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"thedekk/WWT/internal/domains/users"
+
+	"github.com/google/uuid"
 )
 
 type UserHandler struct {
@@ -19,9 +20,9 @@ func NewUserHandler(userService *users.UserService) *UserHandler {
 
 type RegistrationUserInput struct {
 	Body struct {
-		UserName       string `json:"user_name"`
-		Password       string `json:"password"`
-		RepeatPassword string `json:"repeat_password"`
+		UserName   string    `json:"user_name"`
+		Password   string    `json:"password"`
+		TelegramID uuid.UUID `json:"telegram_id"`
 	}
 }
 
@@ -30,11 +31,7 @@ type UserCookieOut struct {
 }
 
 func (h *UserHandler) RegistrationUser(ctx context.Context, input *RegistrationUserInput) (*UserCookieOut, error) {
-	if input.Body.Password != input.Body.RepeatPassword {
-		return nil, fmt.Errorf("Password no repeat")
-	}
-
-	userCookie, err := h.userService.RegistrationUser(ctx, input.Body.UserName, input.Body.Password)
+	userCookie, err := h.userService.RegistrationUser(ctx, input.Body.UserName, input.Body.Password, input.Body.TelegramID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,22 +39,22 @@ func (h *UserHandler) RegistrationUser(ctx context.Context, input *RegistrationU
 	var userCookieOut UserCookieOut
 
 	userCookieOut.SetCookie = append(userCookieOut.SetCookie, http.Cookie{
-		Name:  "token",
-		Value: (*userCookie)["Token"],
-		MaxAge:   14 * 24 * 60 * 60, 
+		Name:   "token",
+		Value:  (*userCookie)["Token"],
+		MaxAge: 14 * 24 * 60 * 60,
 	}, http.Cookie{
-		Name:  "user_id",
-		Value: (*userCookie)["UserID"],
-		MaxAge:   14 * 24 * 60 * 60,
-	}, )
+		Name:   "user_id",
+		Value:  (*userCookie)["UserID"],
+		MaxAge: 14 * 24 * 60 * 60,
+	})
 
 	return &userCookieOut, nil
 }
 
 type LoginUserInput struct {
 	Body struct {
-		UserName       string `json:"user_name"`
-		Password       string `json:"password"`
+		UserName string `json:"user_name"`
+		Password string `json:"password"`
 	}
 }
 
@@ -70,14 +67,14 @@ func (h *UserHandler) LoginUser(ctx context.Context, input *LoginUserInput) (*Us
 	var userCookieOut UserCookieOut
 
 	userCookieOut.SetCookie = append(userCookieOut.SetCookie, http.Cookie{
-		Name:  "token",
-		Value: (*userCookie)["Token"],
-		MaxAge:   14 * 24 * 60 * 60, 
+		Name:   "token",
+		Value:  (*userCookie)["Token"],
+		MaxAge: 14 * 24 * 60 * 60,
 	}, http.Cookie{
-		Name:  "user_id",
-		Value: (*userCookie)["UserID"],
-		MaxAge:   14 * 24 * 60 * 60, 
-	}, )
+		Name:   "user_id",
+		Value:  (*userCookie)["UserID"],
+		MaxAge: 14 * 24 * 60 * 60,
+	})
 
 	return &userCookieOut, nil
 

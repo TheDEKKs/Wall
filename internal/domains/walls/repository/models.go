@@ -18,11 +18,21 @@ type Comment struct {
 	CreatedAt *time.Time `json:"created_at"`
 }
 
-type User struct {
+type Telegram struct {
 	ID             uuid.UUID  `json:"id"`
-	UserName       string     `json:"user_name"`
-	PasswordHash   string     `json:"password_hash"`
+	TelegramID     int64      `json:"telegram_id"`
+	FirstName      string     `json:"first_name"`
+	LastName       string     `json:"last_name"`
+	Username       string     `json:"username"`
 	RegistrationAt *time.Time `json:"registration_at"`
+}
+
+type User struct {
+	ID               uuid.UUID  `json:"id"`
+	UserName         string     `json:"user_name"`
+	PasswordHash     string     `json:"password_hash"`
+	TelegramRecordID uuid.UUID  `json:"telegram_record_id"`
+	RegistrationAt   *time.Time `json:"registration_at"`
 }
 
 type Wall struct {
