@@ -3,7 +3,7 @@ package bot
 import (
 	"context"
 	"fmt"
-	"thedekk/WWT/internal/domains/bot"
+	telegram "thedekk/WWT/internal/domains/telegram"
 	"thedekk/WWT/internal/transport/bot/handlers"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -12,8 +12,8 @@ import (
 )
 
 func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pgxpool.Pool) error {
-	botService := bot.NewBotService(conn)
-	botHandler := handlers.NewBotHandler(botService)
+	telegramService := telegram.NewTelegramService(conn)
+	telegramHandler := handlers.NewTelegramHandler(telegramService)
 
 	ctx := context.Background()
 
@@ -21,18 +21,16 @@ func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pg
 		if up.Message != nil && up.Message.IsCommand() {
 			msg := tgbotapi.NewMessage(up.Message.Chat.ID, "")
 			msg.ParseMode = "Markdown"
-			
-			switch up.Message.Command(){
-			case "start": 	
-				id, err := botHandler.GetOrCreateUserCode(ctx, up)
+
+			switch up.Message.Command() {
+			case "start":
+				id, err := telegramHandler.GetOrCreateUserCode(ctx, up)
 				if err != nil {
 					fmt.Println(err)
 					msg.Text = "Error create new user, please try again later."
 				} else {
 					msg.Text = fmt.Sprintf("Your registration cod - `%s`", id.String())
 				}
-				
-
 
 			default:
 				continue
@@ -45,7 +43,7 @@ func StartBot(updates tgbotapi.UpdatesChannel, botAPI *tgbotapi.BotAPI, conn *pg
 			continue
 
 		}
-	
+
 	}
 
 	return nil

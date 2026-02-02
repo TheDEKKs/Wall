@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"thedekk/WWT/internal/domains/bot"
+	telegram "thedekk/WWT/internal/domains/telegram"
 
 	"context"
 
@@ -9,20 +9,20 @@ import (
 	"github.com/google/uuid"
 )
 
-type BotHandler struct {
-	botService *bot.BotService
+type TelegramHandler struct {
+	telegramService *telegram.TelegramService
 }
 
-func NewBotHandler(botService *bot.BotService) *BotHandler {
-	return &BotHandler{
-		botService: botService,
+func NewTelegramHandler(telegramService *telegram.TelegramService) *TelegramHandler {
+	return &TelegramHandler{
+		telegramService: telegramService,
 	}
 }
 
-func (h *BotHandler) GetOrCreateUserCode(ctx context.Context, up tgbotapi.Update) (uuid.UUID, error) {
+func (h *TelegramHandler) GetOrCreateUserCode(ctx context.Context, up tgbotapi.Update) (uuid.UUID, error) {
 	userT := up.Message.From
-	
-	user, err := h.botService.GetOrCreateUserCode(ctx, userT.UserName, userT.FirstName, userT.LastName, userT.ID)
+
+	user, err := h.telegramService.GetOrCreateUserCode(ctx, userT.UserName, userT.FirstName, userT.LastName, userT.ID)
 	if err != nil {
 		return uuid.Nil, err
 	}
