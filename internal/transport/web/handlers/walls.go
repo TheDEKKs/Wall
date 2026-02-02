@@ -3,18 +3,21 @@ package handlers
 import (
 	"context"
 	"thedekk/WWT/internal/domains/comments"
+	"thedekk/WWT/internal/domains/telegram"
 	"thedekk/WWT/internal/domains/walls"
 )
 
 type WallHandler struct {
-	wallService    *walls.WallService
-	commentService *comments.CommentsService
+	wallService     *walls.WallService
+	commentService  *comments.CommentsService
+	telegramService *telegram.TelegramService
 }
 
-func NewWallHandler(wallService *walls.WallService, commentService *comments.CommentsService) *WallHandler {
+func NewWallHandler(wallService *walls.WallService, commentService *comments.CommentsService, telegramService *telegram.TelegramService) *WallHandler {
 	return &WallHandler{
-		commentService: commentService,
-		wallService:    wallService,
+		commentService:  commentService,
+		wallService:     wallService,
+		telegramService: telegramService,
 	}
 }
 

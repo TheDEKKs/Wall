@@ -3,7 +3,7 @@ package bot
 import (
 	"context"
 	"fmt"
-	telegram "thedekk/WWT/internal/domains/telegram"
+	"thedekk/WWT/internal/domains/telegram"
 	"thedekk/WWT/internal/transport/bot/handlers"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
