@@ -5,6 +5,7 @@ import (
 
 	"thedekk/WWT/internal/domains/telegram/repository"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -41,6 +42,15 @@ func (s *TelegramService) GetOrCreateUserCode(ctx context.Context, userName, fir
 		FirstName:  firstName,
 		LastName:   lastName,
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (s *TelegramService) GetUserByID(ctx context.Context, id uuid.UUID) (*repository.Telegram, error) {
+	user, err := s.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

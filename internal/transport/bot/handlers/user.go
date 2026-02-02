@@ -2,6 +2,7 @@ package handlers
 
 import (
 	telegram "thedekk/WWT/internal/domains/telegram"
+	"thedekk/WWT/internal/domains/telegram/repository"
 
 	"context"
 
@@ -28,4 +29,9 @@ func (h *TelegramHandler) GetOrCreateUserCode(ctx context.Context, up tgbotapi.U
 	}
 
 	return user.ID, nil
+}
+
+
+func (h *TelegramHandler) GetUserByID(ctx context.Context, id uuid.UUID) (*repository.Telegram, error) {
+	return h.telegramService.GetUserByID(ctx, id)
 }

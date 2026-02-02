@@ -7,3 +7,6 @@ RETURNING *;
 
 -- name: GetUserByTelegramID :one 
 SELECT * FROM telegram WHERE telegram_id = $1;
+
+-- name: GetUserByID :one 
+SELECT * FROM telegram WHERE id = $1;
