@@ -5,8 +5,11 @@ import (
 	"thedekk/WWT/internal/domains/comments"
 	"thedekk/WWT/internal/domains/users"
 	"thedekk/WWT/internal/domains/walls"
-	"thedekk/WWT/internal/transport/handlers"
-	"thedekk/WWT/internal/transport/middlewares"
+	"thedekk/WWT/internal/transport/web/handlers"
+	"thedekk/WWT/internal/transport/web/middlewares"
+
+
+	"thedekk/WWT/internal/domains/telegram"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
@@ -26,10 +29,11 @@ func NewService(conn *pgxpool.Pool) error {
 	wallService := walls.NewWallService(conn)
 	userService := users.NewUserService(conn, wallService)
 	commentService := comments.NewCommentService(conn, userService)
+	telegramService := telegram.NewTelegramService(conn)
 
 	userHandler := handlers.NewUserHandler(userService)
 	commentHandler := handlers.NewCommentHandler(commentService)
-	wallHandler := handlers.NewWallHandler(wallService, commentService)
+	wallHandler := handlers.NewWallHandler(wallService, commentService, telegramService, userService)
 
 	huma.Register(api, huma.Operation{
 		OperationID: "registration",
@@ -53,11 +57,11 @@ func NewService(conn *pgxpool.Pool) error {
 	}, commentHandler.NewComment)
 
 	huma.Register(api, huma.Operation{
-		OperationID: "wall-comments",
+		OperationID: "wall",
 		Method:      http.MethodPost,
-		Path:        "/{wall}/comments",
-		Summary:     "wall-Comments",
-	}, wallHandler.GetCommentsWall)
+		Path:        "/{wall}",
+		Summary:     "wall",
+	}, wallHandler.GetWall)
 
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)

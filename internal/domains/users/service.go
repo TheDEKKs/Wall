@@ -49,7 +49,7 @@ var (
 	DoesNotExist = errors.New("Account does not exist")
 )
 
-func (s *UserService) RegistrationUser(ctx context.Context, userName, password string) (*map[string]string, error) {
+func (s *UserService) RegistrationUser(ctx context.Context, userName, password string, telegram_id uuid.UUID) (*map[string]string, error) {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
 		return nil, err
@@ -64,8 +64,9 @@ func (s *UserService) RegistrationUser(ctx context.Context, userName, password s
 	}
 
 	user, err := repoTx.RegistrationUser(ctx, repository.RegistrationUserParams{
-		UserName:     userName,
-		PasswordHash: hash,
+		UserName:         userName,
+		PasswordHash:     hash,
+		TelegramRecordID: telegram_id,
 	})
 	if err != nil {
 		if IsUniqueViolation(err) {
@@ -141,4 +142,19 @@ func (s *UserService) GetWallIDByUserName(ctx context.Context, userName string) 
 
 func (s *UserService) GetUserByUserID(ctx context.Context, userID uuid.UUID) (repository.User, error) {
 	return s.repo.GetUserByUserID(ctx, userID)
+}
+
+func (s *UserService) GetTelegramIDUserByUserName(ctx context.Context, userName string) (*repository.User, error) {
+	userID, err := s.repo.GetUserIDByUserName(ctx, userName)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.repo.GetUserByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+
 }

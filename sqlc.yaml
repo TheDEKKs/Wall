@@ -45,3 +45,10 @@ sql:
       go:
         <<: *go_defaults
         out: internal/domains/walls/repository/
+
+  - <<: *default
+    queries: internal/domains/telegram/repository/queries.sql
+    gen:
+      go:
+        <<: *go_defaults
+        out: internal/domains/telegram/repository/
