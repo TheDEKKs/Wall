@@ -4,6 +4,7 @@ import (
 	"context"
 	"thedekk/WWT/internal/domains/comments"
 	"thedekk/WWT/internal/domains/telegram"
+	"thedekk/WWT/internal/domains/users"
 	"thedekk/WWT/internal/domains/walls"
 )
 
@@ -11,13 +12,16 @@ type WallHandler struct {
 	wallService     *walls.WallService
 	commentService  *comments.CommentsService
 	telegramService *telegram.TelegramService
+	userService *users.UserService
+
 }
 
-func NewWallHandler(wallService *walls.WallService, commentService *comments.CommentsService, telegramService *telegram.TelegramService) *WallHandler {
+func NewWallHandler(wallService *walls.WallService, commentService *comments.CommentsService, telegramService *telegram.TelegramService, userService *users.UserService) *WallHandler {
 	return &WallHandler{
 		commentService:  commentService,
 		wallService:     wallService,
 		telegramService: telegramService,
+		userService: userService,
 	}
 }
 
@@ -43,9 +47,17 @@ func (h *WallHandler) GetWall(ctx context.Context, input *struct {
 		return nil, err
 	}
 
-	
+	user, err := h.userService.GetTelegramIDUserByUserName(ctx, input.Wall)
+	if err != nil {
+		return nil, err
+	}
 
-	wall := Wall{Comments: *comment, UserName: input.Wall, NumberOfRecords: index}
+	userTelegram, err := h.telegramService.GetUserByID(ctx, user.TelegramRecordID)
+	if err != nil {
+		return nil, err
+	}
+
+	wall := Wall{Comments: *comment, UserName: input.Wall, NumberOfRecords: index, UserNameTelegram: userTelegram.Username, FirstNameTelegram: userTelegram.FirstName, LastNAmeTelegram: userTelegram.LastName}
 
 	return &CommentsWallOut{Body: wall}, nil
 }

@@ -143,3 +143,18 @@ func (s *UserService) GetWallIDByUserName(ctx context.Context, userName string) 
 func (s *UserService) GetUserByUserID(ctx context.Context, userID uuid.UUID) (repository.User, error) {
 	return s.repo.GetUserByUserID(ctx, userID)
 }
+
+func (s *UserService) GetTelegramIDUserByUserName(ctx context.Context, userName string) (*repository.User, error) {
+	userID, err := s.repo.GetUserIDByUserName(ctx, userName)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.repo.GetUserByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+
+}

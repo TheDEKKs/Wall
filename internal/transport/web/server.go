@@ -33,7 +33,7 @@ func NewService(conn *pgxpool.Pool) error {
 
 	userHandler := handlers.NewUserHandler(userService)
 	commentHandler := handlers.NewCommentHandler(commentService)
-	wallHandler := handlers.NewWallHandler(wallService, commentService, telegramService)
+	wallHandler := handlers.NewWallHandler(wallService, commentService, telegramService, userService)
 
 	huma.Register(api, huma.Operation{
 		OperationID: "registration",
