@@ -25,6 +25,10 @@ type Wall struct {
 	Comments        []comments.Comments
 	UserName        string `json:"user_name"`
 	NumberOfRecords int    `json:"number_of_records"`
+
+	UserNameTelegram  string `json:"user_name_telegram"`
+	FirstNameTelegram string `json:"first_name_telegram"`
+	LastNAmeTelegram  string `json:"last_name_telegram"`
 }
 
 type CommentsWallOut struct {
@@ -38,6 +42,8 @@ func (h *WallHandler) GetWall(ctx context.Context, input *struct {
 	if err != nil {
 		return nil, err
 	}
+
+	
 
 	wall := Wall{Comments: *comment, UserName: input.Wall, NumberOfRecords: index}
 
