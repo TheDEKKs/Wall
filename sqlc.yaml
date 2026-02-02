@@ -47,8 +47,8 @@ sql:
         out: internal/domains/walls/repository/
 
   - <<: *default
-    queries: internal/domains/bot/repository/queries.sql
+    queries: internal/domains/telegram/repository/queries.sql
     gen:
       go:
         <<: *go_defaults
-        out: internal/domains/bot/repository/
+        out: internal/domains/telegram/repository/

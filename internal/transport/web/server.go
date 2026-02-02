@@ -8,6 +8,9 @@ import (
 	"thedekk/WWT/internal/transport/web/handlers"
 	"thedekk/WWT/internal/transport/web/middlewares"
 
+
+	"thedekk/WWT/internal/domains/telegram"
+
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
@@ -26,10 +29,11 @@ func NewService(conn *pgxpool.Pool) error {
 	wallService := walls.NewWallService(conn)
 	userService := users.NewUserService(conn, wallService)
 	commentService := comments.NewCommentService(conn, userService)
+	telegramService := telegram.NewTelegramService(conn)
 
 	userHandler := handlers.NewUserHandler(userService)
 	commentHandler := handlers.NewCommentHandler(commentService)
-	wallHandler := handlers.NewWallHandler(wallService, commentService)
+	wallHandler := handlers.NewWallHandler(wallService, commentService, telegramService, userService)
 
 	huma.Register(api, huma.Operation{
 		OperationID: "registration",

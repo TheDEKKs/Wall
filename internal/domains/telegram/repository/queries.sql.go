@@ -7,7 +7,27 @@ package repository
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
+
+const getUserByID = `-- name: GetUserByID :one
+SELECT id, telegram_id, first_name, last_name, username, registration_at FROM telegram WHERE id = $1
+`
+
+func (q *Queries) GetUserByID(ctx context.Context, id uuid.UUID) (Telegram, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
+	var i Telegram
+	err := row.Scan(
+		&i.ID,
+		&i.TelegramID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.RegistrationAt,
+	)
+	return i, err
+}
 
 const getUserByTelegramID = `-- name: GetUserByTelegramID :one
 SELECT id, telegram_id, first_name, last_name, username, registration_at FROM telegram WHERE telegram_id = $1
