@@ -1,4 +1,14 @@
-<!DOCTYPE html>
+.share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 1rem 1.5rem;
+            background: rgba(153, 51, 255, 0.1);
+            border: <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -127,7 +137,7 @@
         .wall-header {
             background: var(--bg-dark);
             border: 2px solid var(--eva-purple);
-            padding: 3rem 2rem;
+            padding: 3rem 2rem 2rem;
             margin-bottom: 2rem;
             position: relative;
             text-align: center;
@@ -196,21 +206,46 @@
         }
 
         .user-telegram {
-            font-size: 1rem;
-            letter-spacing: 0.2rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            display: none; /* Убрано в MVP */
         }
 
-        .user-telegram.not-linked {
-            color: var(--text-muted);
+        .telegram-profile {
+            display: block;
+            text-decoration: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 136, 204, 0.05);
+            transition: all 0.3s ease;
         }
 
-        .telegram-icon {
+        .telegram-profile:hover {
+            border-color: #0088cc;
+            background: rgba(0, 136, 204, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 136, 204, 0.3);
+        }
+
+        .telegram-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .telegram-username {
+            font-size: 0.9rem;
             color: #0088cc;
+            letter-spacing: 0.05rem;
+        }
+
+        .telegram-username::before {
+            content: '(';
+        }
+
+        .telegram-username::after {
+            content: ')';
         }
 
         .stats-bar {
@@ -262,6 +297,22 @@
             width: 40px;
             height: 3px;
             background: var(--eva-orange);
+        }
+
+        .form-warning {
+            background: rgba(255, 102, 0, 0.1);
+            border: 1px solid var(--eva-orange);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--eva-orange);
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+            line-height: 1.6;
+        }
+
+        .form-warning strong {
+            color: var(--eva-red);
+            font-weight: 900;
         }
 
         .comment-textarea {
@@ -436,6 +487,13 @@
             font-weight: 700;
             letter-spacing: 0.1rem;
             color: var(--eva-orange);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .author-name:hover {
+            color: var(--eva-purple);
+            text-shadow: 0 0 10px rgba(153, 51, 255, 0.5);
         }
 
         .comment-date {
@@ -520,27 +578,137 @@
         }
 
         .share-buttons {
-            display: flex;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 1rem;
-            flex-wrap: wrap;
+            width: 100%;
         }
 
         .share-btn {
-            padding: 1rem 2rem;
+            padding: 1rem;
             background: rgba(153, 51, 255, 0.1);
             border: 2px solid var(--border-color);
             color: var(--text-primary);
             font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 0.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
             text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .share-url-container {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: stretch;
+            gap: 0.5rem;
+            flex-wrap: nowrap;
+        }
+
+        .share-url {
+            flex: 1;
+            min-width: 0;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            outline: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .copy-btn {
+            padding: 0.75rem 1rem;
+            background: var(--eva-green);
+            border: none;
+            color: var(--bg-dark);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .share-header-btn {
+            display: none; /* Убрана кнопка */
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .wall-header {
+                padding: 2rem 1rem;
+            }
+
+            .user-name {
+                font-size: 1.8rem;
+                letter-spacing: 0.2rem;
+            }
+
+            .stats-bar {
+                gap: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .submit-comment-btn {
+                width: 100%;
+            }
+
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .share-header-btn {
+                position: static;
+                width: 100%;
+                margin-top: 1rem;
+                padding: 0.875rem;
+                font-size: 0.75rem;
+            }
+
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .share-btn {
+                font-size: 0.8rem;
+                padding: 0.875rem 1rem;
+            }
+
+            .share-url-container {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .copy-btn {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .share-url {
+                font-size: 0.75rem;
+            }
         }
 
         .share-btn:hover {
@@ -632,6 +800,99 @@
             display: block;
         }
 
+        .error-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-modal.active {
+            display: flex;
+        }
+
+        .error-modal-content {
+            background: var(--bg-dark);
+            border: 2px solid var(--eva-red);
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            animation: slideInDown 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .error-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .error-modal-icon {
+            font-size: 3rem;
+            color: var(--eva-red);
+        }
+
+        .error-modal-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.2rem;
+            color: var(--eva-red);
+        }
+
+        .error-modal-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .error-modal-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--eva-red);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .error-modal-button:hover {
+            background: #cc0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -691,16 +952,13 @@
                 <div class="corner bottom-right"></div>
             </div>
 
-            <button class="share-header-btn" id="shareHeaderBtn">
-                <span>🔗</span>
-                <span>ПОДЕЛИТЬСЯ</span>
-            </button>
-
             <div class="user-avatar" id="userAvatar">👤</div>
             <h1 class="user-name" id="userName">LOADING...</h1>
-            <div class="user-telegram" id="userTelegram">
-                <span>⏳ ЗАГРУЗКА...</span>
-            </div>
+            
+            <a href="#" class="telegram-profile" id="telegramProfile" target="_blank" style="display: none;">
+                <div class="telegram-name" id="telegramName"></div>
+                <div class="telegram-username" id="telegramUsername"></div>
+            </a>
 
             <div class="stats-bar">
                 <div class="stat-item">
@@ -717,6 +975,9 @@
             </div>
             
             <h2 class="form-title">НАПИСАТЬ НА СТЕНУ</h2>
+            <p class="form-warning">
+                ⚠ Вы можете оставить только <strong>ОДИН КОММЕНТАРИЙ</strong> на этой стене
+            </p>
             <form id="commentForm">
                 <textarea 
                     id="commentText" 
@@ -766,6 +1027,22 @@
         </div>
     </div>
 
+    <!-- Error Modal -->
+    <div class="error-modal" id="errorModal">
+        <div class="error-modal-content">
+            <div class="error-modal-header">
+                <div class="error-modal-icon">⚠</div>
+                <div class="error-modal-title">ОШИБКА</div>
+            </div>
+            <div class="error-modal-text" id="errorModalText">
+                Текст ошибки
+            </div>
+            <button class="error-modal-button" id="closeErrorModal">
+                ПОНЯТНО
+            </button>
+        </div>
+    </div>
+
     <script>
         // Конфигурация API
         const API_BASE_URL = 'http://127.0.0.1:8888'; // Ваш бэкенд
@@ -798,38 +1075,102 @@
         // Загрузка данных стены
         async function loadWallData() {
             try {
-                // Запрос данных стены - POST метод согласно вашему API
+                console.log(`Запрос к: ${API_BASE_URL}/${targetUsername}`);
+                
                 const response = await fetch(`${API_BASE_URL}/${targetUsername}`, {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`Пользователь не найден (${response.status})`);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                if (response.status === 404) {
+                    throw new Error('ПОЛЬЗОВАТЕЛЬ НЕ НАЙДЕН');
                 }
 
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`ОШИБКА ЗАГРУЗКИ (${response.status})`);
+                }
+
+                // Получаем текст ответа
+                const responseText = await response.text();
+                console.log('Raw response (first 500 chars):', responseText.substring(0, 500));
+
+                // ИСПРАВЛЕНИЕ: Сервер возвращает JSON дважды, берем первый
+                let cleanText = responseText.trim();
                 
-                // Ожидаемая структура JSON:
-                // {
-                //   "user_name": "alex_raven",
-                //   "number_of_records": 5,
-                //   "Comments": [
-                //     {
-                //       "user_name": "friend_user",
-                //       "comment": "Текст комментария",
-                //       "time": "2026-01-18T10:15:00Z"
-                //     }
-                //   ]
-                // }
+                // Ищем первый полный JSON объект
+                let jsonStartIndex = cleanText.indexOf('{');
+                let jsonEndIndex = -1;
+                let braceCount = 0;
+                
+                for (let i = jsonStartIndex; i < cleanText.length; i++) {
+                    if (cleanText[i] === '{') braceCount++;
+                    if (cleanText[i] === '}') braceCount--;
+                    
+                    if (braceCount === 0) {
+                        jsonEndIndex = i + 1;
+                        break;
+                    }
+                }
+                
+                if (jsonEndIndex > 0) {
+                    cleanText = cleanText.substring(jsonStartIndex, jsonEndIndex);
+                    console.log('Extracted first JSON:', cleanText);
+                }
+
+                // Парсим JSON
+                let data;
+                try {
+                    const parsed = JSON.parse(cleanText);
+                    console.log('Parsed data:', parsed);
+                    
+                    // Убираем $schema если есть
+                    delete parsed.$schema;
+                    
+                    // Проверяем разные варианты структуры
+                    if (parsed.body) {
+                        data = parsed.body;
+                        console.log('Found data in "body"');
+                    } else if (parsed.data) {
+                        data = parsed.data;
+                        console.log('Found data in "data"');
+                    } else {
+                        data = parsed;
+                        console.log('Using direct data');
+                    }
+                } catch (parseError) {
+                    console.error('JSON Parse Error:', parseError);
+                    console.error('Tried to parse:', cleanText);
+                    throw new Error('СЕРВЕР ВЕРНУЛ НЕКОРРЕКТНЫЕ ДАННЫЕ');
+                }
+                
+                console.log('Final data:', data);
+                
+                // Проверка полей (гибко)
+                const username = data.user_name || data.UserName || data.username;
+                if (!username) {
+                    console.error('No username found in data:', data);
+                    throw new Error('НЕКОРРЕКТНЫЙ ОТВЕТ СЕРВЕРА - НЕТ ИМЕНИ ПОЛЬЗОВАТЕЛЯ');
+                }
 
                 userData = {
-                    user_name: data.user_name,
-                    number_of_records: data.number_of_records
+                    user_name: username,
+                    number_of_records: data.number_of_records || data.NumberOfRecords || 0,
+                    user_name_telegram: data.user_name_telegram || data.UserNameTelegram || null,
+                    first_name_telegram: data.first_name_telegram || data.FirstNameTelegram || null,
+                    last_name_telegram: data.last_name_telegram || data.LastNAmeTelegram || null
                 };
-                comments = data.Comments || [];
+                
+                // Проверяем разные варианты названия массива комментариев
+                comments = data.Comments || data.comments || [];
+                
+                console.log('userData:', userData);
+                console.log('comments:', comments);
 
                 renderUserData();
                 renderComments();
@@ -846,13 +1187,29 @@
 
             document.getElementById('userName').textContent = userData.user_name.toUpperCase();
             document.getElementById('userAvatar').textContent = getAvatarEmoji(userData.user_name);
-            
-            // В MVP нет Telegram
-            const telegramElement = document.getElementById('userTelegram');
-            telegramElement.innerHTML = `
-                <span>⚠ MVP - TELEGRAM СКОРО</span>
-            `;
-            telegramElement.classList.add('not-linked');
+
+            // Показываем Telegram профиль если данные есть
+            const telegramProfile = document.getElementById('telegramProfile');
+            const telegramName = document.getElementById('telegramName');
+            const telegramUsername = document.getElementById('telegramUsername');
+
+            if (userData.user_name_telegram) {
+                // Формируем имя (Имя + Фамилия)
+                let fullName = '';
+                if (userData.first_name_telegram) {
+                    fullName += userData.first_name_telegram;
+                }
+                if (userData.last_name_telegram) {
+                    fullName += (fullName ? ' ' : '') + userData.last_name_telegram;
+                }
+
+                telegramName.textContent = fullName || 'Telegram User';
+                telegramUsername.textContent = '@' + userData.user_name_telegram;
+                telegramProfile.href = `https://t.me/${userData.user_name_telegram}`;
+                telegramProfile.style.display = 'block';
+            } else {
+                telegramProfile.style.display = 'none';
+            }
 
             // Обновляем title страницы
             document.title = `Wall - ${userData.user_name}`;
@@ -893,7 +1250,7 @@
                 <div class="comment-card">
                     <div class="comment-header">
                         <div class="comment-author">
-                            <div class="author-name">${escapeHtml(comment.user_name).toUpperCase()}</div>
+                            <div class="author-name" onclick="window.location.href='wall.html?user=${escapeHtml(comment.user_name)}'">${escapeHtml(comment.user_name).toUpperCase()}</div>
                         </div>
                         <div class="comment-date">${formatDate(comment.time)}</div>
                     </div>
@@ -948,7 +1305,20 @@
                     
                 } catch (error) {
                     console.error('Ошибка отправки комментария:', error);
-                    alert('Ошибка: ' + error.message);
+                    
+                    // Показываем конкретную ошибку
+                    let errorMsg = error.message || 'Неизвестная ошибка';
+                    
+                    if (errorMsg.includes('401') || errorMsg.includes('авторизован')) {
+                        showErrorModal('Войдите в аккаунт для добавления комментариев');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else if (errorMsg.includes('duplicate') || errorMsg.includes('already') || errorMsg.includes('уже оставил') || errorMsg.includes('409')) {
+                        showErrorModal('Вы уже оставили комментарий на этой стене. Можно оставить только ОДИН комментарий. Попробуйте позже или напишите на другой стене.');
+                    } else {
+                        showErrorModal(errorMsg + '. Попробуйте позже.');
+                    }
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'ОТПРАВИТЬ →';
@@ -956,12 +1326,48 @@
             });
         }
 
+        // Показать модальное окно с ошибкой
+        function showErrorModal(message) {
+            const errorModal = document.getElementById('errorModal');
+            const errorModalText = document.getElementById('errorModalText');
+            
+            errorModalText.textContent = message;
+            errorModal.classList.add('active');
+        }
+
+        // Закрытие модального окна
+        document.addEventListener('DOMContentLoaded', () => {
+            const closeErrorModal = document.getElementById('closeErrorModal');
+            const errorModal = document.getElementById('errorModal');
+            
+            if (closeErrorModal) {
+                closeErrorModal.addEventListener('click', () => {
+                    errorModal.classList.remove('active');
+                });
+            }
+            
+            // Закрытие по клику вне окна
+            if (errorModal) {
+                errorModal.addEventListener('click', (e) => {
+                    if (e.target === errorModal) {
+                        errorModal.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Закрытие по ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && errorModal.classList.contains('active')) {
+                    errorModal.classList.remove('active');
+                }
+            });
+        });
+
         // Настройка кнопок "Поделиться"
         function setupShareButtons() {
             const currentUrl = window.location.href;
             const shareUrl = document.getElementById('shareUrl');
             const copyBtn = document.getElementById('copyBtn');
-            const shareHeaderBtn = document.getElementById('shareHeaderBtn');
             const shareTelegram = document.getElementById('shareTelegram');
             const shareVk = document.getElementById('shareVk');
             const shareNative = document.getElementById('shareNative');
@@ -987,14 +1393,6 @@
                     document.execCommand('copy');
                     copyBtn.textContent = '✓ СКОПИРОВАНО';
                 }
-            });
-
-            // Кнопка "Поделиться" в шапке - скролл к секции
-            shareHeaderBtn.addEventListener('click', () => {
-                document.getElementById('shareSection').scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'center'
-                });
             });
 
             // Telegram share
@@ -1027,23 +1425,42 @@
 
         // Отправка комментария на сервер
         async function postComment(commentText) {
-            const response = await fetch(`${API_BASE_URL}/comment/new/${targetUsername}`, {
-                method: 'POST',
-                credentials: 'include', // Отправка cookies
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    comment: commentText
-                })
-            });
+            try {
+                const response = await fetch(`${API_BASE_URL}/comment/new/${targetUsername}`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        comment: commentText
+                    })
+                });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Ошибка отправки (${response.status})`);
+                if (response.status === 401) {
+                    throw new Error('Вы не авторизованы. Войдите в аккаунт.');
+                }
+
+                if (response.status === 409 || response.status === 400) {
+                    // 409 Conflict - дубликат комментария
+                    const errorData = await response.json().catch(() => ({}));
+                    const errorMsg = errorData.message || errorData.detail || 'Вы уже оставили комментарий на этой стене';
+                    throw new Error(errorMsg);
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    const errorMsg = errorData.message || errorData.detail || `Ошибка отправки (${response.status})`;
+                    throw new Error(errorMsg);
+                }
+
+                // Даже если ответ пустой - это успех
+                return { success: true };
+                
+            } catch (error) {
+                console.error('Post comment error:', error);
+                throw error;
             }
-
-            return await response.json();
         }
 
         // Показать сообщение об успехе
@@ -1094,13 +1511,36 @@
             hideLoading();
             const container = document.getElementById('mainContainer');
             container.style.display = 'block';
-            container.innerHTML = `
+            
+            let errorHtml = `
                 <div class="error-container">
                     <div class="error-icon">⚠</div>
                     <div class="error-title">${title}</div>
                     <div class="error-message">${message}</div>
-                </div>
             `;
+
+            // Если пользователь не найден, добавляем кнопку поиска
+            if (title.includes('НЕ НАЙДЕН')) {
+                errorHtml += `
+                    <div style="margin-top: 2rem;">
+                        <button onclick="window.location.href='index.html'" style="
+                            padding: 1rem 2rem;
+                            background: var(--eva-purple);
+                            border: none;
+                            color: white;
+                            font-family: 'Courier New', monospace;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            letter-spacing: 0.2rem;
+                        ">
+                            НА ГЛАВНУЮ
+                        </button>
+                    </div>
+                `;
+            }
+
+            errorHtml += `</div>`;
+            container.innerHTML = errorHtml;
         }
 
         // Скрыть загрузку

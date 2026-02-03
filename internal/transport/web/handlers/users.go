@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"thedekk/WWT/internal/domains/users"
+	"thedekk/WWT/internal/transport/web/middlewares"
 
 	"github.com/google/uuid"
 )
@@ -77,5 +78,21 @@ func (h *UserHandler) LoginUser(ctx context.Context, input *LoginUserInput) (*Us
 	})
 
 	return &userCookieOut, nil
+
+}
+
+type UserResponse struct {
+	Body string `json:"user_name"`
+}
+
+func (h *UserHandler) Check(ctx context.Context, input *struct{}) (*UserResponse, error) {
+	cookie := ctx.Value("cookie").(middlewares.CookieCtx)
+
+	user, err := h.userService.GetUserByUserID(ctx, cookie.UserID)
+	if err != nil {
+		return nil, err	
+	}
+
+	return  &UserResponse{Body: user.UserName}, nil
 
 }

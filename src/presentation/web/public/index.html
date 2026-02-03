@@ -677,6 +677,18 @@
             border-color: var(--eva-green);
         }
 
+        .quick-access-btn {
+            border-color: var(--eva-purple);
+        }
+
+        .quick-access-btn:hover {
+            border-color: var(--eva-orange);
+        }
+
+        .quick-access-btn::before {
+            background: rgba(255, 102, 0, 0.1);
+        }
+
         .auth-icon {
             font-size: 2rem;
             position: relative;
@@ -730,6 +742,57 @@
             color: var(--text-muted);
             letter-spacing: 0.2rem;
             font-size: 0.9rem;
+        }
+
+        .terms-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 102, 0, 0.05);
+            border: 1px solid var(--eva-orange);
+        }
+
+        .terms-checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .terms-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .terms-label {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .terms-label a {
+            color: var(--eva-purple);
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .terms-label a:hover {
+            color: var(--eva-orange);
+        }
+
+        .terms-error {
+            color: var(--eva-red);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+            letter-spacing: 0.05rem;
+        }
+
+        .terms-error.active {
+            display: block;
         }
 
         .modal-footer {
@@ -1071,6 +1134,112 @@
         const closeModal = document.getElementById('closeModal');
         const registerBtn = document.querySelector('.register-btn');
         const loginBtn = document.querySelector('.login-btn');
+        const quickAccessBtn = document.getElementById('quickAccessBtn');
+        const quickStartBtnTop = document.getElementById('quickStartBtnTop');
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const termsError = document.getElementById('termsError');
+        const termsLink = document.getElementById('termsLink');
+        const privacyLink = document.getElementById('privacyLink');
+        const API_BASE_URL = 'http://127.0.0.1:8888';
+
+        // Проверка согласия с условиями
+        function checkTermsAccepted() {
+            if (!termsCheckbox.checked) {
+                termsError.classList.add('active');
+                return false;
+            }
+            termsError.classList.remove('active');
+            return true;
+        }
+
+        // Скрыть ошибку при изменении чекбокса
+        termsCheckbox?.addEventListener('change', () => {
+            if (termsCheckbox.checked) {
+                termsError.classList.remove('active');
+            }
+        });
+
+        // Открытие документов
+        termsLink?.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('terms.html', '_blank');
+        });
+
+        privacyLink?.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('privacy.html', '_blank');
+        });
+
+        // Функция проверки авторизации и открытия модалки/перехода на стену
+        async function handleStartClick() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.user_name) {
+                        // Пользователь авторизован - переход на стену
+                        window.location.href = `wall.html?user=${data.user_name}`;
+                        return;
+                    }
+                }
+                
+                // Не авторизован - открываем модалку
+                authModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+            } catch (error) {
+                console.log('Auth check failed, opening modal');
+                // Ошибка - открываем модалку
+                authModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Кнопка "НАЧАТЬ" вверху
+        quickStartBtnTop?.addEventListener('click', handleStartClick);
+
+        // Кнопка "НАЧАТЬ" в CTA секции
+        startButton?.addEventListener('click', handleStartClick);
+
+        // Проверка авторизации при загрузке для кнопки "МОЯ СТЕНА"
+        async function checkQuickAccess() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.user_name) {
+                        // Показываем кнопку быстрого доступа в модалке
+                        quickAccessBtn.style.display = 'flex';
+                        quickAccessBtn.querySelector('.auth-text').textContent = `МОЯ СТЕНА (${data.user_name.toUpperCase()})`;
+                        
+                        quickAccessBtn.addEventListener('click', () => {
+                            if (!checkTermsAccepted()) return;
+                            window.location.href = `wall.html?user=${data.user_name}`;
+                        });
+                    }
+                }
+            } catch (error) {
+                console.log('Quick access check failed');
+            }
+        }
+
+        checkQuickAccess();
 
         // Open modal
         startButton?.addEventListener('click', () => {
@@ -1102,11 +1271,13 @@
 
         // Register button
         registerBtn?.addEventListener('click', () => {
+            if (!checkTermsAccepted()) return;
             window.location.href = 'register.html';
         });
 
         // Login button
         loginBtn?.addEventListener('click', () => {
+            if (!checkTermsAccepted()) return;
             window.location.href = 'login.html';
         });
 

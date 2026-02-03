@@ -22,7 +22,6 @@
             --text-secondary: #cccccc;
             --text-muted: #666666;
             --border-color: #333333;
-            --warning-yellow: #ffff00;
         }
 
         body {
@@ -75,12 +74,6 @@
                 transform: translateY(0);
                 opacity: 1;
             }
-        }
-
-        .corner-marks {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
         }
 
         .corner {
@@ -176,32 +169,6 @@
             color: var(--text-muted);
         }
 
-        .divider {
-            position: relative;
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--border-color);
-        }
-
-        .divider-text {
-            background: var(--bg-dark);
-            padding: 0 1rem;
-            position: relative;
-            z-index: 1;
-            color: var(--text-muted);
-            letter-spacing: 0.2rem;
-            font-size: 0.9rem;
-        }
-
         .submit-button {
             width: 100%;
             padding: 1.5rem;
@@ -216,7 +183,6 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin-bottom: 1rem;
         }
 
         .submit-button::before {
@@ -230,38 +196,13 @@
             transition: left 0.3s ease;
         }
 
-        .submit-button:hover {
+        .submit-button:hover:not(:disabled) {
             box-shadow: 0 0 20px rgba(153, 51, 255, 0.5);
             transform: translateY(-2px);
         }
 
-        .submit-button:hover::before {
+        .submit-button:hover:not(:disabled)::before {
             left: 100%;
-        }
-
-        .tg-button {
-            width: 100%;
-            padding: 1.5rem;
-            background: rgba(0, 136, 204, 0.1);
-            border: 2px solid #0088cc;
-            color: #0088cc;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 0.3rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .tg-button:hover {
-            background: rgba(0, 136, 204, 0.2);
-            border-color: #0099e6;
-            box-shadow: 0 0 20px rgba(0, 136, 204, 0.3);
-            transform: translateY(-2px);
         }
 
         .login-footer {
@@ -295,10 +236,14 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
         }
 
         .back-link:hover {
             color: var(--eva-purple);
+            border-color: var(--eva-purple);
             transform: translateX(-5px);
         }
 
@@ -315,6 +260,13 @@
 
         .error-message.active {
             display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         @media (max-width: 768px) {
@@ -344,12 +296,10 @@
     </a>
 
     <div class="login-container">
-        <div class="corner-marks">
-            <div class="corner top-left"></div>
-            <div class="corner top-right"></div>
-            <div class="corner bottom-left"></div>
-            <div class="corner bottom-right"></div>
-        </div>
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
 
         <div class="login-header">
             <h1 class="login-title">ВХОД</h1>
@@ -386,19 +336,10 @@
                     >
                 </div>
 
-                <button type="submit" class="submit-button">
+                <button type="submit" class="submit-button" id="submitBtn">
                     ВОЙТИ →
                 </button>
             </form>
-
-            <div class="divider">
-                <span class="divider-text">ИЛИ</span>
-            </div>
-
-            <button class="tg-button" id="tgLoginBtn">
-                <span>📱</span>
-                <span>ВОЙТИ ЧЕРЕЗ TELEGRAM</span>
-            </button>
         </div>
 
         <div class="login-footer">
@@ -407,43 +348,105 @@
     </div>
 
     <script>
-        // Form submission
+        const API_BASE_URL = 'http://127.0.0.1:8888';
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
 
-        loginForm.addEventListener('submit', (e) => {
+        // Проверка cookies при загрузке страницы
+        function checkAuth() {
+            const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+                const [key, value] = cookie.trim().split('=');
+                acc[key] = value;
+                return acc;
+            }, {});
+
+            // Если есть token и user_id, проверяем их валидность
+            if (cookies.token && cookies.user_id) {
+                // Пытаемся получить данные пользователя
+                verifyAuth(cookies.user_id);
+            }
+        }
+
+        // Проверка валидности авторизации
+        async function verifyAuth(userId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/${userId}`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    // Авторизация валидна - редирект на стену
+                    console.log('Already logged in, redirecting...');
+                    window.location.href = `wall.html?user=${userId}`;
+                }
+            } catch (error) {
+                console.log('Auth check failed, showing login form');
+            }
+        }
+
+        // Отправка формы
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Здесь будет отправка на сервер
-            console.log('Login attempt:', { username, password });
-
-            // Пример обработки ошибки
             if (!username || !password) {
-                errorMessage.classList.add('active');
-                setTimeout(() => {
-                    errorMessage.classList.remove('active');
-                }, 3000);
-            } else {
-                // Успешный вход - редирект на главную страницу профиля
+                showError('ЗАПОЛНИТЕ ВСЕ ПОЛЯ');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'ВХОД...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_name: username,
+                        password: password
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    showError(errorData.message || 'НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'ВОЙТИ →';
+                    return;
+                }
+
+                // Успешный вход
                 console.log('Login successful!');
-                // window.location.href = '/dashboard';
+                window.location.href = `wall.html?user=${username}`;
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('ПРОБЛЕМА СОЕДИНЕНИЯ С СЕРВЕРОМ');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'ВОЙТИ →';
             }
         });
 
-        // Telegram login
-        const tgLoginBtn = document.getElementById('tgLoginBtn');
-        tgLoginBtn.addEventListener('click', () => {
-            console.log('Telegram login initiated');
-            // Здесь будет логика входа через Telegram
-            // Например, открытие окна авторизации Telegram
-        });
+        function showError(message) {
+            errorMessage.textContent = `⚠ ОШИБКА: ${message}`;
+            errorMessage.classList.add('active');
+            
+            setTimeout(() => {
+                errorMessage.classList.remove('active');
+            }, 3000);
+        }
 
-        // Console easter egg
+        // Проверяем авторизацию при загрузке
+        checkAuth();
+
         console.log('%c WALL LOGIN SYSTEM ', 'background: #9933ff; color: #fff; font-size: 16px; padding: 5px;');
-        console.log('%c ACCESS LEVEL: GUEST ', 'background: #ff6600; color: #000; font-size: 12px; padding: 5px;');
     </script>
 </body>
 </html>

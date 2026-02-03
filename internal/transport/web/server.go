@@ -15,6 +15,8 @@ import (
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -22,9 +24,20 @@ func NewService(conn *pgxpool.Pool) error {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
+	router.Use(cors.Handler(cors.Options{
+        AllowedOrigins:   []string{"http://127.0.0.1:5500"}, // или []string{"*"} для теста
+        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+        ExposedHeaders:   []string{"Link"},
+        AllowCredentials: true,
+        MaxAge:           300, // seconds
+    }))
+
 	configAPI := huma.DefaultConfig("My API", "1.0.0")
 	api := humachi.New(router, configAPI)
 	api.UseMiddleware(middlewares.MyMiddleware)
+
+	
 
 	wallService := walls.NewWallService(conn)
 	userService := users.NewUserService(conn, wallService)
@@ -48,6 +61,13 @@ func NewService(conn *pgxpool.Pool) error {
 		Path:        "/login",
 		Summary:     "login",
 	}, userHandler.LoginUser)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "check",
+		Method:      http.MethodPost,
+		Path:        "/auth/check",
+		Summary:     "check",
+	}, userHandler.Check)
 
 	huma.Register(api, huma.Operation{
 		OperationID: "new-comment",

@@ -211,6 +211,22 @@
             color: var(--eva-green);
         }
 
+        .field-hint {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05rem;
+        }
+
+        .field-hint a {
+            color: var(--eva-purple);
+            transition: color 0.3s ease;
+        }
+
+        .field-hint a:hover {
+            color: var(--eva-orange);
+        }
+
         .submit-button {
             width: 100%;
             padding: 1.5rem;
@@ -366,7 +382,7 @@
             </div>
 
             <div class="info-box">
-                <strong>⚠ ВНИМАНИЕ:</strong> Имя пользователя должно быть уникальным. Пароль должен содержать минимум 8 символов.
+                <strong>⚠ ВНИМАНИЕ:</strong> Имя пользователя должно быть уникальным. Пароль должен содержать минимум 8 символов. Для получения Telegram ID напишите боту <a href="https://t.me/WallTGBot" target="_blank" style="color: var(--eva-orange); text-decoration: underline;">@WallTGBot</a>
             </div>
 
             <form id="registerForm">
@@ -408,6 +424,25 @@
                         placeholder="Повторите пароль"
                         required
                     >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telegramId">Telegram ID</label>
+                    <input 
+                        type="text" 
+                        id="telegramId" 
+                        name="telegramId" 
+                        class="form-input" 
+                        placeholder="Получите UUID от @WallTGBot"
+                        required
+                        pattern="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                        title="UUID формата: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    >
+                    <div class="field-hint">
+                        <span style="color: var(--eva-orange);">💡</span> 
+                        Откройте <a href="https://t.me/WallTGBot" target="_blank" style="color: var(--eva-purple); text-decoration: underline;">@WallTGBot</a> 
+                        и получите ваш уникальный UUID
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-button" id="submitBtn">
@@ -469,6 +504,7 @@
             const username = document.getElementById('username').value;
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
+            const telegramId = document.getElementById('telegramId').value.trim();
 
             // Validation
             if (username.length < 3) {
@@ -486,6 +522,13 @@
                 return;
             }
 
+            // Проверка формата UUID
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(telegramId)) {
+                showError('Некорректный формат Telegram ID. Получите правильный UUID от @WallTGBot');
+                return;
+            }
+
             submitBtn.disabled = true;
             submitBtn.textContent = 'РЕГИСТРАЦИЯ...';
 
@@ -499,7 +542,7 @@
                     body: JSON.stringify({
                         user_name: username,
                         password: password,
-                        repeat_password: confirmPassword
+                        telegram_id: telegramId
                     })
                 });
 
