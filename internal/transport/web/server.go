@@ -70,6 +70,20 @@ func NewService(conn *pgxpool.Pool) error {
 		Summary:     "reset-password",
 	}, userHandler.ResetPassword)
 
+	huma.Register(api, huma.Operation{
+		OperationID: "reset-user-name",
+		Method:      http.MethodPost,
+		Path:        "/auth/new-user-name",
+		Summary:     "reset-user-name",
+	}, userHandler.ResetUserName)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "reset-telegram",
+		Method:      http.MethodPost,
+		Path:        "/auth/new-telegram",
+		Summary:     "reset-telegram",
+	}, userHandler.ResetTelegram)
+
 	
 
 	
