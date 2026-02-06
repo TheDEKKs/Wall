@@ -63,6 +63,13 @@ func NewService(conn *pgxpool.Pool) error {
 		Summary:     "wall",
 	}, wallHandler.GetWall)
 
+	huma.Register(api, huma.Operation{
+		OperationID: "reset-password",
+		Method:      http.MethodPost,
+		Path:        "/auth/new-password",
+		Summary:     "reset-password",
+	}, userHandler.ResetPassword)
+
 	
 
 	// Start the server!
