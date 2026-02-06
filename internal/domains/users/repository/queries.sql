@@ -17,5 +17,9 @@ SELECT id FROM users WHERE user_name = $1;
 -- name: SetNewPasswordByUserID :exec 
 UPDATE users SET password_hash = $2 WHERE id = $1;
 
--- name: SetNewUserNameUserID :exec
+-- name: SetNewUserNameByUserID :exec
 UPDATE users SET user_name = $2 WHERE id = $1;
+
+
+-- name: SetNewTelegramByUserID :exec
+UPDATE users SET telegram_record_id = $2 WHERE id = $1;

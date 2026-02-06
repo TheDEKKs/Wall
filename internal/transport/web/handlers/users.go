@@ -127,3 +127,20 @@ func (h *UserHandler) ResetUserName(ctx context.Context, input *ResetUserNameInp
 
 	return nil, nil 
 }
+
+
+type ResetTelegramInput struct {
+	Body struct {
+		TelegramID uuid.UUID `json:"telegram_id"`
+	}
+}
+
+func (h *UserHandler) ResetTelegram(ctx context.Context, input *ResetTelegramInput) (*struct{},error)  {
+	cookie := ctx.Value("cookie").(middlewares.CookieCtx)
+
+	if err := h.userService.ResetTelegram(ctx, cookie.UserID, input.Body.TelegramID); err != nil {
+		return nil, err
+	}
+
+	return nil, nil 
+}

@@ -97,16 +97,30 @@ func (q *Queries) SetNewPasswordByUserID(ctx context.Context, arg SetNewPassword
 	return err
 }
 
-const setNewUserNameUserID = `-- name: SetNewUserNameUserID :exec
+const setNewTelegramByUserID = `-- name: SetNewTelegramByUserID :exec
+UPDATE users SET telegram_record_id = $2 WHERE id = $1
+`
+
+type SetNewTelegramByUserIDParams struct {
+	ID               uuid.UUID `json:"id"`
+	TelegramRecordID uuid.UUID `json:"telegram_record_id"`
+}
+
+func (q *Queries) SetNewTelegramByUserID(ctx context.Context, arg SetNewTelegramByUserIDParams) error {
+	_, err := q.db.Exec(ctx, setNewTelegramByUserID, arg.ID, arg.TelegramRecordID)
+	return err
+}
+
+const setNewUserNameByUserID = `-- name: SetNewUserNameByUserID :exec
 UPDATE users SET user_name = $2 WHERE id = $1
 `
 
-type SetNewUserNameUserIDParams struct {
+type SetNewUserNameByUserIDParams struct {
 	ID       uuid.UUID `json:"id"`
 	UserName string    `json:"user_name"`
 }
 
-func (q *Queries) SetNewUserNameUserID(ctx context.Context, arg SetNewUserNameUserIDParams) error {
-	_, err := q.db.Exec(ctx, setNewUserNameUserID, arg.ID, arg.UserName)
+func (q *Queries) SetNewUserNameByUserID(ctx context.Context, arg SetNewUserNameByUserIDParams) error {
+	_, err := q.db.Exec(ctx, setNewUserNameByUserID, arg.ID, arg.UserName)
 	return err
 }

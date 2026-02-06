@@ -193,7 +193,7 @@ func (s *UserService) ResetPassword(ctx context.Context, userID uuid.UUID, passw
 }
 
 func (s *UserService) ResetUserName(ctx context.Context, userID uuid.UUID, newUserName string) (error) {
-	err := s.repo.SetNewUserNameUserID(ctx, repository.SetNewUserNameUserIDParams{
+	err := s.repo.SetNewUserNameByUserID(ctx, repository.SetNewUserNameByUserIDParams{
 		ID: userID,
 		UserName: newUserName,
 	})
@@ -213,5 +213,29 @@ func (s *UserService) ResetUserName(ctx context.Context, userID uuid.UUID, newUs
 
 	return nil
 }
+
+func (s *UserService) ResetTelegram(ctx context.Context, userID, telegram_id uuid.UUID) (error) {
+	err := s.repo.SetNewTelegramByUserID(ctx, repository.SetNewTelegramByUserIDParams{
+		ID: userID,
+		TelegramRecordID: telegram_id,
+	})
+
+	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+			switch pgErr.Code {
+			case "23505": 
+				return NonUnique
+		
+			default:
+				return err
+			}
+		}	
+	}
+
+
+	return nil
+}
+
+
 
 
