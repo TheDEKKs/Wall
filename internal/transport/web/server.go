@@ -63,6 +63,8 @@ func NewService(conn *pgxpool.Pool) error {
 		Summary:     "wall",
 	}, wallHandler.GetWall)
 
+	
+
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)
 

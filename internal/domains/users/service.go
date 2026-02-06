@@ -113,13 +113,9 @@ func (s *UserService) LoginUser(ctx context.Context, userName, password string) 
 		return nil, err
 	}
 
-	token, err := security.JwtCreate(user.PasswordHash, user.ID)
-	if err != nil {
-		return nil, err
-	}
 
 	userCookie := map[string]string{
-		"Token":  token,
+		"Token":  user.PasswordHash,
 		"UserID": user.ID.String(),
 	}
 
@@ -158,3 +154,41 @@ func (s *UserService) GetTelegramIDUserByUserName(ctx context.Context, userName 
 	return &user, nil
 
 }
+
+
+func (s *UserService) ResetPassword(ctx context.Context, userID uuid.UUID, password, newPassword string) (*map[string]string, error) {
+	user, err := s.repo.GetUserByUserID(ctx, userID)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, DoesNotExist
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := security.CheckPassword(user.PasswordHash, password); err != nil {
+		return nil, err
+	}
+
+	token, err := security.JwtCreate(newPassword, user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.repo.SetNewPasswordByUserID(ctx, repository.SetNewPasswordByUserIDParams{
+		ID: userID,
+		PasswordHash: token,
+	}); err != nil {
+		return nil, err
+	}
+
+	userCookie := map[string]string{
+		"Token":  token,
+		"UserID": user.ID.String(),
+	}
+
+	return &userCookie, nil
+
+	
+}
+
