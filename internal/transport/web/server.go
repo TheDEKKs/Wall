@@ -63,6 +63,31 @@ func NewService(conn *pgxpool.Pool) error {
 		Summary:     "wall",
 	}, wallHandler.GetWall)
 
+	huma.Register(api, huma.Operation{
+		OperationID: "reset-password",
+		Method:      http.MethodPost,
+		Path:        "/auth/new-password",
+		Summary:     "reset-password",
+	}, userHandler.ResetPassword)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "reset-user-name",
+		Method:      http.MethodPost,
+		Path:        "/auth/new-user-name",
+		Summary:     "reset-user-name",
+	}, userHandler.ResetUserName)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "reset-telegram",
+		Method:      http.MethodPost,
+		Path:        "/auth/new-telegram",
+		Summary:     "reset-telegram",
+	}, userHandler.ResetTelegram)
+
+	
+
+	
+
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)
 
