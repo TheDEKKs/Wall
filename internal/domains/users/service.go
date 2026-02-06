@@ -192,3 +192,26 @@ func (s *UserService) ResetPassword(ctx context.Context, userID uuid.UUID, passw
 	
 }
 
+func (s *UserService) ResetUserName(ctx context.Context, userID uuid.UUID, newUserName string) (error) {
+	err := s.repo.SetNewUserNameUserID(ctx, repository.SetNewUserNameUserIDParams{
+		ID: userID,
+		UserName: newUserName,
+	})
+
+	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+			switch pgErr.Code {
+			case "23505": 
+				return NonUnique
+		
+			default:
+				return err
+			}
+		}	
+	}
+
+
+	return nil
+}
+
+

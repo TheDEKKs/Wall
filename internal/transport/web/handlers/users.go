@@ -110,3 +110,20 @@ func (h *UserHandler) ResetPassword(ctx context.Context, input *ResetPasswordInp
 
 	return &userCookieOut, nil
 }
+
+
+type ResetUserNameInput struct {
+	Body struct {
+		UserName string `json:"new_user_name"`
+	}
+}
+
+func (h *UserHandler) ResetUserName(ctx context.Context, input *ResetUserNameInput) (*struct{},error) {
+	cookie := ctx.Value("cookie").(middlewares.CookieCtx)
+
+	if err := h.userService.ResetUserName(ctx, cookie.UserID, input.Body.UserName); err != nil {
+		return nil, err
+	}
+
+	return nil, nil 
+}

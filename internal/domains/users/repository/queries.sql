@@ -16,3 +16,6 @@ SELECT id FROM users WHERE user_name = $1;
 
 -- name: SetNewPasswordByUserID :exec 
 UPDATE users SET password_hash = $2 WHERE id = $1;
+
+-- name: SetNewUserNameUserID :exec
+UPDATE users SET user_name = $2 WHERE id = $1;

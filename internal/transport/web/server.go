@@ -72,6 +72,8 @@ func NewService(conn *pgxpool.Pool) error {
 
 	
 
+	
+
 	// Start the server!
 	http.ListenAndServe("127.0.0.1:8888", router)
 

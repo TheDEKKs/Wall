@@ -96,3 +96,17 @@ func (q *Queries) SetNewPasswordByUserID(ctx context.Context, arg SetNewPassword
 	_, err := q.db.Exec(ctx, setNewPasswordByUserID, arg.ID, arg.PasswordHash)
 	return err
 }
+
+const setNewUserNameUserID = `-- name: SetNewUserNameUserID :exec
+UPDATE users SET user_name = $2 WHERE id = $1
+`
+
+type SetNewUserNameUserIDParams struct {
+	ID       uuid.UUID `json:"id"`
+	UserName string    `json:"user_name"`
+}
+
+func (q *Queries) SetNewUserNameUserID(ctx context.Context, arg SetNewUserNameUserIDParams) error {
+	_, err := q.db.Exec(ctx, setNewUserNameUserID, arg.ID, arg.UserName)
+	return err
+}
