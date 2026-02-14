@@ -780,13 +780,16 @@
             }
 
             // Загрузить данные стены
-            await loadWall();
+            const success = await loadWall();
             
-            // Настроить форму комментария
-            setupCommentForm();
-            
-            // Настроить кнопки "Поделиться"
-            setupShareButtons();
+            // Только если загрузка успешна - настраиваем формы
+            if (success) {
+                // Настроить форму комментария
+                setupCommentForm();
+                
+                // Настроить кнопки "Поделиться"
+                setupShareButtons();
+            }
         }
 
         // Загрузка данных стены
@@ -802,56 +805,94 @@
 
                 if (response.status === 404) {
                     showError('ПОЛЬЗОВАТЕЛЬ НЕ НАЙДЕН', `Пользователь ${targetUsername} не существует`);
-                    return;
+                    return false;
                 }
 
                 if (!response.ok) {
                     showError('ОШИБКА ЗАГРУЗКИ', 'Не удалось загрузить данные стены');
-                    return;
+                    return false;
                 }
 
-                const data = await response.json();
-                userData = data;
+                // Получаем текст ответа
+                let text = await response.text();
+                text = text.trim();
+                
+                // Если JSON повторяется дважды - берем только первый
+                // Ищем закрывающую скобку первого объекта
+                let data;
+                try {
+                    // Пытаемся найти первый полный JSON объект
+                    let bracketCount = 0;
+                    let firstJsonEnd = -1;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        if (text[i] === '{') bracketCount++;
+                        if (text[i] === '}') bracketCount--;
+                        
+                        if (bracketCount === 0 && firstJsonEnd === -1 && text[i] === '}') {
+                            firstJsonEnd = i + 1;
+                            break;
+                        }
+                    }
+                    
+                    // Берем только первый JSON
+                    const firstJson = firstJsonEnd > 0 ? text.substring(0, firstJsonEnd) : text;
+                    data = JSON.parse(firstJson);
+                    
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    console.log('Response text:', text);
+                    throw new Error('Invalid JSON response');
+                }
+                
+                userData = data.Body || data;
 
                 // Отобразить данные
-                displayWall(data);
+                displayWall(userData);
                 hideLoading();
+                
+                return true;
 
             } catch (error) {
                 console.error('Load wall error:', error);
                 showError('ОШИБКА СОЕДИНЕНИЯ', 'Не удалось подключиться к серверу');
+                return false;
             }
         }
 
         // Отображение данных стены
         function displayWall(data) {
             // Имя пользователя
-            document.getElementById('userName').textContent = data.user_name || targetUsername;
+            const userName = data.user_name || data.UserName || targetUsername;
+            document.getElementById('userName').textContent = userName;
             
             // Аватар
-            document.getElementById('userAvatar').textContent = getAvatarEmoji(data.user_name || targetUsername);
+            document.getElementById('userAvatar').textContent = getAvatarEmoji(userName);
             
             // Статистика
-            document.getElementById('userStats').textContent = `СООБЩЕНИЙ: ${data.number_of_records || 0}`;
+            const commentsCount = data.number_of_records || data.NumberOfRecords || 0;
+            document.getElementById('userStats').textContent = `СООБЩЕНИЙ: ${commentsCount}`;
 
-            // Telegram профиль
-            if (data.user_name_telegram) {
+            // Telegram профиль (опционально)
+            const telegramUsername = data.user_name_telegram || data.UserNameTelegram;
+            if (telegramUsername && telegramUsername !== '' && telegramUsername !== 'null') {
                 const telegramProfile = document.getElementById('telegramProfile');
                 const telegramName = document.getElementById('telegramName');
-                const telegramUsername = document.getElementById('telegramUsername');
+                const telegramUsernameEl = document.getElementById('telegramUsername');
                 
-                const fullName = [data.first_name_telegram, data.last_name_telegram]
-                    .filter(Boolean)
-                    .join(' ') || 'Telegram User';
+                const firstName = data.first_name_telegram || data.FirstNameTelegram || '';
+                const lastName = data.last_name_telegram || data.LastNAmeTelegram || '';
+                const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Telegram User';
                 
                 telegramName.textContent = fullName;
-                telegramUsername.textContent = data.user_name_telegram;
-                telegramProfile.href = `https://t.me/${data.user_name_telegram}`;
+                telegramUsernameEl.textContent = telegramUsername;
+                telegramProfile.href = `https://t.me/${telegramUsername}`;
                 telegramProfile.style.display = 'block';
             }
 
             // Комментарии
-            displayComments(data.Comments || []);
+            const comments = data.Comments || data.comments || [];
+            displayComments(comments);
         }
 
         // Отображение комментариев
@@ -890,6 +931,12 @@
             const charCounter = document.getElementById('charCounter');
             const commentForm = document.getElementById('commentForm');
             const submitBtn = document.getElementById('submitBtn');
+
+            // Проверка что элементы существуют
+            if (!commentText || !charCounter || !commentForm || !submitBtn) {
+                console.error('Comment form elements not found');
+                return;
+            }
 
             // Счетчик символов
             commentText.addEventListener('input', () => {
@@ -993,6 +1040,12 @@
             const shareTelegram = document.getElementById('shareTelegram');
             const shareVk = document.getElementById('shareVk');
             const shareNative = document.getElementById('shareNative');
+
+            // Проверка что элементы существуют
+            if (!shareUrl || !copyBtn || !shareTelegram || !shareVk || !shareNative) {
+                console.error('Share buttons elements not found');
+                return;
+            }
 
             shareUrl.value = currentUrl;
 
