@@ -186,6 +186,48 @@
             50% { opacity: 1; transform: scaleY(1.5); }
         }
 
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 0.3rem;
+            color: var(--eva-purple);
+        }
+
+        .quick-start-btn {
+            padding: 0.75rem 2rem;
+            background: var(--eva-purple);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-start-btn:hover {
+            background: var(--eva-orange);
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* Section Number */
         .section-number {
             position: absolute;
@@ -248,19 +290,17 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            margin-top: 3rem;
         }
 
         .warning-icon {
             font-size: 3rem;
-            color: var(--warning-yellow);
+            flex-shrink: 0;
         }
 
-        .warning-box p {
+        .warning-text {
             font-size: 1.1rem;
             letter-spacing: 0.1rem;
-            color: var(--warning-yellow);
-            font-weight: bold;
+            line-height: 1.8;
         }
 
         /* Features Section */
@@ -270,16 +310,16 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
 
         .feature-card {
-            background: rgba(153, 51, 255, 0.03);
+            background: var(--bg-dark);
             border: 1px solid var(--border-color);
-            padding: 2.5rem;
-            position: relative;
+            padding: 2.5rem 2rem;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .feature-card::before {
@@ -287,46 +327,42 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 0;
-            height: 2px;
+            right: 0;
+            height: 3px;
             background: var(--eva-purple);
-            transition: width 0.3s ease;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .feature-card:hover {
             border-color: var(--eva-purple);
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(153, 51, 255, 0.3);
         }
 
         .feature-card:hover::before {
-            width: 100%;
+            transform: scaleX(1);
         }
 
-        .feature-number {
+        .feature-icon {
             font-size: 3rem;
-            font-weight: 900;
-            color: rgba(153, 51, 255, 0.3);
-            line-height: 1;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: block;
         }
 
         .feature-title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: 0.2rem;
             margin-bottom: 1rem;
             color: var(--text-primary);
         }
 
-        .feature-text {
-            color: var(--text-secondary);
+        .feature-description {
+            font-size: 1rem;
             line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            opacity: 0.5;
+            color: var(--text-secondary);
+            letter-spacing: 0.05rem;
         }
 
         /* Social Section */
@@ -336,125 +372,92 @@
 
         .social-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
         .social-card {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            padding: 3rem 2rem;
+            border: 2px solid var(--border-color);
+            padding: 2.5rem;
             text-align: center;
-            text-decoration: none;
-            color: var(--text-primary);
-            position: relative;
             transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .social-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0;
-            background: rgba(153, 51, 255, 0.1);
-            transition: height 0.3s ease;
         }
 
         .social-card:hover {
-            border-color: var(--eva-purple);
-            transform: translateY(-5px);
-        }
-
-        .social-card:hover::after {
-            height: 100%;
+            border-color: var(--eva-orange);
+            transform: scale(1.02);
+            box-shadow: 0 10px 40px rgba(255, 102, 0, 0.2);
         }
 
         .social-icon {
-            font-size: 3.5rem;
+            font-size: 4rem;
             margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
+            display: block;
         }
 
-        .social-name {
-            font-size: 1.3rem;
+        .social-title {
+            font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: 0.2rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
         }
 
-        .social-status {
-            font-size: 0.8rem;
-            color: var(--eva-green);
-            letter-spacing: 0.1rem;
-            position: relative;
-            z-index: 1;
+        .social-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--eva-purple);
+            color: var(--eva-purple);
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--eva-purple);
+            color: var(--text-primary);
+            box-shadow: 0 0 20px rgba(153, 51, 255, 0.5);
         }
 
         /* CTA Section */
         .cta-section {
             background: var(--bg-darker);
-            position: relative;
-        }
-
-        .cta-content {
             text-align: center;
         }
 
-        .cta-warning {
-            background: var(--bg-dark);
-            border: 3px solid var(--warning-yellow);
-            padding: 2rem 3rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .warning-stripes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255, 255, 0, 0.05) 10px,
-                rgba(255, 255, 0, 0.05) 20px
-            );
-            pointer-events: none;
-        }
-
-        .cta-text {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        .cta-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 900;
+            letter-spacing: 0.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px var(--eva-purple);
+        }
+
+        .cta-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
             letter-spacing: 0.3rem;
-            color: var(--warning-yellow);
-            position: relative;
-            z-index: 1;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
         }
 
         .cta-button {
+            padding: 2rem 4rem;
             background: var(--eva-purple);
-            color: var(--text-primary);
             border: none;
-            padding: 1.5rem 4rem;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
             font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 0.3rem;
+            font-weight: 900;
+            letter-spacing: 0.5rem;
             cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
         }
 
         .cta-button::before {
@@ -469,71 +472,84 @@
         }
 
         .cta-button:hover {
+            background: var(--eva-orange);
+            box-shadow: 0 0 40px rgba(255, 102, 0, 0.5);
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(153, 51, 255, 0.5);
         }
 
         .cta-button:hover::before {
             left: 100%;
         }
 
-        .button-arrow {
-            transition: transform 0.3s ease;
-        }
-
-        .cta-button:hover .button-arrow {
-            transform: translateX(10px);
-        }
-
-        .cta-footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
             border-top: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            letter-spacing: 0.1rem;
+            padding: 3rem 2rem;
+            text-align: center;
         }
 
-        .cta-footer p {
-            margin: 0.5rem 0;
+        .footer-text {
+            font-size: 0.9rem;
+            letter-spacing: 0.2rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--eva-purple);
+            text-shadow: 0 0 10px rgba(153, 51, 255, 0.5);
         }
 
         /* Auth Modal */
-        .modal-overlay {
+        .auth-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
             opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.active {
+        .auth-modal.active {
             opacity: 1;
-            visibility: visible;
+            pointer-events: all;
         }
 
-        .modal-container {
+        .auth-modal-content {
             background: var(--bg-dark);
             border: 2px solid var(--eva-purple);
-            max-width: 600px;
+            max-width: 500px;
             width: 90%;
             position: relative;
-            animation: modalSlide 0.4s ease;
-            box-shadow: 0 0 50px rgba(153, 51, 255, 0.3);
+            animation: modalSlide 0.3s ease;
         }
 
         @keyframes modalSlide {
             from {
-                transform: translateY(-50px);
+                transform: translateY(50px);
                 opacity: 0;
             }
             to {
@@ -544,27 +560,21 @@
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 2px solid var(--eva-red);
-            color: var(--eva-red);
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
             font-size: 2rem;
-            width: 50px;
-            height: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 10;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             line-height: 1;
         }
 
         .modal-close:hover {
-            background: var(--eva-red);
-            color: var(--bg-dark);
+            color: var(--eva-red);
             transform: rotate(90deg);
         }
 
@@ -572,309 +582,220 @@
             padding: 3rem 2rem 2rem;
             border-bottom: 1px solid var(--border-color);
             text-align: center;
-            position: relative;
-        }
-
-        .modal-corner {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--eva-orange);
-        }
-
-        .modal-corner.top-left {
-            top: 15px;
-            left: 15px;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .modal-corner.top-right {
-            top: 15px;
-            right: 15px;
-            border-left: none;
-            border-bottom: none;
-        }
-
-        .modal-corner.bottom-left {
-            bottom: 15px;
-            left: 15px;
-            border-right: none;
-            border-top: none;
-        }
-
-        .modal-corner.bottom-right {
-            bottom: 15px;
-            right: 15px;
-            border-left: none;
-            border-top: none;
         }
 
         .modal-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 900;
             letter-spacing: 0.5rem;
             margin-bottom: 0.5rem;
-            color: var(--text-primary);
             text-shadow: 0 0 20px var(--eva-purple);
         }
 
         .modal-subtitle {
             font-size: 1rem;
-            letter-spacing: 0.3rem;
+            letter-spacing: 0.2rem;
             color: var(--text-muted);
         }
 
-        .modal-content {
+        .modal-body {
             padding: 3rem 2rem;
         }
 
         .auth-options {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1rem;
         }
 
-        .auth-button {
-            background: rgba(153, 51, 255, 0.05);
-            border: 2px solid var(--border-color);
-            padding: 2rem;
+        .auth-option {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
-            position: relative;
-            overflow: hidden;
         }
 
-        .auth-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(153, 51, 255, 0.1);
-            transition: left 0.3s ease;
-        }
-
-        .auth-button:hover {
+        .auth-option:hover {
             border-color: var(--eva-purple);
+            background: rgba(153, 51, 255, 0.1);
             transform: translateX(10px);
         }
 
-        .auth-button:hover::before {
-            left: 0;
-        }
-
-        .register-btn:hover {
-            border-color: var(--eva-orange);
-        }
-
-        .login-btn:hover {
-            border-color: var(--eva-green);
-        }
-
-        .quick-access-btn {
-            border-color: var(--eva-purple);
-        }
-
-        .quick-access-btn:hover {
-            border-color: var(--eva-orange);
-        }
-
-        .quick-access-btn::before {
-            background: rgba(255, 102, 0, 0.1);
-        }
-
-        .auth-icon {
-            font-size: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
         .auth-text {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            letter-spacing: 0.3rem;
+            letter-spacing: 0.2rem;
             color: var(--text-primary);
-            flex: 1;
-            text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .auth-arrow {
             font-size: 1.5rem;
-            color: var(--eva-purple);
-            transition: transform 0.3s ease;
-            position: relative;
-            z-index: 1;
+            color: var(--eva-orange);
         }
 
-        .auth-button:hover .auth-arrow {
-            transform: translateX(10px);
+        .quick-access-option {
+            display: none;
+            background: rgba(0, 255, 0, 0.05);
+            border-color: var(--eva-green);
         }
 
-        .divider {
-            position: relative;
-            text-align: center;
-            margin: 1rem 0;
+        .quick-access-option:hover {
+            border-color: var(--eva-green);
+            background: rgba(0, 255, 0, 0.1);
         }
 
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--border-color);
-        }
-
-        .divider-text {
-            background: var(--bg-dark);
-            padding: 0 1rem;
-            position: relative;
-            z-index: 1;
-            color: var(--text-muted);
-            letter-spacing: 0.2rem;
-            font-size: 0.9rem;
-        }
-
-        .terms-container {
+        .terms-agreement {
             margin-top: 2rem;
             padding: 1.5rem;
-            background: rgba(255, 102, 0, 0.05);
-            border: 1px solid var(--eva-orange);
-        }
-
-        .terms-checkbox-wrapper {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            background: rgba(255, 255, 0, 0.05);
+            border: 1px solid var(--warning-yellow);
         }
 
         .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .terms-checkbox input {
             width: 20px;
             height: 20px;
+            margin-top: 3px;
             cursor: pointer;
-            flex-shrink: 0;
-            margin-top: 2px;
+            accent-color: var(--eva-purple);
         }
 
-        .terms-label {
-            font-size: 0.85rem;
+        .terms-text {
+            font-size: 0.9rem;
             line-height: 1.6;
             color: var(--text-secondary);
-            cursor: pointer;
+            letter-spacing: 0.05rem;
         }
 
-        .terms-label a {
+        .terms-text a {
             color: var(--eva-purple);
             text-decoration: underline;
             transition: color 0.3s ease;
         }
 
-        .terms-label a:hover {
+        .terms-text a:hover {
             color: var(--eva-orange);
         }
 
         .terms-error {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--eva-red);
             color: var(--eva-red);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
             display: none;
-            letter-spacing: 0.05rem;
         }
 
         .terms-error.active {
             display: block;
+            animation: shake 0.5s;
         }
 
-        .modal-footer {
-            padding: 2rem;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-info {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            letter-spacing: 0.1rem;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .section-number {
-                font-size: 3rem;
-                top: 20px;
-                left: 20px;
-            }
-            
             .hero-title {
                 letter-spacing: 0.5rem;
             }
-            
+
             .hero-subtitle {
-                letter-spacing: 0.2rem;
+                letter-spacing: 0.3rem;
             }
-            
+
+            .section-number {
+                font-size: 4rem;
+                top: 20px;
+                left: 20px;
+            }
+
             .section-title {
+                letter-spacing: 0.3rem;
+            }
+
+            .top-nav {
+                padding: 1rem;
+            }
+
+            .nav-logo {
+                font-size: 1.2rem;
                 letter-spacing: 0.2rem;
             }
-            
+
+            .quick-start-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .cta-button {
+                padding: 1.5rem 2rem;
+                font-size: 1.2rem;
+                letter-spacing: 0.3rem;
+            }
+
             .features-grid,
             .social-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .about-text {
                 padding-left: 1rem;
             }
-            
+
             .warning-box {
                 flex-direction: column;
                 text-align: center;
             }
 
-            .modal-title {
-                font-size: 1.8rem;
-                letter-spacing: 0.3rem;
-            }
-
-            .auth-text {
-                font-size: 1.2rem;
-                letter-spacing: 0.2rem;
-            }
-
-            .auth-button {
-                padding: 1.5rem;
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-logo">WALL</div>
+        <button class="quick-start-btn" id="quickStartBtnTop">НАЧАТЬ</button>
+    </nav>
+
     <!-- Hero Section -->
     <section class="section hero-section">
         <div class="eva-grid"></div>
-        <div class="hero-content">
-            <h1 class="hero-title" id="hero-title"></h1>
-            <p class="hero-subtitle" id="hero-subtitle"></p>
-        </div>
-        <div class="scroll-indicator">
-            <span class="scroll-text">SCROLL</span>
-            <div class="scroll-line"></div>
-        </div>
+        
         <div class="corner-marks">
             <div class="corner top-left"></div>
             <div class="corner top-right"></div>
             <div class="corner bottom-left"></div>
             <div class="corner bottom-right"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title" id="heroTitle">WALL</h1>
+            <p class="hero-subtitle" id="heroSubtitle">ПИШИ НА СТЕНЫ</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <span class="scroll-text">ПРОКРУТИ ВНИЗ</span>
+            <div class="scroll-line"></div>
         </div>
     </section>
 
@@ -884,22 +805,27 @@
         <div class="content-wrapper">
             <h2 class="section-title">
                 <span class="title-line"></span>
-                О ЧЁМ WALL?
+                ЧТО ТАКОЕ WALL?
             </h2>
+            
             <div class="about-content">
                 <p class="about-text">
-                    Твоя личная стена в цифровом пространстве. 
-                    Место, где твои друзья могут оставить свой след — 
-                    написать всё, что думают о тебе, поделиться воспоминаниями, 
-                    признаться в чём-то важном.
+                    WALL — это минималистичная платформа для публичного общения. Каждый пользователь имеет свою "стену", 
+                    на которой другие могут оставлять сообщения. Никаких лайков, никаких подписок — только чистая коммуникация.
                 </p>
+                
                 <p class="about-text">
-                    Без масок. Без фильтров. Только искренность.
+                    Вдохновлённая эстетикой Evangelion, платформа фокусируется на простоте и прямоте общения. 
+                    Создай свою стену и начни получать сообщения от других пользователей.
                 </p>
-            </div>
-            <div class="warning-box">
-                <div class="warning-icon">⚠</div>
-                <p>КАЖДОЕ СООБЩЕНИЕ — ЭТО СВЯЗЬ МЕЖДУ ЛЮДЬМИ</p>
+
+                <div class="warning-box">
+                    <span class="warning-icon">⚠</span>
+                    <div class="warning-text">
+                        <strong>ВНИМАНИЕ:</strong> Все сообщения публичны и видны всем. 
+                        Будьте вежливы и уважайте других пользователей. Модерация не предусмотрена.
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -912,24 +838,54 @@
                 <span class="title-line"></span>
                 ВОЗМОЖНОСТИ
             </h2>
+            
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-number">01</div>
-                    <h3 class="feature-title">ОТКРЫТОСТЬ</h3>
-                    <p class="feature-text">Друзья пишут от своего имени — честно и искренне</p>
-                    <div class="feature-icon">✍️</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-number">02</div>
+                    <span class="feature-icon">📝</span>
                     <h3 class="feature-title">ЛИЧНАЯ СТЕНА</h3>
-                    <p class="feature-text">Твоё уникальное пространство для воспоминаний</p>
-                    <div class="feature-icon">🧱</div>
+                    <p class="feature-description">
+                        Получай сообщения от других пользователей. Твоя стена — твоё цифровое пространство для коммуникации.
+                    </p>
                 </div>
+
                 <div class="feature-card">
-                    <div class="feature-number">03</div>
-                    <h3 class="feature-title">СВЯЗЬ</h3>
-                    <p class="feature-text">Укрепляй отношения через искренние послания</p>
-                    <div class="feature-icon">💭</div>
+                    <span class="feature-icon">🔗</span>
+                    <h3 class="feature-title">ПРОСТАЯ ССЫЛКА</h3>
+                    <p class="feature-description">
+                        Делись ссылкой на свою стену в любых соцсетях. Короткий адрес wall.com/username.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🎭</span>
+                    <h3 class="feature-title">АНОНИМНОСТЬ</h3>
+                    <p class="feature-description">
+                        Пиши на стены других пользователей. Твои комментарии публичны, но ты сам решаешь, что писать.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">БЕЗ РЕКЛАМЫ</h3>
+                    <p class="feature-description">
+                        Никакой рекламы, никаких алгоритмов. Только чистая коммуникация между людьми.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3 class="feature-title">ПРИВАТНОСТЬ</h3>
+                    <p class="feature-description">
+                        Мы не продаём твои данные. Минимум информации для регистрации — только username и пароль.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3 class="feature-title">TELEGRAM BOT</h3>
+                    <p class="feature-description">
+                        Получай уведомления о новых сообщениях через Telegram бота. Мгновенная связь.
+                    </p>
                 </div>
             </div>
         </div>
@@ -941,192 +897,102 @@
         <div class="content-wrapper">
             <h2 class="section-title">
                 <span class="title-line"></span>
-                СВЯЗЬ
+                ПОДКЛЮЧАЙСЯ
             </h2>
+            
             <div class="social-grid">
-                <a href="#" class="social-card">
-                    <div class="social-icon">📱</div>
-                    <div class="social-name">TELEGRAM</div>
-                    <div class="social-status">ACTIVE</div>
-                </a>
-                <a href="#" class="social-card">
-                    <div class="social-icon">✉️</div>
-                    <div class="social-name">EMAIL</div>
-                    <div class="social-status">ACTIVE</div>
-                </a>
-                <a href="#" class="social-card">
-                    <div class="social-icon">💬</div>
-                    <div class="social-name">ПОДДЕРЖКА TG</div>
-                    <div class="social-status">ACTIVE</div>
-                </a>
+                <div class="social-card">
+                    <span class="social-icon">💬</span>
+                    <h3 class="social-title">TELEGRAM</h3>
+                    <p class="feature-description">
+                        Присоединяйся к нашему сообществу в Telegram. Новости, обновления и общение с другими пользователями.
+                    </p>
+                    <a href="https://t.me/WallCommunity" class="social-link" target="_blank">ПЕРЕЙТИ →</a>
+                </div>
+
+                <div class="social-card">
+                    <span class="social-icon">🤖</span>
+                    <h3 class="social-title">TELEGRAM BOT</h3>
+                    <p class="feature-description">
+                        Подключи бота для получения уведомлений. Узнавай о новых сообщениях на твоей стене мгновенно.
+                    </p>
+                    <a href="https://t.me/WallTGBot" class="social-link" target="_blank">ПОДКЛЮЧИТЬ →</a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
     <section class="section cta-section">
-        <div class="cta-content">
-            <div class="cta-warning">
-                <div class="warning-stripes"></div>
-                <p class="cta-text">ГОТОВ СОЗДАТЬ СВОЮ СТЕНУ?</p>
-            </div>
-            <button class="cta-button" id="startButton">
-                <span class="button-text">НАЧАТЬ</span>
-                <span class="button-arrow">→</span>
-            </button>
-            <div class="cta-footer">
-                <p>WALL SYSTEM v1.0.0</p>
-                <p>© 2026 ALL RIGHTS RESERVED</p>
-            </div>
+        <div class="content-wrapper">
+            <h2 class="cta-title">ГОТОВ НАЧАТЬ?</h2>
+            <p class="cta-subtitle">СОЗДАЙ СВОЮ СТЕНУ ПРЯМО СЕЙЧАС</p>
+            <button class="cta-button" id="startButton">НАЧАТЬ</button>
         </div>
     </section>
 
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">© 2025 WALL — ПИШИ НА СТЕНЫ</p>
+        <div class="footer-links">
+            <a href="terms.html" class="footer-link">УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</a>
+            <a href="privacy.html" class="footer-link">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a>
+        </div>
+    </footer>
+
     <!-- Auth Modal -->
-    <div class="modal-overlay" id="authModal">
-        <div class="modal-container">
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
             <button class="modal-close" id="closeModal">×</button>
             
-            <div class="modal-header">
-                <div class="modal-corner top-left"></div>
-                <div class="modal-corner top-right"></div>
-                <h2 class="modal-title">WALL SYSTEM</h2>
-                <p class="modal-subtitle">ДОСТУП К СИСТЕМЕ</p>
+            <div class="corner-marks">
+                <div class="corner top-left"></div>
+                <div class="corner top-right"></div>
+                <div class="corner bottom-left"></div>
+                <div class="corner bottom-right"></div>
             </div>
 
-            <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">НАЧАТЬ</h2>
+                <p class="modal-subtitle">ВЫБЕРИ ДЕЙСТВИЕ</p>
+            </div>
+
+            <div class="modal-body">
                 <div class="auth-options">
-                    <button class="auth-button register-btn">
-                        <span class="auth-icon">📝</span>
-                        <span class="auth-text">РЕГИСТРАЦИЯ</span>
+                    <div class="auth-option quick-access-option" id="quickAccessBtn">
+                        <span class="auth-text">МОЯ СТЕНА</span>
                         <span class="auth-arrow">→</span>
-                    </button>
-                    
-                    <div class="divider">
-                        <span class="divider-text">ИЛИ</span>
                     </div>
                     
-                    <button class="auth-button login-btn">
-                        <span class="auth-icon">🔓</span>
-                        <span class="auth-text">ВОЙТИ</span>
+                    <div class="auth-option register-btn">
+                        <span class="auth-text">РЕГИСТРАЦИЯ</span>
                         <span class="auth-arrow">→</span>
-                    </button>
+                    </div>
+                    
+                    <div class="auth-option login-btn">
+                        <span class="auth-text">ВХОД</span>
+                        <span class="auth-arrow">→</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <div class="modal-corner bottom-left"></div>
-                <div class="modal-corner bottom-right"></div>
-                <p class="modal-info">ВЫБЕРИТЕ ДЕЙСТВИЕ ДЛЯ ПРОДОЛЖЕНИЯ</p>
+                <div class="terms-agreement">
+                    <label class="terms-checkbox">
+                        <input type="checkbox" id="termsCheckbox">
+                        <span class="terms-text">
+                            Я соглашаюсь с <a href="terms.html" id="termsLink" target="_blank">условиями использования</a> 
+                            и <a href="privacy.html" id="privacyLink" target="_blank">политикой конфиденциальности</a>
+                        </span>
+                    </label>
+                    <div class="terms-error" id="termsError">
+                        ⚠ НЕОБХОДИМО ПРИНЯТЬ УСЛОВИЯ
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Typing animation for hero section
-        const heroTitle = document.getElementById('hero-title');
-        const heroSubtitle = document.getElementById('hero-subtitle');
-
-        const titleText = 'WALL';
-        const subtitleText = 'ПИШИ НА СТЕНЫ';
-
-        let titleIndex = 0;
-        let subtitleIndex = 0;
-
-        // Type title
-        function typeTitle() {
-            if (titleIndex < titleText.length) {
-                heroTitle.textContent += titleText.charAt(titleIndex);
-                titleIndex++;
-                setTimeout(typeTitle, 200);
-            } else {
-                setTimeout(typeSubtitle, 500);
-            }
-        }
-
-        // Type subtitle
-        function typeSubtitle() {
-            if (subtitleIndex < subtitleText.length) {
-                heroSubtitle.textContent += subtitleText.charAt(subtitleIndex);
-                subtitleIndex++;
-                setTimeout(typeSubtitle, 100);
-            } else {
-                heroSubtitle.style.borderRight = '2px solid #fff';
-                setInterval(() => {
-                    heroSubtitle.style.borderRight = 
-                        heroSubtitle.style.borderRight === '2px solid #fff' 
-                        ? '2px solid transparent' 
-                        : '2px solid #fff';
-                }, 500);
-            }
-        }
-
-        // Start typing animation
-        window.addEventListener('load', () => {
-            setTimeout(typeTitle, 500);
-        });
-
-        // Smooth scroll
-        document.querySelector('.scroll-indicator')?.addEventListener('click', () => {
-            const aboutSection = document.querySelector('.about-section');
-            aboutSection?.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // Parallax effect
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const sectionNumbers = document.querySelectorAll('.section-number');
-            
-            sectionNumbers.forEach((number) => {
-                const speed = 0.5;
-                const yPos = -(scrolled * speed);
-                number.style.transform = `translateY(${yPos}px)`;
-            });
-        });
-
-        // Fade-in animations
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const animatedElements = document.querySelectorAll(
-                '.feature-card, .social-card, .about-text, .warning-box'
-            );
-            
-            animatedElements.forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(el);
-            });
-        });
-
-        // Glitch effect
-        heroTitle?.addEventListener('mouseenter', () => {
-            let glitchInterval = setInterval(() => {
-                heroTitle.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
-            }, 50);
-            
-            setTimeout(() => {
-                clearInterval(glitchInterval);
-                heroTitle.style.transform = 'translate(0, 0)';
-            }, 300);
-        });
-
-        // CTA Button
-        document.querySelector('.cta-button')?.addEventListener('click', () => {
-            console.log('Starting Wall creation...');
-        });
+        const API_BASE_URL = 'http://127.0.0.1:8888';
 
         // Auth Modal functionality
         const authModal = document.getElementById('authModal');
@@ -1140,7 +1006,6 @@
         const termsError = document.getElementById('termsError');
         const termsLink = document.getElementById('termsLink');
         const privacyLink = document.getElementById('privacyLink');
-        const API_BASE_URL = 'http://127.0.0.1:8888';
 
         // Проверка согласия с условиями
         function checkTermsAccepted() {
@@ -1184,7 +1049,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     
-                    if (data.user_name) {
+                    if (data && data.user_name) {
                         // Пользователь авторизован - переход на стену
                         window.location.href = `wall.html?user=${data.user_name}`;
                         return;
@@ -1223,7 +1088,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     
-                    if (data.user_name) {
+                    if (data && data.user_name) {
                         // Показываем кнопку быстрого доступа в модалке
                         quickAccessBtn.style.display = 'flex';
                         quickAccessBtn.querySelector('.auth-text').textContent = `МОЯ СТЕНА (${data.user_name.toUpperCase()})`;
@@ -1240,12 +1105,6 @@
         }
 
         checkQuickAccess();
-
-        // Open modal
-        startButton?.addEventListener('click', () => {
-            authModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
 
         // Close modal
         closeModal?.addEventListener('click', () => {
@@ -1281,15 +1140,59 @@
             window.location.href = 'login.html';
         });
 
-        // Random glitch effect
-        setInterval(() => {
-            if (Math.random() > 0.95) {
-                document.body.style.filter = 'hue-rotate(180deg)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                }, 50);
-            }
-        }, 3000);
+        // Typing animation
+        const heroTitle = document.getElementById('heroTitle');
+        const heroSubtitle = document.getElementById('heroSubtitle');
+        
+        function typeTitle() {
+            const text = 'WALL';
+            heroTitle.textContent = '';
+            let i = 0;
+            
+            const typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    heroTitle.textContent += text[i];
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                    typeSubtitle();
+                }
+            }, 150);
+        }
+
+        function typeSubtitle() {
+            const text = 'ПИШИ НА СТЕНЫ';
+            heroSubtitle.textContent = '';
+            let i = 0;
+            
+            const typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    heroSubtitle.textContent += text[i];
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                    // Blinking cursor
+                    heroSubtitle.style.borderRight = '2px solid #fff';
+                    setInterval(() => {
+                        heroSubtitle.style.borderRight = 
+                            heroSubtitle.style.borderRight === '2px solid #fff' 
+                            ? '2px solid transparent' 
+                            : '2px solid #fff';
+                    }, 500);
+                }
+            }, 80);
+        }
+
+        // Start typing animation
+        window.addEventListener('load', () => {
+            setTimeout(typeTitle, 500);
+        });
+
+        // Smooth scroll
+        document.querySelector('.scroll-indicator')?.addEventListener('click', () => {
+            const aboutSection = document.querySelector('.about-section');
+            aboutSection?.scrollIntoView({ behavior: 'smooth' });
+        });
 
         // Console easter egg
         console.log('%c WALL SYSTEM INITIALIZED ', 'background: #9933ff; color: #fff; font-size: 20px; padding: 10px;');
