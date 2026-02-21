@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall - Настройки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --eva-purple: #9933ff;
+            --eva-orange: #ff6600;
+            --eva-green: #00ff00;
+            --eva-red: #ff0000;
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #666666;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .eva-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(153, 51, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(153, 51, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link:hover {
+            color: var(--eva-purple);
+            border-color: var(--eva-purple);
+            transform: translateX(-5px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .settings-header {
+            background: var(--bg-dark);
+            border: 2px solid var(--eva-purple);
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .settings-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--eva-purple);
+        }
+
+        .settings-subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.2rem;
+            color: var(--text-muted);
+        }
+
+        .current-user {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(153, 51, 255, 0.1);
+            border: 1px solid var(--eva-purple);
+            font-size: 1.2rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .settings-section {
+            background: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--eva-orange);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            letter-spacing: 0.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--eva-purple);
+            box-shadow: 0 0 10px rgba(153, 51, 255, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: var(--eva-purple);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: var(--eva-orange);
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid var(--eva-green);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--eva-green);
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--eva-red);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--eva-red);
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .info-box {
+            background: rgba(255, 255, 0, 0.05);
+            border: 1px solid var(--warning-yellow);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05rem;
+        }
+
+        @media (max-width: 768px) {
+            .settings-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.3rem;
+            }
+
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="eva-grid"></div>
+    
+    <a href="#" class="back-link" id="backToWall">
+        <span>←</span>
+        <span>МОЯ СТЕНА</span>
+    </a>
+
+    <div class="container">
+        <div class="settings-header">
+            <h1 class="settings-title">НАСТРОЙКИ</h1>
+            <p class="settings-subtitle">УПРАВЛЕНИЕ ПРОФИЛЕМ</p>
+            <div class="current-user" id="currentUser">
+                ЗАГРУЗКА...
+            </div>
+        </div>
+
+        <!-- Change Username -->
+        <div class="settings-section">
+            <h2 class="section-title">ИЗМЕНИТЬ ИМЯ ПОЛЬЗОВАТЕЛЯ</h2>
+            <div class="info-box">
+                <strong>⚠ ВНИМАНИЕ:</strong> Изменение имени пользователя изменит URL вашей стены. Старая ссылка перестанет работать.
+            </div>
+            <form id="usernameForm">
+                <div class="success-message" id="usernameSuccess">✓ ИМЯ ПОЛЬЗОВАТЕЛЯ ИЗМЕНЕНО</div>
+                <div class="error-message" id="usernameError">⚠ ОШИБКА</div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="newUsername">Новое имя пользователя</label>
+                    <input 
+                        type="text" 
+                        id="newUsername" 
+                        class="form-input" 
+                        placeholder="Введите новое имя"
+                        minlength="3"
+                        maxlength="20"
+                        required
+                    >
+                </div>
+                <button type="submit" class="submit-button" id="usernameBtn">
+                    ИЗМЕНИТЬ ИМЯ →
+                </button>
+            </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="settings-section">
+            <h2 class="section-title">ИЗМЕНИТЬ ПАРОЛЬ</h2>
+            <form id="passwordForm">
+                <div class="success-message" id="passwordSuccess">✓ ПАРОЛЬ ИЗМЕНЕН</div>
+                <div class="error-message" id="passwordError">⚠ ОШИБКА</div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="currentPassword">Текущий пароль</label>
+                    <input 
+                        type="password" 
+                        id="currentPassword" 
+                        class="form-input" 
+                        placeholder="Введите текущий пароль"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="newPassword">Новый пароль</label>
+                    <input 
+                        type="password" 
+                        id="newPassword" 
+                        class="form-input" 
+                        placeholder="Минимум 8 символов"
+                        minlength="8"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Повторите новый пароль</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        class="form-input" 
+                        placeholder="Повторите пароль"
+                        required
+                    >
+                </div>
+                
+                <button type="submit" class="submit-button" id="passwordBtn">
+                    ИЗМЕНИТЬ ПАРОЛЬ →
+                </button>
+            </form>
+        </div>
+
+        <!-- Change Telegram ID -->
+        <div class="settings-section">
+            <h2 class="section-title">ИЗМЕНИТЬ TELEGRAM ID</h2>
+            <div class="info-box">
+                <strong>💡 СОВЕТ:</strong> Получите новый UUID от бота <a href="https://t.me/WallTGBot" target="_blank" style="color: var(--eva-purple);">@WallTGBot</a>
+            </div>
+            <form id="telegramForm">
+                <div class="success-message" id="telegramSuccess">✓ TELEGRAM ID ИЗМЕНЕН</div>
+                <div class="error-message" id="telegramError">⚠ ОШИБКА</div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="newTelegramId">Новый Telegram ID</label>
+                    <input 
+                        type="text" 
+                        id="newTelegramId" 
+                        class="form-input" 
+                        placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        pattern="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                        required
+                    >
+                </div>
+                <button type="submit" class="submit-button" id="telegramBtn">
+                    ИЗМЕНИТЬ TELEGRAM ID →
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8888';
+        let currentUsername = '';
+
+        // Проверка авторизации и загрузка данных пользователя
+        async function init() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    // Не авторизован - редирект на главную
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const data = await response.json();
+                currentUsername = data.user_name;
+                
+                // Обновляем UI
+                document.getElementById('currentUser').textContent = `ПОЛЬЗОВАТЕЛЬ: ${currentUsername.toUpperCase()}`;
+                
+                // Настраиваем ссылку "Назад"
+                document.getElementById('backToWall').href = `wall.html?user=${currentUsername}`;
+                
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Изменение имени пользователя
+        document.getElementById('usernameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const successMsg = document.getElementById('usernameSuccess');
+            const errorMsg = document.getElementById('usernameError');
+            const btn = document.getElementById('usernameBtn');
+            
+            if (newUsername.length < 3) {
+                showError(errorMsg, 'Имя слишком короткое (минимум 3 символа)');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'ИЗМЕНЕНИЕ...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/new-user-name`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        new_user_name: newUsername
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Ошибка изменения имени');
+                }
+
+                // Успех
+                showSuccess(successMsg);
+                currentUsername = newUsername;
+                document.getElementById('currentUser').textContent = `ПОЛЬЗОВАТЕЛЬ: ${currentUsername.toUpperCase()}`;
+                document.getElementById('backToWall').href = `wall.html?user=${currentUsername}`;
+                document.getElementById('newUsername').value = '';
+                
+            } catch (error) {
+                showError(errorMsg, error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'ИЗМЕНИТЬ ИМЯ →';
+            }
+        });
+
+        // Изменение пароля
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const successMsg = document.getElementById('passwordSuccess');
+            const errorMsg = document.getElementById('passwordError');
+            const btn = document.getElementById('passwordBtn');
+            
+            if (newPassword.length < 8) {
+                showError(errorMsg, 'Новый пароль слишком короткий (минимум 8 символов)');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showError(errorMsg, 'Пароли не совпадают');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'ИЗМЕНЕНИЕ...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/new-password`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        password: currentPassword,
+                        new_password: newPassword
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Неверный текущий пароль');
+                }
+
+                // Успех
+                showSuccess(successMsg);
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+            } catch (error) {
+                showError(errorMsg, error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'ИЗМЕНИТЬ ПАРОЛЬ →';
+            }
+        });
+
+        // Изменение Telegram ID
+        document.getElementById('telegramForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newTelegramId = document.getElementById('newTelegramId').value.trim();
+            const successMsg = document.getElementById('telegramSuccess');
+            const errorMsg = document.getElementById('telegramError');
+            const btn = document.getElementById('telegramBtn');
+            
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(newTelegramId)) {
+                showError(errorMsg, 'Некорректный формат UUID');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'ИЗМЕНЕНИЕ...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/new-telegram`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        telegram_id: newTelegramId
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Ошибка изменения Telegram ID');
+                }
+
+                // Успех
+                showSuccess(successMsg);
+                document.getElementById('newTelegramId').value = '';
+                
+            } catch (error) {
+                showError(errorMsg, error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'ИЗМЕНИТЬ TELEGRAM ID →';
+            }
+        });
+
+        // Вспомогательные функции
+        function showSuccess(element) {
+            element.classList.add('active');
+            setTimeout(() => {
+                element.classList.remove('active');
+            }, 3000);
+        }
+
+        function showError(element, message) {
+            element.textContent = `⚠ ОШИБКА: ${message.toUpperCase()}`;
+            element.classList.add('active');
+            setTimeout(() => {
+                element.classList.remove('active');
+            }, 4000);
+        }
+
+        // Инициализация
+        init();
+
+        console.log('%c WALL SETTINGS ', 'background: #9933ff; color: #fff; font-size: 16px; padding: 5px;');
+    </script>
+</body>
+</html>

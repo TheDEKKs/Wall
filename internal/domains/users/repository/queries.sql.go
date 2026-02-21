@@ -82,3 +82,45 @@ func (q *Queries) RegistrationUser(ctx context.Context, arg RegistrationUserPara
 	)
 	return i, err
 }
+
+const setNewPasswordByUserID = `-- name: SetNewPasswordByUserID :exec
+UPDATE users SET password_hash = $2 WHERE id = $1
+`
+
+type SetNewPasswordByUserIDParams struct {
+	ID           uuid.UUID `json:"id"`
+	PasswordHash string    `json:"password_hash"`
+}
+
+func (q *Queries) SetNewPasswordByUserID(ctx context.Context, arg SetNewPasswordByUserIDParams) error {
+	_, err := q.db.Exec(ctx, setNewPasswordByUserID, arg.ID, arg.PasswordHash)
+	return err
+}
+
+const setNewTelegramByUserID = `-- name: SetNewTelegramByUserID :exec
+UPDATE users SET telegram_record_id = $2 WHERE id = $1
+`
+
+type SetNewTelegramByUserIDParams struct {
+	ID               uuid.UUID `json:"id"`
+	TelegramRecordID uuid.UUID `json:"telegram_record_id"`
+}
+
+func (q *Queries) SetNewTelegramByUserID(ctx context.Context, arg SetNewTelegramByUserIDParams) error {
+	_, err := q.db.Exec(ctx, setNewTelegramByUserID, arg.ID, arg.TelegramRecordID)
+	return err
+}
+
+const setNewUserNameByUserID = `-- name: SetNewUserNameByUserID :exec
+UPDATE users SET user_name = $2 WHERE id = $1
+`
+
+type SetNewUserNameByUserIDParams struct {
+	ID       uuid.UUID `json:"id"`
+	UserName string    `json:"user_name"`
+}
+
+func (q *Queries) SetNewUserNameByUserID(ctx context.Context, arg SetNewUserNameByUserIDParams) error {
+	_, err := q.db.Exec(ctx, setNewUserNameByUserID, arg.ID, arg.UserName)
+	return err
+}

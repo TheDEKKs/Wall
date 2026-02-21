@@ -96,3 +96,66 @@ func (h *UserHandler) Check(ctx context.Context, input *struct{}) (*UserResponse
 	return  &UserResponse{Body: user.UserName}, nil
 
 }
+type ResetPasswordInput struct {
+	Body struct {
+		Password    string `json:"password"`
+		NewPassword string `json:"new_password"`
+	}
+}
+
+func (h *UserHandler) ResetPassword(ctx context.Context, input *ResetPasswordInput) (*UserCookieOut, error) {
+	cookie := ctx.Value("cookie").(middlewares.CookieCtx)
+
+	userCookie, err := h.userService.ResetPassword(ctx, cookie.UserID, input.Body.Password, input.Body.NewPassword)
+	if err != nil {
+		return nil, err
+	}
+
+	var userCookieOut UserCookieOut
+
+	userCookieOut.SetCookie = append(userCookieOut.SetCookie, http.Cookie{
+		Name:   "token",
+		Value:  (*userCookie)["Token"],
+		MaxAge: 14 * 24 * 60 * 60,
+	}, http.Cookie{
+		Name:   "user_id",
+		Value:  (*userCookie)["UserID"],
+		MaxAge: 14 * 24 * 60 * 60,
+	})
+
+	return &userCookieOut, nil
+}
+
+
+type ResetUserNameInput struct {
+	Body struct {
+		UserName string `json:"new_user_name"`
+	}
+}
+
+func (h *UserHandler) ResetUserName(ctx context.Context, input *ResetUserNameInput) (*struct{},error) {
+	cookie := ctx.Value("cookie").(middlewares.CookieCtx)
+
+	if err := h.userService.ResetUserName(ctx, cookie.UserID, input.Body.UserName); err != nil {
+		return nil, err
+	}
+
+	return nil, nil 
+}
+
+
+type ResetTelegramInput struct {
+	Body struct {
+		TelegramID uuid.UUID `json:"telegram_id"`
+	}
+}
+
+func (h *UserHandler) ResetTelegram(ctx context.Context, input *ResetTelegramInput) (*struct{},error)  {
+	cookie := ctx.Value("cookie").(middlewares.CookieCtx)
+
+	if err := h.userService.ResetTelegram(ctx, cookie.UserID, input.Body.TelegramID); err != nil {
+		return nil, err
+	}
+
+	return nil, nil 
+}

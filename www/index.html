@@ -822,8 +822,8 @@
                 <div class="warning-box">
                     <span class="warning-icon">⚠</span>
                     <div class="warning-text">
-                        <strong>ВНИМАНИЕ:</strong> Все сообщения публичны и видны всем. 
-                        Будьте вежливы и уважайте других пользователей. Модерация не предусмотрена.
+                        <strong>ВАЖНО:</strong> Каждый пользователь может оставить только ОДИН комментарий на одной стене. 
+                        Выбирайте слова мудро. Все сообщения публичны и видны всем. Будьте вежливы и уважайте других.
                     </div>
                 </div>
             </div>
@@ -1005,8 +1005,19 @@
             window.open('privacy.html', '_blank');
         });
 
-        // Функция проверки авторизации и открытия модалки/перехода на стену
+        // Функция проверки авторизации и редиректа
         async function handleStartClick() {
+            // Проверяем наличие cookies локально
+            const cookies = document.cookie;
+            const hasToken = cookies.includes('token=') && cookies.includes('user_id=');
+            
+            if (!hasToken) {
+                // Нет cookies - сразу на регистрацию
+                window.location.href = 'register.html';
+                return;
+            }
+            
+            // Есть cookies - пытаемся проверить на сервере
             try {
                 const response = await fetch(`${API_BASE_URL}/auth/check`, {
                     method: 'POST',
@@ -1017,26 +1028,101 @@
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
+                    const text = await response.text();
+                    console.log('Auth check response:', text);
                     
-                    if (data && data.user_name) {
-                        // Пользователь авторизован - переход на стену
-                        window.location.href = `wall.html?user=${data.user_name}`;
-                        return;
+                    if (text && text.trim()) {
+                        try {
+                            const data = JSON.parse(text.trim());
+                            const username = data.user_name || data.Body || null;
+                            
+                            if (username) {
+                                // Успешно авторизован
+                                window.location.href = `wall.html?user=${username}`;
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Parse error:', e);
+                        }
                     }
                 }
                 
-                // Не авторизован - открываем модалку
-                authModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                // Не удалось - на регистрацию
+                window.location.href = 'register.html';
                 
             } catch (error) {
-                console.log('Auth check failed, opening modal');
-                // Ошибка - открываем модалку
-                authModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                console.log('Auth check failed:', error);
+                // Ошибка - на регистрацию
+                window.location.href = 'register.html';
             }
         }
+
+        // Проверка авторизации при загрузке и показ кнопки "ПРОФИЛЬ"
+        async function checkAuthOnLoad() {
+            // Проверяем наличие cookies локально
+            const cookies = document.cookie;
+            const hasToken = cookies.includes('token=') && cookies.includes('user_id=');
+            
+            if (!hasToken) {
+                return; // Нет cookies
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    const text = await response.text();
+                    
+                    if (text && text.trim()) {
+                        try {
+                            const data = JSON.parse(text.trim());
+                            const username = data.user_name || data.Body || null;
+                            
+                            if (username) {
+                                // Показываем кнопку "МОЙ ПРОФИЛЬ"
+                                showProfileButton(username);
+                            }
+                        } catch (e) {
+                            console.error('Parse error:', e);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Auth check failed');
+            }
+        }
+
+        // Показать кнопку профиля
+        function showProfileButton(username) {
+            const topNav = document.querySelector('.top-nav');
+            const navLogo = document.querySelector('.nav-logo');
+            
+            if (topNav && navLogo) {
+                // Создаем кнопку профиля
+                const profileBtn = document.createElement('a');
+                profileBtn.href = `wall.html?user=${username}`;
+                profileBtn.className = 'quick-start-btn';
+                profileBtn.style.background = 'var(--eva-green)';
+                profileBtn.textContent = 'МОЙ ПРОФИЛЬ';
+                
+                // Заменяем кнопку "НАЧАТЬ"
+                const existingBtn = document.getElementById('quickStartBtnTop');
+                if (existingBtn) {
+                    existingBtn.replaceWith(profileBtn);
+                }
+            }
+        }
+
+        // Проверяем авторизацию при загрузке
+        window.addEventListener('load', () => {
+            checkAuthOnLoad();
+        });
 
         // Кнопка "НАЧАТЬ" вверху
         quickStartBtnTop?.addEventListener('click', handleStartClick);
@@ -1056,16 +1142,24 @@
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
+                    const text = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(text.trim());
+                    } catch (e) {
+                        return;
+                    }
                     
-                    if (data && data.user_name) {
+                    const username = data.user_name || data.Body || (typeof data === 'string' ? data : null);
+                    
+                    if (username) {
                         // Показываем кнопку быстрого доступа в модалке
                         quickAccessBtn.style.display = 'flex';
-                        quickAccessBtn.querySelector('.auth-text').textContent = `МОЯ СТЕНА (${data.user_name.toUpperCase()})`;
+                        quickAccessBtn.querySelector('.auth-text').textContent = `МОЯ СТЕНА (${username.toUpperCase()})`;
                         
                         quickAccessBtn.addEventListener('click', () => {
                             if (!checkTermsAccepted()) return;
-                            window.location.href = `wall.html?user=${data.user_name}`;
+                            window.location.href = `wall.html?user=${username}`;
                         });
                     }
                 }

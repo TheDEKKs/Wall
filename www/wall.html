@@ -148,6 +148,31 @@
             transform: translateX(-5px);
         }
 
+        /* Settings Button */
+        .settings-button {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .settings-button:hover {
+            color: var(--eva-orange);
+            border-color: var(--eva-orange);
+            transform: translateX(5px);
+        }
+
         /* Header Section */
         .wall-header {
             background: var(--bg-dark);
@@ -674,6 +699,12 @@
         <span>НАЗАД</span>
     </a>
 
+    <!-- Settings Button (only for own wall) -->
+    <a href="settings.html" class="settings-button" id="settingsButton" style="display: none;">
+        <span>⚙</span>
+        <span>НАСТРОЙКИ</span>
+    </a>
+
     <!-- Main Container -->
     <div class="container" id="mainContainer" style="display: none;">
         <!-- Wall Header -->
@@ -722,6 +753,9 @@
         <!-- Comment Form -->
         <div class="comment-form-section">
             <h2 class="form-title">ОСТАВИТЬ СООБЩЕНИЕ</h2>
+            <div class="info-notice" style="background: rgba(255, 255, 0, 0.05); border: 1px solid var(--warning-yellow); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; letter-spacing: 0.05rem; color: var(--text-secondary);">
+                ⚠ <strong>ВАЖНО:</strong> Вы можете оставить только ОДИН комментарий на этой стене. После отправки его можно будет отредактировать, но не удалить.
+            </div>
             <form id="commentForm">
                 <textarea 
                     class="comment-textarea" 
@@ -779,6 +813,13 @@
                 return;
             }
 
+            // Проверить авторизацию и показать кнопку настроек если это своя стена
+            await checkIfOwnWall();
+            
+            // АЛЬТЕРНАТИВНЫЙ СПОСОБ: Показать кнопку настроек если username совпадает
+            // (на случай если /auth/check не работает)
+            checkSettingsButtonFallback();
+
             // Загрузить данные стены
             const success = await loadWall();
             
@@ -789,6 +830,88 @@
                 
                 // Настроить кнопки "Поделиться"
                 setupShareButtons();
+            }
+        }
+
+        // Альтернативная проверка - показываем кнопку если загружена своя стена
+        function checkSettingsButtonFallback() {
+            // Если после загрузки userData.user_name совпадает с targetUsername
+            setTimeout(() => {
+                if (userData && userData.user_name === targetUsername) {
+                    const settingsBtn = document.getElementById('settingsButton');
+                    if (settingsBtn && settingsBtn.style.display === 'none') {
+                        // Проверяем есть ли cookies
+                        const cookies = document.cookie;
+                        if (cookies.includes('token=') && cookies.includes('user_id=')) {
+                            console.log('Fallback: Showing settings button based on loaded data');
+                            settingsBtn.style.display = 'flex';
+                        }
+                    }
+                }
+            }, 1000); // Даем время на загрузку данных
+        }
+
+        // Проверка это своя стена или нет
+        async function checkIfOwnWall() {
+            // Сначала проверяем есть ли вообще cookies
+            const cookies = document.cookie;
+            const hasToken = cookies.includes('token=') && cookies.includes('user_id=');
+            
+            if (!hasToken) {
+                console.log('No auth cookies found');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                console.log('Auth check status:', response.status);
+
+                if (response.ok) {
+                    const text = await response.text();
+                    console.log('Auth check response:', text);
+                    
+                    if (!text || !text.trim()) {
+                        console.log('Empty response from auth check');
+                        return;
+                    }
+                    
+                    let data;
+                    try {
+                        data = JSON.parse(text.trim());
+                    } catch (e) {
+                        console.error('Failed to parse auth response:', e);
+                        return;
+                    }
+                    
+                    // Проверяем разные форматы ответа
+                    const username = data.user_name || data.Body || (typeof data === 'string' ? data : null);
+                    console.log('Logged in as:', username, '| Target username:', targetUsername);
+                    
+                    if (username && username === targetUsername) {
+                        // Это своя стена - показываем кнопку настроек
+                        console.log('✓ This is own wall, showing settings button');
+                        const settingsBtn = document.getElementById('settingsButton');
+                        if (settingsBtn) {
+                            settingsBtn.style.display = 'flex';
+                            console.log('✓ Settings button displayed');
+                        } else {
+                            console.error('✗ Settings button element not found in DOM');
+                        }
+                    } else {
+                        console.log('Not own wall (username mismatch or not logged in)');
+                    }
+                } else {
+                    console.log('Auth check failed with status:', response.status);
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
             }
         }
 
