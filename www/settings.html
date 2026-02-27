@@ -397,8 +397,46 @@
                     return;
                 }
 
-                const data = await response.json();
-                currentUsername = data.user_name;
+                let text = await response.text();
+                text = text.trim();
+                
+                if (!text) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Парсим только первый JSON
+                let bracketCount = 0;
+                let firstJsonEnd = -1;
+                
+                for (let i = 0; i < text.length; i++) {
+                    if (text[i] === '{') bracketCount++;
+                    if (text[i] === '}') bracketCount--;
+                    
+                    if (bracketCount === 0 && firstJsonEnd === -1 && text[i] === '}') {
+                        firstJsonEnd = i + 1;
+                        break;
+                    }
+                }
+                
+                const firstJson = firstJsonEnd > 0 ? text.substring(0, firstJsonEnd) : text;
+                
+                let data;
+                try {
+                    data = JSON.parse(firstJson);
+                } catch (e) {
+                    console.error('Parse error:', e);
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Проверяем разные форматы ответа
+                currentUsername = data.user_name || data.Body || null;
+                
+                if (!currentUsername) {
+                    window.location.href = 'index.html';
+                    return;
+                }
                 
                 // Обновляем UI
                 document.getElementById('currentUser').textContent = `ПОЛЬЗОВАТЕЛЬ: ${currentUsername.toUpperCase()}`;

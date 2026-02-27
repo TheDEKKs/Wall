@@ -823,7 +823,8 @@
                     <span class="warning-icon">⚠</span>
                     <div class="warning-text">
                         <strong>ВАЖНО:</strong> Каждый пользователь может оставить только ОДИН комментарий на одной стене. 
-                        Выбирайте слова мудро. Все сообщения публичны и видны всем. Будьте вежливы и уважайте других.
+                        Выбирайте слова мудро. Все сообщения публичны и видны всем. Для регистрации требуется Telegram ID 
+                        (получите через <a href="https://t.me/WallTGBot" target="_blank" style="color: var(--eva-orange); text-decoration: underline;">@WallTGBot</a>).
                     </div>
                 </div>
             </div>
@@ -852,15 +853,15 @@
                     <span class="feature-icon">🔗</span>
                     <h3 class="feature-title">ПРОСТАЯ ССЫЛКА</h3>
                     <p class="feature-description">
-                        Делись ссылкой на свою стену в любых соцсетях. Короткий адрес wall.com/username.
+                        Делись ссылкой на свою стену в любых соцсетях. Короткий адрес для твоего профиля.
                     </p>
                 </div>
 
                 <div class="feature-card">
                     <span class="feature-icon">💬</span>
-                    <h3 class="feature-title">ПУБЛИЧНОЕ ОБЩЕНИЕ</h3>
+                    <h3 class="feature-title">ОДИН КОММЕНТАРИЙ</h3>
                     <p class="feature-description">
-                        Пиши на стены других пользователей. Все сообщения видны всем - честная и открытая коммуникация.
+                        Каждый пользователь может оставить только один комментарий на стене. Выбирайте слова мудро.
                     </p>
                 </div>
 
@@ -876,15 +877,16 @@
                     <span class="feature-icon">🔒</span>
                     <h3 class="feature-title">ПРИВАТНОСТЬ</h3>
                     <p class="feature-description">
-                        Мы не продаём твои данные. Минимум информации для регистрации — только username и пароль.
+                        Мы не продаём твои данные. Минимум информации для регистрации — только username, пароль и Telegram ID.
                     </p>
                 </div>
 
                 <div class="feature-card">
-                    <span class="feature-icon">🎯</span>
-                    <h3 class="feature-title">МИНИМАЛИЗМ</h3>
+                    <span class="feature-icon">🤖</span>
+                    <h3 class="feature-title">TELEGRAM ИНТЕГРАЦИЯ</h3>
                     <p class="feature-description">
-                        Простой и чистый интерфейс. Никаких отвлекающих элементов - только суть.
+                        Для регистрации нужен Telegram ID от бота <a href="https://t.me/WallTGBot" target="_blank" style="color: var(--eva-orange); text-decoration: underline;">@WallTGBot</a>. 
+                        Присоединяйся к сообществу: <a href="https://t.me/WallsCommunity" target="_blank" style="color: var(--eva-purple); text-decoration: underline;">@WallsCommunity</a>
                     </p>
                 </div>
             </div>
@@ -1028,12 +1030,28 @@
                 });
 
                 if (response.ok) {
-                    const text = await response.text();
-                    console.log('Auth check response:', text);
+                    let text = await response.text();
+                    text = text.trim();
                     
-                    if (text && text.trim()) {
+                    if (text) {
+                        // Парсим только первый JSON
+                        let bracketCount = 0;
+                        let firstJsonEnd = -1;
+                        
+                        for (let i = 0; i < text.length; i++) {
+                            if (text[i] === '{') bracketCount++;
+                            if (text[i] === '}') bracketCount--;
+                            
+                            if (bracketCount === 0 && firstJsonEnd === -1 && text[i] === '}') {
+                                firstJsonEnd = i + 1;
+                                break;
+                            }
+                        }
+                        
+                        const firstJson = firstJsonEnd > 0 ? text.substring(0, firstJsonEnd) : text;
+                        
                         try {
-                            const data = JSON.parse(text.trim());
+                            const data = JSON.parse(firstJson);
                             const username = data.user_name || data.Body || null;
                             
                             if (username) {
@@ -1077,20 +1095,39 @@
                 });
 
                 if (response.ok) {
-                    const text = await response.text();
+                    let text = await response.text();
+                    text = text.trim();
                     
-                    if (text && text.trim()) {
-                        try {
-                            const data = JSON.parse(text.trim());
-                            const username = data.user_name || data.Body || null;
-                            
-                            if (username) {
-                                // Показываем кнопку "МОЙ ПРОФИЛЬ"
-                                showProfileButton(username);
-                            }
-                        } catch (e) {
-                            console.error('Parse error:', e);
+                    if (!text) {
+                        return; // Пустой ответ
+                    }
+                    
+                    // Если JSON повторяется - берем только первый
+                    let bracketCount = 0;
+                    let firstJsonEnd = -1;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        if (text[i] === '{') bracketCount++;
+                        if (text[i] === '}') bracketCount--;
+                        
+                        if (bracketCount === 0 && firstJsonEnd === -1 && text[i] === '}') {
+                            firstJsonEnd = i + 1;
+                            break;
                         }
+                    }
+                    
+                    const firstJson = firstJsonEnd > 0 ? text.substring(0, firstJsonEnd) : text;
+                    
+                    try {
+                        const data = JSON.parse(firstJson);
+                        const username = data.user_name || data.Body || null;
+                        
+                        if (username) {
+                            // Показываем кнопку "МОЙ ПРОФИЛЬ"
+                            showProfileButton(username);
+                        }
+                    } catch (e) {
+                        console.error('Parse error:', e);
                     }
                 }
             } catch (error) {
@@ -1100,22 +1137,20 @@
 
         // Показать кнопку профиля
         function showProfileButton(username) {
-            const topNav = document.querySelector('.top-nav');
-            const navLogo = document.querySelector('.nav-logo');
+            const existingBtn = document.getElementById('quickStartBtnTop');
             
-            if (topNav && navLogo) {
-                // Создаем кнопку профиля
-                const profileBtn = document.createElement('a');
-                profileBtn.href = `wall.html?user=${username}`;
-                profileBtn.className = 'quick-start-btn';
-                profileBtn.style.background = 'var(--eva-green)';
-                profileBtn.textContent = 'МОЙ ПРОФИЛЬ';
+            if (existingBtn) {
+                // Меняем текст и стиль существующей кнопки
+                existingBtn.textContent = 'МОЙ ПРОФИЛЬ';
+                existingBtn.style.background = 'var(--eva-green)';
                 
-                // Заменяем кнопку "НАЧАТЬ"
-                const existingBtn = document.getElementById('quickStartBtnTop');
-                if (existingBtn) {
-                    existingBtn.replaceWith(profileBtn);
-                }
+                // Переопределяем обработчик клика
+                existingBtn.onclick = function(e) {
+                    e.preventDefault();
+                    window.location.href = `wall.html?user=${username}`;
+                };
+                
+                console.log('Profile button activated for user:', username);
             }
         }
 
